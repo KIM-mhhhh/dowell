@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="first.customer.dao.CustomerMapper">
+
+	<!-- 고객 전체 조회	 -->
+
+ 	<select id="getCustomerList" resultType="CustomerVO">
+		SELECT m.prt_nm, 
+		       u.user_nm,
+		       c.cust_no, 
+		       c.cust_nm, 
+		       c.mbl_no, 
+		       c.cust_ss_cd, 
+		       c.js_dt, 
+		       c.jn_prt_cd,
+		       c.fst_user_id,
+		       c.lst_upd_dt, 
+		       c.lst_upd_id 
+		FROM cs_cust01_mt c 
+		JOIN ma_prt_mt m ON c.jn_prt_cd = m.prt_cd
+		JOIN ma_user_mt u ON c.fst_user_id = u.user_id 
+		ORDER BY c.cust_no
+ 	</select>
+
+ 	<!-- 고객 조회(고객이름, 핸드폰번호로)	 -->
+
+ 	<select id="searchCustomer" resultType="CustomerVO" parameterType="map">
+ 		SELECT * FROM CS_CUST01_MT 
+		<where>
+  			<if test="cust_nm != '' and mbl_no ==''">
+  				cust_nm LIKE '%' || #{cust_nm} || '%'
+  			</if>
+  			<if test="cust_nm == '' and mbl_no !=''">
+  				mbl_no LIKE '%' || #{mbl_no} || '%'
+  			</if>
+  			<if test="cust_nm != '' and mbl_no !=''">
+  				mbl_no LIKE '%' || #{mbl_no} || '%' and
+  				cust_nm LIKE '%' || #{cust_nm} || '%'
+  			</if>
+  		</where>
+ 	</select>
+ 	
+ 	
+ 	<!-- 조회 결과 수(고객이름, 핸드폰번호로) -->
+ 	<select id="CustomerCount" resultType="integer" parameterType="map">
+ 		SELECT COUNT(*) FROM CS_CUST01_MT 
+		<where>
+  			<if test="cust_nm != '' and mbl_no ==''">
+  				cust_nm LIKE '%' || #{cust_nm} || '%'
+  			</if>
+  			<if test="cust_nm == '' and mbl_no !=''">
+  				mbl_no LIKE '%' || #{mbl_no} || '%'
+  			</if>
+  			<if test="cust_nm != '' and mbl_no !=''">
+  				mbl_no LIKE '%' || #{mbl_no} || '%' and
+  				cust_nm LIKE '%' || #{cust_nm} || '%'
+  			</if>
+  		</where>
+ 	</select>
+ 	
+ 	
+ 	<!-- 고객번호로 고객 이력 가져오기.	 -->
+ 	<select id="getRecord" resultType="RecordVO" parameterType="String">
+ 		SELECT h.cust_no,h.chg_dt,
+			(CASE WHEN upper(h.chg_cd) = 'CUST_NO' THEN '고객번호'
+			      WHEN upper(h.chg_cd)= 'CUST_NM' THEN '고객명'
+				  WHEN upper(h.chg_cd) = 'SEX_CD' THEN '성별코드'
+				  WHEN upper(h.chg_cd) = 'BRDY_DT' THEN '생년월일'
+				    WHEN upper(h.chg_cd) = 'POC_CD' THEN '직업코드'
+				    WHEN upper(h.chg_cd) = 'MBL_NO' THEN '휴대폰번호'
+				    WHEN upper(h.chg_cd) = 'CUST_SS_CD' THEN '고객상태코드'
+				    WHEN upper(h.chg_cd) = 'JN_PRT_CD' THEN '가입매장'
+				    WHEN upper(h.chg_cd) = 'STP_DT' THEN '중지일자'
+				    WHEN upper(h.chg_cd) = 'CNCL_DT' THEN '해지일자'
+			    END) AS chg_cd
+				,h.chg_bf_cnt,h.chg_aft_cnt, h.lst_upd_dt, h.lst_upd_id, u.user_nm
+		FROM SD_CUST01_HT h JOIN ma_user_mt u ON h.lst_upd_id=u.user_id 
+		WHERE h.CUST_NO=#{cust_no} ORDER BY h.CHG_DT DESC	
+ 	</select>
+ 	
+ 	<!-- 메인검색 결과 수 -->
+ 	<select id="getMainCount" resultType="integer" parameterType="map">
+ 		SELECT count(*)
+	  				FROM cs_cust01_mt c JOIN ma_prt_mt m ON c.jn_prt_cd = m.prt_cd
+	  		                JOIN ma_user_mt u ON c.fst_user_id = u.user_id
+	  		                WHERE
+					  			<if test="prt_cd != '' and cust_no ==''">
+					  				m.prt_cd=#{prt_cd} AND m.prt_nm=#{prt_nm} and
+					  			</if>
+					  			<if test="prt_cd == '' and cust_no !=''">
+					  				c.cust_no=#{cust_no} AND c.cust_nm=#{cust_nm}  and
+					  			</if>
+					  			<if test="prt_cd != '' and cust_no !=''">
+					  				m.prt_cd=#{prt_cd} AND m.prt_nm=#{prt_nm} and
+					  				c.cust_no=#{cust_no} AND c.cust_nm=#{cust_nm}  and
+					  			</if>
+					  			<if test='cust_ss_cd.equals("0")'>
+					  				c.cust_ss_cd LIKE '%'|| '0' ||'%' AND
+					  			</if>
+					  			<if test='cust_ss_cd.equals("10")'>
+					  				c.cust_ss_cd = #{cust_ss_cd}  AND
+					  			</if>
+					  			<if test='cust_ss_cd.equals("80")'>
+					  				c.cust_ss_cd = #{cust_ss_cd}  AND
+					  			</if>
+					  			<if test='cust_ss_cd.equals("90")'>
+					  				c.cust_ss_cd = #{cust_ss_cd}  AND
+					  			</if>
+	  				  (c.js_dt BETWEEN #{fromDate} AND #{toDate})
+ 	</select> 
+
+ 	
+ 	<!-- 메인검색 결과 -->
+ 	<select id="getMainCustomer" resultType="CustomerVO" parameterType="map">
+ 		SELECT m.prt_nm,
+ 			   u.user_nm,
+ 			   c.cust_no, 
+ 			   c.cust_nm, 
+ 			   c.mbl_no, 
+ 			   c.cust_ss_cd, 
+ 			   c.js_dt, 
+ 			   c.jn_prt_cd,
+ 			   c.fst_user_id, 
+ 			   c.lst_upd_dt, 
+ 			   c.lst_upd_id
+	  	FROM cs_cust01_mt c JOIN ma_prt_mt m ON c.jn_prt_cd = m.prt_cd
+	  		                JOIN ma_user_mt u ON c.fst_user_id = u.user_id
+	  	WHERE
+					  			<if test="prt_cd != '' and cust_no ==''">
+					  				m.prt_cd=#{prt_cd} AND m.prt_nm=#{prt_nm} and
+					  			</if>
+					  			<if test="prt_cd == '' and cust_no !=''">
+					  				c.cust_no=#{cust_no} AND c.cust_nm=#{cust_nm}  and
+					  			</if>
+					  			<if test="prt_cd != '' and cust_no !=''">
+					  				m.prt_cd=#{prt_cd} AND m.prt_nm=#{prt_nm} and
+					  				c.cust_no=#{cust_no} AND c.cust_nm=#{cust_nm}  and
+					  			</if>
+					  			<if test='cust_ss_cd.equals("0")'>
+					  				c.cust_ss_cd LIKE '%'|| '0' ||'%' AND
+					  			</if>
+					  			<if test='cust_ss_cd.equals("10")'>
+					  				c.cust_ss_cd = #{cust_ss_cd}  AND
+					  			</if>
+					  			<if test='cust_ss_cd.equals("80")'>
+					  				c.cust_ss_cd = #{cust_ss_cd}  AND
+					  			</if>
+					  			<if test='cust_ss_cd.equals("90")'>
+					  				c.cust_ss_cd = #{cust_ss_cd}  AND
+					  			</if>
+					  			
+	  				  (c.js_dt BETWEEN #{fromDate} AND #{toDate})
+ 	</select>
+ 	
+</mapper>

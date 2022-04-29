@@ -1,0 +1,146 @@
+@charset "UTF-8";
+
+.align-center{
+	text-align:center;
+}
+.align-right{
+	text-align:right;
+}
+
+
+
+/* 폼 */
+form{
+	width:90%;
+	height:40px;
+	margin:0 auto;
+	border:1px solid #000;
+	padding:10px 10px 10px 10px;
+	background-color:#f0f0f0;
+}
+
+#marketForm{
+	width:80%;
+	height:40px;
+	background-color:white;
+	border : 3px double black;
+	border-radius : 4%;
+	display:flex;							/* display는 서로 요소들 움직일 수 있게 */
+	justify-content:space-between;			/* 동일한 간격으로 서로 사이두고 끝에 붙게 */
+	align-items:center;						/* 위아래로 간격 두고 끝에 붙게 */
+}
+#markgetForm > li{
+	display:inline-block;
+	width:50%;
+	float:left;
+}
+#cusForm{
+	width:80%;
+	height:40px;
+	background-color:white;
+	border : 3px double black;
+	border-radius : 4%;
+	display:flex;							/* display는 서로 요소들 움직일 수 있게 */
+	justify-content:space-between;			/* 동일한 간격으로 서로 사이두고 끝에 붙게 */
+	align-items:center;						/* 위아래로 간격 두고 끝에 붙게 */
+}
+
+ul{
+	list-style:none;
+}
+ul li{
+	display:inline-block;
+}
+label{
+	width:90px;
+	float:left;			/* 태그를 왼쪽으로 정렬 */
+}
+.searchIcon{
+	width:18px;
+	height:18px;
+	padding : 2px 2px 2px 2px;
+	border : 1px solid grey;
+}
+h4{
+	padding-left:50px;
+}
+
+
+#submitCus{
+	width:30px;
+	height:30px;
+}
+
+/* 테이블 */
+table{
+	border-top: 1px solid #444444;
+	border-collapse: collapse;
+	width:80%;
+	margin:0 auto;
+	margin-top : 30px;
+	margin-bottom : 20px;
+	text-align : center;
+	
+}
+
+#recTable{
+	width:90%;
+}
+th, td {
+	border-bottom: 1px solid #444444; 
+    padding: 10px;
+    height : 30px;
+  }
+th{
+	background-color:black;
+	color : white;
+}
+
+#marketTable{
+	width:100%; 
+	border:"0" ;
+	cellspacing:"0" ;
+	ellpadding:"0";
+	border-top: 1px solid #444444;
+	border-collapse: collapse;
+	margin:0 auto;
+	margin-top : 30px;
+	margin-bottom : 20px;
+	text-align : center;
+}
+
+#info{
+	margin:0 auto;
+	width:90%;
+	background-color:white;
+	border : 3px double black;
+	border-radius : 4%;
+}
+
+#closeForm{
+	background-color : white;
+	border : 1.5px solid black;
+	border-radius : 10%;
+	font-weight : bold;
+	margin-left : 10px;
+}
+
+.mkBtn{
+	display:inline-block;
+	float:right;
+}
+#resultBtn{
+	background-color : white;
+	border : 1.5px solid black;
+	border-radius : 10%;
+	font-weight : bold;
+	margin-left : 10px;
+}
+
+.marketList{
+	width:80%; 
+	height:500px; 
+	overflow:auto;
+	margin:0 auto;
+}
+

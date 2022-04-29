@@ -1,0 +1,67 @@
+@charset "UTF-8";
+
+body,
+ul,
+li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.status-ico{
+	text-align : right;
+	 padding: 8px;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.left-side-bar > ul ul {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 180px;
+    background-color:#f0f0f0;
+}
+
+
+.left-side-bar {
+    background-color:#f0f0f0;
+    height: 100%;
+    width: 180px;
+    position: fixed;
+    left: -155px;
+    transition: left .3s;
+}
+
+
+.left-side-bar > ul li {
+    position: relative;
+}
+
+.left-side-bar ul {
+    font-weight: bold;
+    text-align: center;
+    padding: 0;
+}
+
+.left-side-bar ul > li > a {
+    display: block;
+    padding: 10px;
+    white-space: nowrap;
+}
+
+.left-side-bar:hover {
+    left: 0;
+}
+
+.left-side-bar ul > li:hover ul {
+    display: block;
+}
+
+.left-side-bar ul > li:hover > a {
+    color: white;
+    background-color: black;
+}

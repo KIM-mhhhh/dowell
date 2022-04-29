@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="first.user.dao.UserMapper">
+
+ 	
+ 	<!-- 매장코드로 고객조회 테이블 고객정보 불러오기 -->
+ 	<select id="getCustomer" resultType="CustomerVO" parameterType="String">
+ 		SELECT m.prt_nm, u.user_nm,c.cust_no, c.cust_nm, c.mbl_no, c.cust_ss_cd, c.js_dt, c.jn_prt_cd,c.fst_user_id,c.lst_upd_dt, c.lst_upd_id 
+			FROM cs_cust01_mt c JOIN ma_prt_mt m ON c.jn_prt_cd = m.prt_cd
+			JOIN ma_user_mt u ON c.fst_user_id = u.user_id 
+			WHERE jn_prt_cd=#{prt_cd}
+ 	</select> 
+ 	
+ 	
+ 	
+</mapper>

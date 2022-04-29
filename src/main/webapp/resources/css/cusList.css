@@ -1,0 +1,132 @@
+@charset "UTF-8";
+
+.align-center{
+	text-align:center;
+}
+.align-right{
+	text-align:right;
+}
+
+
+
+/* 폼 */
+form{
+	width:85%;
+	height:120px;
+	margin:0 auto;
+	padding:10px 10px 10px 10px;
+	background-color:white;
+	border : 3px double black;
+	display:flex;
+	align-items:center;
+}
+.fullSearch{
+	display:inline-block;
+	list-style:none;
+	width:90%;
+	
+}
+.fullSearch li{
+	padding-top : 18px;
+	display:inline-block;
+	width:50%;
+	float:left;
+}
+/* label{
+	width:90px;
+	float:left;			태그를 왼쪽으로 정렬
+} */
+.searchIcon{
+	width:18px;
+	height:18px;
+	padding : 2px 2px 2px 2px;
+	border : 1px solid grey;
+}
+h4{
+	padding-left:100px;
+}
+
+h4 img{
+	width:15px;
+	height:15px;
+}
+
+#cusInsert{
+	width:80px;
+	height:27px;
+	margin-top:12px;
+	margin-bottom:12px;
+	background-color : white;
+	border : 2.5px solid black;
+	border-radius : 10%;
+	font-weight : bold;
+}
+
+.detBtn,.recBtn{
+	background-color : white;
+	border : 1.5px solid black;
+	border-radius : 10%;
+	font-weight : bold;
+	margin-left : 10px;
+}
+.submitBtn{
+	display:inline-block;
+	width:5%;
+}
+#submitCus{
+	width:50px;
+	height:50px;
+	 background-color : white;
+	 border : 1.5px double black;
+	
+}
+
+.btn{
+ text-align : right;
+ padding-right :95px;	
+}
+
+/* 테이블 */
+table{
+	border-top: 1px solid #444444;
+    border-collapse: collapse;
+	width:85%;
+	margin:0 auto 30px;
+	
+}
+
+
+th, td {
+	border-bottom: 1px solid #444444;
+    
+    padding: 10px;
+    height:45px;
+}
+
+
+#cusNo,#cusNm,#regM,#regP{
+	text-align:left;
+}
+ 
+th{
+	background-color:black;
+	color : white;
+}
+
+.header{
+	width:100%;
+}
+
+.footer { 
+	position : relative;
+ 	transform : translateY(-100%);
+	height:10px;
+	width: 100%;
+	z-index: -999;
+	
+}
+
+#wrapper{
+  height: auto;
+  padding-bottom: 10px;
+}

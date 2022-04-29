@@ -1,0 +1,13 @@
+@charset "UTF-8";
+
+hr{
+	height: 1.5px;
+  	background-color: grey;
+  	width : 100%;
+  	border : 0;
+}
+p{
+	text-align:center;
+	font-family:fantasy;
+	font-weight:bolder;
+}

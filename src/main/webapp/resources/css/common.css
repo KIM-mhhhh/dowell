@@ -1,0 +1,50 @@
+@charset "UTF-8";
+
+.align-center{
+	text-align:center;
+}
+.align-right{
+	text-align:right;
+}
+/* 푸터 */
+.footer { 
+	position: absolute; 
+	left: 0; 
+	bottom: 0; 
+	width: 100%; }
+
+/* 폼 */
+form{
+	width:400px;
+	height:250px;
+	margin:0 auto;
+	padding:10px 10px 10px 10px;
+}
+form h2{
+	text-align:center;
+}
+ul{
+	list-style:none;
+}
+form 
+
+div #loginForm{
+	padding-top : 50px;
+}
+h5 img{
+	width:20px;
+	height:20px;
+}
+
+.side{
+	width:30%;
+	float:left;
+}
+.body{
+	width:70%;
+	float:right;
+}
+
+.material-icons{
+	margin:0 auto;
+}
