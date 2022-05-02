@@ -18,7 +18,7 @@
                 <a href="#">고객관리</a>
                 <ul class="smallSide">
                     <li><a href="#">고객조회</a></li>
-                    <li><a href="#">고객정보조회</a></li>
+                    <li><a href="${pageContext.request.contextPath}/customer/showCustomer.do">고객정보조회</a></li>
                     <li><a href="#">신규고객등록</a></li>
                 </ul>
             </li>

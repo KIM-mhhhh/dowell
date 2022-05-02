@@ -55,8 +55,6 @@ public class CustomerController {
 		List<RecordVO> recordList = customerService.getRecord(cust_no);
 		for(int i=0;i<recordList.size();i++) {
 			RecordVO record = recordList.get(i);
-			// 날짜 형식 바꾸기(string > string)
-			 record.setChg_dt(FormatUtil.dateFormat(record.getChg_dt()));  
 			//날짜 형식 바꾸기(date > string)
 			  record.setStrLst_upd_dt(FormatUtil.chDateFormat(record.getLst_upd_dt()));
 	
@@ -150,10 +148,10 @@ public class CustomerController {
 		ajaxMap.put("mbl_no", mbl_no);
 			
 		Map<String,Object> map = new HashMap<String, Object>();
-			
-		int customerCount = customerService.CustomerCount(ajaxMap);
+
 			
 		List<CustomerVO> customer = customerService.searchCustomer(ajaxMap);
+		int customerCount = customer.size();
 		for(int i=0;i<customer.size();i++) { 
 			 CustomerVO custVO = customer.get(i); 
 			 //고객 상태
@@ -184,8 +182,8 @@ public class CustomerController {
 		String cust_ss_cd = request.getParameter("cust_ss_cd"); 
 		String from =request.getParameter("from"); 
 		String to = request.getParameter("to");
-
-		System.out.println("전체" + cust_ss_cd);
+		
+//		System.out.println("from : " + from +"/ to:"+ to );
 
 		Map<String,Object> map = new HashMap<String,Object>();
 			map.put("prt_cd", prt_cd);
@@ -196,8 +194,9 @@ public class CustomerController {
 			map.put("fromDate", from); 
 			map.put("toDate", to);
 
-		int searchCount = customerService.getMainCount(map);
 		List<CustomerVO> searchList = customerService.getMainCustomer(map);
+		int searchCount = searchList.size();
+//		System.out.println(searchCount);
 		for(int i=0;i<searchList.size();i++) {
 			CustomerVO customer = searchList.get(i);
 			//고객상태
@@ -211,9 +210,6 @@ public class CustomerController {
 			customer.setCust_nm(FormatUtil.chName(customer.getCust_nm()));
 		  //전화번호에 *처리, - 추가
 		  customer.setMbl_no(FormatUtil.phoneFormat(FormatUtil.chPhone(customer.getMbl_no()))); 
-		  //날짜 형식 바꾸기(string > string)
-		  customer.setJs_dt(FormatUtil.dateFormat(customer.getJs_dt())); 
-		//  System.out.println(customer.getLst_upd_dt());
 		}
 		
 		Map<String,Object> ajaxMap = new HashMap<String,Object>();
@@ -222,4 +218,21 @@ public class CustomerController {
 		
 		return ajaxMap;
 	}
+	
+	
+	//신규 고객 등록
+	@RequestMapping("/customer/cusRegist.do")
+	public String CustomerRegister() {
+		
+		return "/customer/cusRegister";
+	}
+	
+	//고객정보조회
+	@RequestMapping("/customer/showCustomer.do")
+	public String inquireCustomer() {
+		
+		return "/customer/cusInfo";
+	}
+	
+	
 }

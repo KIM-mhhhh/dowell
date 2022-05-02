@@ -18,6 +18,9 @@
 		$('#searchCust').click(function(){
 			window.open('${pageContext.request.contextPath}/customer/searchCustomer.do','market','width=700,height=900');
 		});
+		$('#cusInsert').click(function(){
+			window.open('${pageContext.request.contextPath}/customer/cusRegist.do','market','width=700,height=900');
+		});
 		$(document).on('click','.recBtn',function(){
 			var cust_no = $(this).parent().eq(0).find('span').html();
 			window.open('${pageContext.request.contextPath}/customer/showRecord.do?cust_no='+cust_no,'record','width=900,height=700');
@@ -38,8 +41,8 @@
 			var cust_no = $('input[name="cust_no"]').val().trim();
 			var cust_nm = $('input[name="cust_nm"]').val().trim();
 			var cust_ss_cd =$('input[name="cust_ss_cd"]:checked').val();
-			var from = $('input[name="from"]').val();
-			var to = $('input[name="to"]').val();
+			var from = $('input[name="from"]').val().replace(/\-/g,'');
+			var to = $('input[name="to"]').val().replace(/\-/g,'');
 			
 			$.ajax({
 				type:'post',
@@ -173,8 +176,8 @@
 			</li>
 			<li>
 				<label>가입일자</label>
-				<input type="date" name="from" id="from" max="1901-01-01">
-				<input type="date" name="to" id="to" min="1901-01-01" max="1901-01-01" >
+				<input type="date" name="from" id="from" >
+				<input type="date" name="to" id="to" >
 			</li>
 		</ul>
 		<div class="submitBtn">
@@ -183,7 +186,7 @@
 	</form>
 </div>
 <div class="btn">
-<input type="button" id="cusInsert" onclick="location.href='#'" value="신규등록">
+<input type="button" id="cusInsert" value="신규등록">
 </div>
 <div class="align-center table list">
 	<table class="mainTable">

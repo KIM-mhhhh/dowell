@@ -1,0 +1,68 @@
+@charset "UTF-8";
+
+.align-center{
+	text-align:center;
+}
+.align-right{
+	text-align:right;
+}
+/* 푸터 */
+.footer { 
+	position: absolute; 
+	left: 0; 
+	bottom: 0; 
+	width: 100%; }
+
+/* 폼 */
+#searchForm{
+	width:80%;
+	height:50px;
+	margin:0 auto;
+	padding:10px 10px 10px 10px;
+	background-color:white;
+	border : 3px double black;
+}
+.infoBox{
+	width:75%;
+	margin:0 auto;
+	padding:10px 10px 10px 10px;
+	border : 2px solid black;
+}
+.calBox{
+	width:75%;
+	margin:0 auto;
+	padding:10px 10px 10px 10px;
+	border : 2px solid black;
+}
+.ynBox{
+	width:75%;
+	margin:0 auto;
+	padding:10px 10px 10px 10px;
+	border : 2px solid black;
+	display:flex;							/* display는 서로 요소들 움직일 수 있게 */
+	justify-content:space-between;			/* 동일한 간격으로 서로 사이두고 끝에 붙게 */
+	align-items:center;						/* 위아래로 간격 두고 끝에 붙게 */
+}
+.btn{
+	text-align:center;
+}
+ul{
+	list-style:none;
+}
+ul li{
+	display:inline-block;
+}
+.searchIcon{
+	width:18px;
+	height:18px;
+	padding : 2px 2px 2px 2px;
+	border : 1px solid grey;
+}
+
+
+.side{
+	width:30%;
+	float:left;
+}
+
+

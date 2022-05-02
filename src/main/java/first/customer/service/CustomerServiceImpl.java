@@ -39,18 +39,6 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public int CustomerCount(Map<String,Object> map) {
-		int count = customerMapper.CustomerCount(map);
-		return count;
-	}
-
-	@Override
-	public int getMainCount(Map<String, Object> map) {
-		int count = customerMapper.getMainCount(map);
-		return count;
-	}
-
-	@Override
 	public List<CustomerVO> getMainCustomer(Map<String, Object> map) {
 		List<CustomerVO> list = customerMapper.getMainCustomer(map);
 		return list;

@@ -17,11 +17,6 @@ public interface CustomerService {
 	//고객 조회(고객이름, 핸드폰번호로)
 	public List<CustomerVO> searchCustomer(Map<String,Object> map);
 	
-	//조회 결과 수
-	public int CustomerCount(Map<String,Object> map);
-	
-	//메인검색 결과 수
-	  public int getMainCount(Map<String,Object> map);
 	//메인 검색 결과
 	  public List<CustomerVO> getMainCustomer(Map<String,Object> map);
 

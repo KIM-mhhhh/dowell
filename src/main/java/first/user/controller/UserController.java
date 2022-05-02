@@ -63,9 +63,7 @@ public class UserController {
 				// 이름에 * 처리
 				customer.setCust_nm(FormatUtil.chName(customer.getCust_nm()));
 				// 전화번호에 *처리, - 추가
-				customer.setMbl_no(FormatUtil.phoneFormat(FormatUtil.chPhone(customer.getMbl_no())));
-				// 날짜 형식 바꾸기(string > string)
-				 customer.setJs_dt(FormatUtil.dateFormat(customer.getJs_dt()));  
+				customer.setMbl_no(FormatUtil.phoneFormat(FormatUtil.chPhone(customer.getMbl_no())));  
 				//날짜 형식 바꾸기(date > string)
 				  customer.setStrLst_upd_dt(FormatUtil.chDateFormat(customer.getLst_upd_dt()));
 				 
@@ -87,10 +85,8 @@ public class UserController {
 				 customer.setCust_nm(FormatUtil.chName(customer.getCust_nm()));
 			  //전화번호에 *처리, - 추가
 			  customer.setMbl_no(FormatUtil.phoneFormat(FormatUtil.chPhone(customer.getMbl_no()))); 
-			  //날짜 형식 바꾸기(string > string)
-			  customer.setJs_dt(FormatUtil.dateFormat(customer.getJs_dt())); 
 			  //날짜 형식 바꾸기(date > string)
-			  customer.setStrLst_upd_dt(FormatUtil.chDateFormat(customer.getLst_upd_dt()));
+//			  customer.setStrLst_upd_dt(FormatUtil.chDateFormat(customer.getLst_upd_dt()));
 			  }
 			 
 			ModelAndView mv = new ModelAndView("/customer/cusList");
