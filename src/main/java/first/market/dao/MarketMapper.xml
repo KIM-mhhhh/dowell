@@ -2,14 +2,13 @@
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="first.market.dao.MarketMapper">
 
- 	<!-- 매장 조건에 맞는 count 	 -->
- 	<select id="getMarketCount" resultType="integer" parameterType="String">
- 		SELECT count(*) FROM ma_prt_mt 
- 		WHERE PRT_DT_CD=2 AND (prt_cd LIKE '%' || #{keyword} || '%' OR prt_nm LIKE '%' || #{keyword} || '%')
- 	</select>
  	<!-- 매장 검색 -->
- 	<select id="searchMarket" resultType="MarketVO" parameterType="String">
- 		SELECT prt_cd, prt_nm, prt_ss_cd FROM ma_prt_mt 
- 		WHERE PRT_DT_CD=2 AND (prt_cd LIKE '%' || #{keyword} || '%' OR prt_nm LIKE '%' || #{keyword} || '%')
+ 	 <select id="searchMarket" resultType="MarketVO" parameterType="String">
+ 		 SELECT m.prt_cd
+     		   ,m.prt_nm
+      		   ,d.dtl_cd_nm AS prt_ss_cd 
+		FROM ma_prt_mt m
+ 		JOIN (SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='PRT_SS_CD') d ON m.prt_ss_cd=d.dtl_cd
+ 		WHERE m.PRT_DT_CD=2 AND (m.prt_cd LIKE '%' || #{keyword} || '%' OR m.prt_nm LIKE '%' || #{keyword} || '%')
  	</select>	
 </mapper>

@@ -1,5 +1,6 @@
 package first.customer.controller;
 
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,13 +9,16 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import first.customer.service.CustomerService;
 import first.customer.vo.CustomerVO;
-import first.market.vo.MarketVO;
+
 import first.record.vo.RecordVO;
 import kr.util.FormatUtil;
 
@@ -35,8 +39,6 @@ public class CustomerController {
 			CustomerVO customer = custList.get(i);
 			//고객상태
 			customer.setCust_ss_cd(FormatUtil.CustomerState(customer.getCust_ss_cd()));
-			//전화번호에 - 추가
-			customer.setMbl_no(FormatUtil.phoneFormat(customer.getMbl_no()));
 		}
 		
 		
@@ -53,82 +55,8 @@ public class CustomerController {
 		String cust_no = request.getParameter("cust_no");
 		
 		List<RecordVO> recordList = customerService.getRecord(cust_no);
-		for(int i=0;i<recordList.size();i++) {
-			RecordVO record = recordList.get(i);
-			//날짜 형식 바꾸기(date > string)
-			  record.setStrLst_upd_dt(FormatUtil.chDateFormat(record.getLst_upd_dt()));
-	
-			// 변경항목이 고객상태인 경우 format 변환
-			if(record.getChg_cd().equals("고객상태코드")) {
-				record.setChg_bf_cnt(FormatUtil.CustomerState(record.getChg_bf_cnt()));
-				record.setChg_aft_cnt(FormatUtil.CustomerState(record.getChg_aft_cnt()));
-			}
-			// 변경항목이 휴대폰 번호인 경우 format 변환
-			else if(record.getChg_cd().equals("휴대폰번호")) {
-				record.setChg_bf_cnt(FormatUtil.phoneFormat(record.getChg_bf_cnt()));
-				record.setChg_aft_cnt(FormatUtil.phoneFormat(record.getChg_aft_cnt()));
-			}
-			// 변경항목이 성별인 경우 format 변환
-			else if(record.getChg_cd().equals("성별코드")) {		
-				if(record.getChg_bf_cnt().equalsIgnoreCase("M")) {
-					record.setChg_bf_cnt("남");
-				}else if(record.getChg_bf_cnt().equalsIgnoreCase("F")) {
-					record.setChg_bf_cnt("여");
-				}else {
-					record.setChg_bf_cnt("-");
-				}
-				if(record.getChg_aft_cnt().equalsIgnoreCase("M")) {
-					record.setChg_aft_cnt("남");
-				}else if(record.getChg_aft_cnt().equalsIgnoreCase("F")) {
-					record.setChg_aft_cnt("여");
-				}else {
-					record.setChg_aft_cnt("-");
-				}
-			}
-			//변경항목이 생년월일인 경우 format 변환
-			else if(record.getChg_cd().equals("생년월일")) {	
-				record.setChg_bf_cnt(FormatUtil.dateFormat(record.getChg_bf_cnt()));
-				record.setChg_aft_cnt(FormatUtil.dateFormat(record.getChg_aft_cnt()));
-			}
-			//변경항목이 직업코드인 경우 format변환 
-			else if(record.getChg_cd().equals("직업코드")) {		
-				if(record.getChg_bf_cnt().equals("10")){
-					record.setChg_bf_cnt("학생");
-				}else if(record.getChg_bf_cnt().equals("20")){
-					record.setChg_bf_cnt("회사원");
-				}else if(record.getChg_bf_cnt().equals("30")) {
-					record.setChg_bf_cnt("공무원");
-				}else if(record.getChg_bf_cnt().equals("40")) {
-					record.setChg_bf_cnt("전문직");
-				}else if(record.getChg_bf_cnt().equals("50")) {
-					record.setChg_bf_cnt("군인");
-				}else if(record.getChg_bf_cnt().equals("60")) {
-					record.setChg_bf_cnt("주부");
-				}else if(record.getChg_bf_cnt().equals("90")) {
-					record.setChg_bf_cnt("연예인");
-				}else if(record.getChg_bf_cnt().equals("99")) {
-					record.setChg_bf_cnt("기타");
-				}
-				if(record.getChg_aft_cnt().equals("10")){
-					record.setChg_aft_cnt("학생");
-				}else if(record.getChg_aft_cnt().equals("20")){
-					record.setChg_aft_cnt("회사원");
-				}else if(record.getChg_aft_cnt().equals("30")) {
-					record.setChg_aft_cnt("공무원");
-				}else if(record.getChg_aft_cnt().equals("40")) {
-					record.setChg_aft_cnt("전문직");
-				}else if(record.getChg_aft_cnt().equals("50")) {
-					record.setChg_aft_cnt("군인");
-				}else if(record.getChg_aft_cnt().equals("60")) {
-					record.setChg_aft_cnt("주부");
-				}else if(record.getChg_aft_cnt().equals("90")) {
-					record.setChg_aft_cnt("연예인");
-				}else if(record.getChg_aft_cnt().equals("99")) {
-					record.setChg_aft_cnt("기타");
-				}
-			}
-		}
-	
+
+
 		ModelAndView mv = new ModelAndView("/customer/cusRecord");
 		mv.addObject("cust_no", cust_no);
 		mv.addObject("recordList",recordList);
@@ -152,19 +80,6 @@ public class CustomerController {
 			
 		List<CustomerVO> customer = customerService.searchCustomer(ajaxMap);
 		int customerCount = customer.size();
-		for(int i=0;i<customer.size();i++) { 
-			 CustomerVO custVO = customer.get(i); 
-			 //고객 상태
-			 if(custVO.getCust_ss_cd().equals("10")) { 
-				 custVO.setCust_ss_cd("정상");
-			 }else if(custVO.getCust_ss_cd().equals("80")){
-				 custVO.setCust_ss_cd("중지"); 
-			}else if(custVO.getCust_ss_cd().equals("90")){
-				custVO.setCust_ss_cd("해지"); 
-			}
-			//전화번호에 - 추가
-			 custVO.setMbl_no(FormatUtil.phoneFormat(custVO.getMbl_no())); 
-		}
 		map.put("customerCount", customerCount);
 		map.put("customer", customer);
 
@@ -197,20 +112,6 @@ public class CustomerController {
 		List<CustomerVO> searchList = customerService.getMainCustomer(map);
 		int searchCount = searchList.size();
 //		System.out.println(searchCount);
-		for(int i=0;i<searchList.size();i++) {
-			CustomerVO customer = searchList.get(i);
-			//고객상태
-			if(customer.getCust_ss_cd().equals("10")) {
-				customer.setCust_ss_cd("정상");
-			}else if(customer.getCust_ss_cd().equals("80")){
-				customer.setCust_ss_cd("중지");
-			}else if(customer.getCust_ss_cd().equals("90")){
-				customer.setCust_ss_cd("해지");	
-			}
-			customer.setCust_nm(FormatUtil.chName(customer.getCust_nm()));
-		  //전화번호에 *처리, - 추가
-		  customer.setMbl_no(FormatUtil.phoneFormat(FormatUtil.chPhone(customer.getMbl_no()))); 
-		}
 		
 		Map<String,Object> ajaxMap = new HashMap<String,Object>();
 		ajaxMap.put("count", searchCount);
@@ -220,12 +121,63 @@ public class CustomerController {
 	}
 	
 	
-	//신규 고객 등록
+	//신규 고객 등록 팝업
 	@RequestMapping("/customer/cusRegist.do")
-	public String CustomerRegister() {
+	public ModelAndView CustomerRegister(HttpServletRequest request) throws Exception {
 		
-		return "/customer/cusRegister";
+		request.setCharacterEncoding("utf-8");
+		
+		String prt_cd = request.getParameter("prt_cd");
+//		String prt_nm = request.getParameter("prt_nm");
+		ModelAndView mav = new ModelAndView("/customer/cusRegister");
+		mav.addObject("prt_cd", prt_cd);
+//		mav.addObject("prt_nm", prt_nm);
+		
+		return mav;
 	}
+	//휴대폰 번호 중복
+	
+	  @PostMapping("/customer/checkMbl.do")
+	  @ResponseBody public Map<String,String> checkMblNo(HttpServletRequest request){ 
+		  Map<String,String> ajaxMap = new HashMap<String, String>(); 
+		  String mbl_no = request.getParameter("mbl_no");
+	  
+		  System.out.println("폰번호:" +mbl_no);
+		  
+		  int mblCount = customerService.getMblCheck(mbl_no); 
+		  if(mblCount==0) {
+		  ajaxMap.put("result", "NotDuplicated"); 
+		  }else if(mblCount >0){
+		  ajaxMap.put("result", "Duplicated"); 
+		  } 
+		  return ajaxMap; 
+		  
+	 }
+
+	/*
+	 * @PostMapping("/customer/checkMbl.do")
+	 * 
+	 * @ResponseBody public Map<String,String> checkMblNo(@RequestParam String
+	 * mbl_no){ Map<String,String> ajaxMap = new HashMap<String, String>();
+	 * 
+	 * System.out.println("폰번호:" +mbl_no);
+	 * 
+	 * int mblCount = customerService.getMblCheck(mbl_no); if(mblCount==0) {
+	 * ajaxMap.put("result", "NotDuplicated"); }else if(mblCount >0){
+	 * ajaxMap.put("result", "Duplicated"); } return ajaxMap; }
+	 */
+	
+	//신규 고객 등록 처리
+	@RequestMapping("/customer/registerSubmit.do")
+	public String submitRegister(@ModelAttribute CustomerVO customerVO, Model model ) {
+		
+		System.out.println(customerVO.getCust_nm());
+		System.out.println(customerVO.getScal_yn());
+		model.addAttribute("customerVO", customerVO);
+		
+		return "/customer/result";
+	}
+	
 	
 	//고객정보조회
 	@RequestMapping("/customer/showCustomer.do")

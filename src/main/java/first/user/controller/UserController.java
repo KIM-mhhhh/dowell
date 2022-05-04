@@ -49,25 +49,6 @@ public class UserController {
 			
 			// 거래처 코드로 가져온 list(매장용)
 			List<CustomerVO> custList = userService.getCustomer(user.getPrt_cd());
-			for (int i = 0; i < custList.size(); i++) {
-				CustomerVO customer = custList.get(i);
-				// 고객 상태
-				if (customer.getCust_ss_cd().equals("10")) {
-					customer.setCust_ss_cd("정상");
-				} else if (customer.getCust_ss_cd().equals("80")) {
-					customer.setCust_ss_cd("중지");
-				} else if (customer.getCust_ss_cd().equals("90")) {
-					customer.setCust_ss_cd("해지");
-				}
-				 
-				// 이름에 * 처리
-				customer.setCust_nm(FormatUtil.chName(customer.getCust_nm()));
-				// 전화번호에 *처리, - 추가
-				customer.setMbl_no(FormatUtil.phoneFormat(FormatUtil.chPhone(customer.getMbl_no())));  
-				//날짜 형식 바꾸기(date > string)
-				  customer.setStrLst_upd_dt(FormatUtil.chDateFormat(customer.getLst_upd_dt()));
-				 
-			}
 			// 전체 list (본사용)
 			
 			  List<CustomerVO> cList = customerService.getCustomerList(); 
@@ -81,12 +62,6 @@ public class UserController {
 				}else if(customer.getCust_ss_cd().equals("90")){
 					customer.setCust_ss_cd("해지"); 
 				}
-			  //이름에 * 처리 
-				 customer.setCust_nm(FormatUtil.chName(customer.getCust_nm()));
-			  //전화번호에 *처리, - 추가
-			  customer.setMbl_no(FormatUtil.phoneFormat(FormatUtil.chPhone(customer.getMbl_no()))); 
-			  //날짜 형식 바꾸기(date > string)
-//			  customer.setStrLst_upd_dt(FormatUtil.chDateFormat(customer.getLst_upd_dt()));
 			  }
 			 
 			ModelAndView mv = new ModelAndView("/customer/cusList");

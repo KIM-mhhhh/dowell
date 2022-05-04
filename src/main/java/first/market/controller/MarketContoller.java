@@ -23,28 +23,15 @@ public class MarketContoller {
 	@Autowired
 	private MarketService marketService;
 
-	//거래처 전체 목록
-	@RequestMapping("/market/marketShow.do")
-	public ModelAndView showMarket() {
-		
-		ModelAndView mv = new ModelAndView("/market/marketSearch");
-		List<MarketVO> marketList = marketService.marketList();
-		
-		for(int i=0;i<marketList.size();i++) {
-			MarketVO market = marketList.get(i);
-			if(market.getPrt_ss_cd().equals("10")) {
-				market.setPrt_ss_cd("정상");
-			}else if(market.getPrt_ss_cd().equals("80")) {
-				market.setPrt_ss_cd("중지");
-			}else if(market.getPrt_ss_cd().equals("90")) {
-				market.setPrt_ss_cd("폐쇄");
-			}
-		}
-		
-		mv.addObject("marketList", marketList);
-		
-		return mv;
-	}
+	//거래처 팝업
+	
+	  @RequestMapping("/market/marketShow.do") 
+	  public ModelAndView showMarket() {
+	  
+	  ModelAndView mv = new ModelAndView("/market/marketSearch"); 
+
+	  return mv; }
+	 
 	
 	//거래처 검색 결과
 	@RequestMapping("/market/marketResult.do")
@@ -54,19 +41,8 @@ public class MarketContoller {
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 		
-		int marketCount = marketService.getMarketCount(keyword);
-		
 		List<MarketVO> market = marketService.searchMarket(keyword);
-		for(int i=0;i<market.size();i++) {
-			MarketVO marketVO = market.get(i);
-			if(marketVO.getPrt_ss_cd().equals("10")) {
-				marketVO.setPrt_ss_cd("정상");
-			}else if(marketVO.getPrt_ss_cd().equals("80")) {
-				marketVO.setPrt_ss_cd("중지");
-			}else if(marketVO.getPrt_ss_cd().equals("90")) {
-				marketVO.setPrt_ss_cd("폐쇄");
-			}
-		}
+		int marketCount = market.size();
 		map.put("marketCount", marketCount);
 		map.put("market", market);
 		

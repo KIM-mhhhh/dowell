@@ -44,4 +44,10 @@ public class CustomerServiceImpl implements CustomerService {
 		return list;
 	}
 
+	@Override
+	public int getMblCheck(String mbl_no) {
+		int count = customerMapper.getMblCheck(mbl_no);
+		return count;
+	}
+
 }

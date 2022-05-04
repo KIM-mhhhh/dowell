@@ -37,7 +37,7 @@
 				<td>${record.chg_bf_cnt }</td>
 				<td>${record.chg_aft_cnt }</td>
 				<td>${record.lst_upd_id }/${record.user_nm }</td>
-				<td>${record.strLst_upd_dt }</td>
+				<td>${record.lst_upd_dt }</td>
 		</tr>
 		</c:forEach>	
 	</table>

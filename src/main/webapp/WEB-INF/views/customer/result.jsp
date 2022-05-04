@@ -7,6 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-${prt_nm}
+${customerVO.cust_nm }
+/
+${customerVO.scal_yn}
 </body>
 </html>

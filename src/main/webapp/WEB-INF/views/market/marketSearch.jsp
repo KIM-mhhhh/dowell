@@ -12,16 +12,23 @@
       rel="stylesheet">
 <script type="text/javascript">
 	$(document).ready(function(){
-		var prt_cd = "";
+		 var prt_cd = "";
 		var prt_nm = "";
-		//중복체크 막기
+		 
+		 
+		//리스트 기본 값 초기화
+		function init(){
+			$('.marketList').empty();
+		}
+		 
+		 //중복체크 막기
 		$(document).on('click','.checkbox',function(){
 			if($(this).prop('checked')){
 		    	  $('.checkbox').prop('checked',false);
 		    	  $(this).prop('checked',true);
-		    	prt_cd = $(this).parent().parent().find('td').find('span').eq(0).html();
-		    	prt_nm = $(this).parent().parent().find('td').find('span').eq(1).html();
-		      }
+				     	 prt_cd = $(this).parent().parent().find('td').find('span').eq(0).html();
+				    	prt_nm = $(this).parent().parent().find('td').find('span').eq(1).html(); 
+		       }
 		});	
 		//닫기 버튼
 		$('#closeForm').click(function(){
@@ -37,8 +44,8 @@
 		 		 $(opener.document).find('#prt_nm').val(prt_nm);
 					self.close();
 			}
- 		  
 		  });  
+		 
 		//더블클릭 시 본문에 반영하고 창 닫기
 		$(document).on('dblclick','.checkTr',function(){
 			var custNo = $(this).find('td').find('span').eq(0).html();
@@ -47,16 +54,6 @@
 	 		 $(opener.document).find('#prt_nm').val(custNm);
 				self.close();
 		});
-		
-		//검색창 빈칸인 경우 작동 안되게.
-	/* 	$('#submitCus').click(function(){
-		 if($('#keyword').val().trim()==''){
-			 alert('검색어를 입력하세요');
-			 $('#keyword').focus();
-				$('#keyword').val('');
-				return false;
-		 }
-		}); */
 		
 		//팝업 내 검색 결과
 		$('#submitCus').click(function(event){
@@ -69,6 +66,13 @@
 			}
 			var count;
 			var output ="";
+				output+='<table id="marketTable">';
+				output+='<thead><tr>';
+				output+='<th>선택</th>';
+				output+='<th>매장코드</th>';
+				output+='<th>매장명</th>';
+				output+='<th>매장상태</th>';
+				output+='</tr></thead>';
 			$.ajax({
 				type:'post',
 				data:{keyword:keyword},
@@ -79,17 +83,9 @@
 				success:function(param){
 					count = param.marketCount;
 					if(count<=0){
-						output+="<div>검색 결과가 존재하지 않습니다.</div>";
+						output+="<tbody><tr><td colspan='5'>검색 결과가 존재하지 않습니다.</td></tr></div>";
 					}else{
-						output+='<table id="marketTable">';
-						output+='<tr>';
-						output+='<th>선택</th>';
-						output+='<th>매장코드</th>';
-						output+='<th>매장명</th>';
-						output+='<th>매장상태</th>';
-						output+='</tr>';
 						$(param.market).each(function(index,item) {
-							
 							output += '<tr class="checkTr">';
 							output +='<td><input type="checkbox" name="checkbox" class="checkbox"></td>';
 							output +='<td><span>'+item.prt_cd+'</span></td>';
@@ -98,12 +94,10 @@
 							output += '</tr>';
 					
 					});
-						output+='</table>';
-					
+						output+='</table>';	
 				};
 					init();
-					$('.marketList').append(output);
-					
+					$('.marketList').append(output);		
 			},
 			error:function(){
 				alert('네트워크 오류 발생');
@@ -114,16 +108,13 @@
 			event.preventDefault();
 		});
 									
-		//리스트 기본 값 초기화
-		function init(){
-			$('.marketList').empty();
-		}
+	
 		
 		//테이블 mouseover
-		$(document).on('mouseover','tr',function(){
+		$(document).on('mouseover','.checkTr',function(){
 			$(this).css('backgroundColor', '#ebf2fc');
 		});
-		$(document).on('mouseout','tr',function(){
+		$(document).on('mouseout','.checkTr',function(){
 			$(this).css('backgroundColor', 'white');
 		});
 		
@@ -153,14 +144,8 @@
 			<th>매장명</th>
 			<th>매장상태</th>
 		</tr>
-		<%-- <c:forEach var="market" items="${marketList}">
-		<tr class="checkTr">
-			<td><input type="checkbox" name="checkbox" class="checkbox"></td>
-			<td><span>${market.prt_cd }</span></td>
-			<td><span>${market.prt_nm }</span></td>
-			<td>${market.prt_ss_cd}</td>
-		</tr>
-		</c:forEach> --%>
+		<tbody>
+		</tbody>
 	</table>
 </div>
 

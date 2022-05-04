@@ -18,6 +18,9 @@ public interface CustomerService {
 	public List<CustomerVO> searchCustomer(Map<String,Object> map);
 	
 	//메인 검색 결과
-	  public List<CustomerVO> getMainCustomer(Map<String,Object> map);
+	public List<CustomerVO> getMainCustomer(Map<String,Object> map);
+	
+	//핸드폰 번호 중복 검사
+	public int getMblCheck(String mbl_no);
 
 }

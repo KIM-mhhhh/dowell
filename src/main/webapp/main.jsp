@@ -49,7 +49,7 @@
 						<input type="password" id="password" name="password" placeholder="비밀번호">
 					</li>
 				</ul>
-				<div >
+				<div>
 					<input type="submit" id="submitBtn" value="로그인">
 				</div>
 		</form>

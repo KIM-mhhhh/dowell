@@ -98,7 +98,7 @@
 				success:function(param){
 					count = param.customerCount;
 					if(count<=0){
-						output+="<div>검색 결과가 존재하지 않습니다.</div>";
+						output+="<tbody><tr><td colspan='5'>검색 결과가 존재하지 않습니다.</td></tr></tbody>";
 					}else{
 						$(param.customer).each(function(index,item) {
 							
@@ -131,10 +131,10 @@
 			$('.list').empty();
 		}
 		//테이블 mouseover
-		$(document).on('mouseover','tr',function(){
+		$(document).on('mouseover','.checkTr',function(){
 			$(this).css('backgroundColor', '#ebf2fc');
 		});
-		$(document).on('mouseout','tr',function(){
+		$(document).on('mouseout','.checkTr',function(){
 			$(this).css('backgroundColor', 'white');
 		});
 		
@@ -165,15 +165,7 @@
 			<th>핸드폰번호</th>
 			<th>고객상태</th>
 		</tr>
-	<%-- 	<c:forEach var="customer" items="${custList }">
-		<tr class="checkTr">
-			<td><input type="checkbox" class="checkbox" name="checkbox"></td>
-			<td><span>${customer.cust_no }</span></td>
-			<td><span>${customer.cust_nm}</span></td>
-			<td>${customer.mbl_no}</td>
-			<td>${customer.cust_ss_cd}</td>
-		</tr>
-		</c:forEach> --%>
+
 	</table>
 </div>
 

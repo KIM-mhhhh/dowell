@@ -19,7 +19,9 @@
 			window.open('${pageContext.request.contextPath}/customer/searchCustomer.do','market','width=700,height=900');
 		});
 		$('#cusInsert').click(function(){
-			window.open('${pageContext.request.contextPath}/customer/cusRegist.do','market','width=700,height=900');
+			var prt_cd = $('#hidden_cd').val();
+			var prt_nm = $('#hidden_nm').val();
+			window.open('${pageContext.request.contextPath}/customer/cusRegist.do?prt_cd='+prt_cd+'&prt_nm='+prt_nm,'market','width=700,height=900');
 		});
 		$(document).on('click','.recBtn',function(){
 			var cust_no = $(this).parent().eq(0).find('span').html();
@@ -144,6 +146,8 @@
 
 <div>
 	<form method="post" id="mainForm">
+			<input type="hidden" id="hidden_cd" value="${market.prt_cd }">
+			<input type="hidden" id="hidden_nm" value="${market.prt_nm }">
 		<ul class="fullSearch">
 			<li>
 				<label for="prt_cd">매장</label>
@@ -210,7 +214,7 @@
 				<td>${customer.js_dt}</td>
 				<td id="regM">${customer.prt_nm}</td>
 				<td id="regP">${customer.fst_user_id}/${customer.user_nm}</td>
-				<td>${customer.strLst_upd_dt}</td>
+				<td>${customer.lst_upd_dt}</td>
 			</tr>
 			</c:forEach>
 		</c:if>	
@@ -224,7 +228,7 @@
 				<td>${customer2.js_dt}</td>
 				<td id="regM">${customer2.prt_nm}</td>
 				<td id="regP">${customer2.fst_user_id}/${customer2.user_nm}</td>
-				<td>${customer2.strLst_upd_dt}</td>
+				<td>${customer2.lst_upd_dt}</td>
 			</tr>
 			</c:forEach>
 		</c:if>	

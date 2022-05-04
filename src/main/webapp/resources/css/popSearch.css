@@ -104,11 +104,22 @@ th{
 	border-top: 1px solid #444444;
 	border-collapse: collapse;
 	margin:0 auto;
+
+	margin-bottom : 20px;
+	text-align : center;
+}
+#customTable{
+	width:100%; 
+	border:"0" ;
+	cellspacing:"0" ;
+	ellpadding:"0";
+	border-top: 1px solid #444444;
+	border-collapse: collapse;
+	margin:0 auto;
 	margin-top : 30px;
 	margin-bottom : 20px;
 	text-align : center;
 }
-
 #info{
 	margin:0 auto;
 	width:90%;
@@ -141,5 +152,16 @@ th{
 	width:80%; 
 	overflow:auto;
 	height:500px; 
+	margin:40px auto 0 auto;
+}
+.customerList{
+	width:80%; 
+	overflow:auto;
+	height:500px; 
 	margin:0 auto;
+}
+
+thead{
+	position: sticky ;
+	top: 0;
 }
