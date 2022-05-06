@@ -20,4 +20,6 @@ public interface CustomerMapper {
 	public List<CustomerVO> getMainCustomer(Map<String,Object> map);
 	//핸드폰 번호 중복 검사
 	public int getMblCheck(String mbl_no);
+	//직업코드 가져오기
+	public List<Map<String,Object>> getPocCode();
 }

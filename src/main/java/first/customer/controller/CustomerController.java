@@ -57,7 +57,6 @@ public class CustomerController {
 		
 		List<RecordVO> recordList = customerService.getRecord(cust_no);
 
-
 		ModelAndView mv = new ModelAndView("/customer/cusRecord");
 		mv.addObject("cust_no", cust_no);
 		mv.addObject("recordList",recordList);
@@ -78,7 +77,6 @@ public class CustomerController {
 			
 		Map<String,Object> map = new HashMap<String, Object>();
 
-			
 		List<CustomerVO> customer = customerService.searchCustomer(ajaxMap);
 		int customerCount = customer.size();
 		map.put("customerCount", customerCount);
@@ -128,9 +126,13 @@ public class CustomerController {
 		
 		request.setCharacterEncoding("utf-8");
 		
+		//폼 직업 list
+		List<Map<String,Object>> codeList = customerService.getPocCode();
+		
 		String prt_cd = request.getParameter("prt_cd");
 //		String prt_nm = request.getParameter("prt_nm");
 		ModelAndView mav = new ModelAndView("/customer/cusRegister");
+		mav.addObject("codeList", codeList);
 		mav.addObject("prt_cd", prt_cd);
 //		mav.addObject("prt_nm", prt_nm);
 		
@@ -182,9 +184,15 @@ public class CustomerController {
 	
 	//고객정보조회 화면
 	@RequestMapping("/customer/showCustomer.do")
-	public String inquireCustomer() {
+	public ModelAndView inquireCustomer() {
 		
-		return "/customer/cusInfo";
+		//폼 직업 list
+		List<Map<String,Object>> codeList = customerService.getPocCode();
+		
+		ModelAndView mav = new ModelAndView("/customer/cusInfo");
+		mav.addObject("codeList", codeList);
+		
+		return mav;
 	}
 	
 	//회원번호로 고객정보 가져오기

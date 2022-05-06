@@ -1,6 +1,7 @@
 package first.user.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Select;
 
@@ -21,5 +22,7 @@ public interface UserMapper {
 	//매장코드로 고객조회 테이블 고객정보 불러오기
 	public List<CustomerVO> getCustomer(String prt_cd);
 	
+	//회원상태 코드 종류 가져오기
+	public List<Map<String,Object>> getSScode();
 	
 }

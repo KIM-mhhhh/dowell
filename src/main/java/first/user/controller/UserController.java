@@ -1,6 +1,7 @@
 package first.user.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,7 +17,7 @@ import first.customer.vo.CustomerVO;
 import first.market.vo.MarketVO;
 import first.user.service.UserService;
 import first.user.vo.UserVO;
-import kr.util.FormatUtil;
+
 
 @Controller
 public class UserController {
@@ -48,17 +49,17 @@ public class UserController {
 			session.setAttribute("prt_dt_cd", market.getPrt_dt_cd());
 			
 			//검색폼 state의 list
-			
-			
+			List<Map<String,Object>> codeList = userService.getSScode();
 			// 거래처 코드로 가져온 list(매장용)
 			List<CustomerVO> custList = userService.getCustomer(user.getPrt_cd());
 			// 전체 list (본사용)
-			  List<CustomerVO> cList = customerService.getCustomerList(); 
+			 List<CustomerVO> cList = customerService.getCustomerList(); 
 			 
 			ModelAndView mv = new ModelAndView("/customer/cusList");
 			mv.addObject("market", market);
 			mv.addObject("custList", custList);
 			mv.addObject("cList", cList); 
+			mv.addObject("codeList", codeList);
 			return mv;
 		} else { // 불일치
 			ModelAndView mv = new ModelAndView("/user/loginFailResult");

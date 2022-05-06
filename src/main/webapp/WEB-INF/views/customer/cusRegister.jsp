@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -110,14 +111,17 @@
 				<li>
 					<label for="poc_cd">직업코드</label>
 					<select name="poc_cd">
-						<option value="10">학생</option>
+						<c:forEach var="code" items="${codeList }">
+							<option value="${code.DTL_CD }">${code.DTL_CD_NM }</option>
+						</c:forEach>
+						<!-- <option value="10">학생</option>
 						<option value="20">회사원</option>
 						<option value="30">공무원</option>
 						<option value="40">전문직</option>
 						<option value="50">군인</option>
 						<option value="60">주부</option>
 						<option value="90">연예인</option>
-						<option value="99">기타</option>
+						<option value="99">기타</option> -->
 					</select>
 				</li>
 				<li>

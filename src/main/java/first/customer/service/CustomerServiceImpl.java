@@ -50,4 +50,10 @@ public class CustomerServiceImpl implements CustomerService {
 		return count;
 	}
 
+	@Override
+	public List<Map<String, Object>> getPocCode() {
+		List<Map<String,Object>> pocList = customerMapper.getPocCode();
+		return pocList;
+	}
+
 }

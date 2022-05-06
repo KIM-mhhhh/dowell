@@ -167,9 +167,9 @@
 			<li>
 				<label>고객상태</label>
 				<input type="radio" name="cust_ss_cd" value="0" checked> 전체
-				<input type="radio" name="cust_ss_cd" value="10"> 정상
-				<input type="radio" name="cust_ss_cd" value="80"> 중지
-				<input type="radio" name="cust_ss_cd" value="90"> 해지
+				<c:forEach var="code" items="${codeList }">
+					<input type="radio" name="cust_ss_cd" value="${code.DTL_CD }"> ${code.DTL_CD_NM }
+				</c:forEach>
 			</li>
 			<li>
 				<label>가입일자</label>
@@ -204,7 +204,7 @@
 			<c:forEach var="customer" items="${custList}">
 			<tr>
 				<td id="cusNo"><span>${customer.cust_no}</span><input type="button" class="recBtn" value="변경이력"></td>
-				<td id="cusNm">${customer.cust_nm}<input type="button" class="detBtn" value="상세" onclick="location.href='#'"></td>
+				<td id="cusNm"><span>${customer.cust_nm}</span><input type="button" class="detBtn" value="상세"></td>
 				<td>${customer.mbl_no}</td>
 				<td>${customer.cust_ss_cd}</td>
 				<td>${customer.js_dt}</td>

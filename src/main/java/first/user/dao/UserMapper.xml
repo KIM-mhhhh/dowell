@@ -51,13 +51,17 @@
 		JOIN ma_prt_mt m ON c.jn_prt_cd = m.prt_cd
 		JOIN ma_user_mt u ON c.fst_user_id = u.user_id 
 		JOIN (SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='CUST_SS_CD') d ON c.cust_ss_cd= d.dtl_cd
-		WHERE 
+		WHERE c.js_dt between SYSDATE-7 and SYSDATE
 			<if test="prt_cd != ''">
-  				c.jn_prt_cd=#{prt_cd}
+  				AND	c.jn_prt_cd=#{prt_cd}
   			</if>
-  			AND c.js_dt between SYSDATE-7 and SYSDATE
+  			 
  	</select> -->
  	
+ 	<!-- 회원상태코드 항목 db에서 불러오기 -->
+ 	<select id="getSScode" resultType="java.util.HashMap">
+ 		SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='CUST_SS_CD'
+ 	</select>
  	
  	
 </mapper>

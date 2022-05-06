@@ -2,6 +2,7 @@ package first.user.service;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,14 @@ public class UserServiceImpl implements UserService {
 	public List<CustomerVO> getCustomer(String prt_cd) {
 		List<CustomerVO> customerList = userMapper.getCustomer(prt_cd);
 		return customerList;
+	}
+
+
+
+	@Override
+	public List<Map<String,Object>> getSScode() {
+		List<Map<String,Object>> codeList = userMapper.getSScode();
+		return codeList;
 	}
 
 	

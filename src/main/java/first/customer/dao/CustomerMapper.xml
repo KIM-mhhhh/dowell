@@ -135,4 +135,9 @@
  		FROM CS_CUST01_MT
 		WHERE mbl_no=#{mbl_no}
  	</select>
+ 	
+ 	 <!-- 직업코드 항목 db에서 불러오기 -->
+ 	<select id="getPocCode" resultType="java.util.HashMap">
+ 		SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='POC_CD'
+ 	</select>
 </mapper>
