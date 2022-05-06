@@ -12,20 +12,33 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
+		//리스트 기본 값 초기화
+		function init(){
+			$('#mTbody').empty();
+		}
+		//매장 검색 팝업
 		$('#searchMarket').click(function(){
 			window.open('${pageContext.request.contextPath}/market/marketShow.do','market','width=500,height=600');
 		});
+		//회원 검색 팝업
 		$('#searchCust').click(function(){
-			window.open('${pageContext.request.contextPath}/customer/searchCustomer.do','market','width=700,height=900');
+			window.open('${pageContext.request.contextPath}/customer/searchCustomer.do','customer','width=700,height=900');
 		});
+		//신규회원 등록 팝업
 		$('#cusInsert').click(function(){
 			var prt_cd = $('#hidden_cd').val();
 			var prt_nm = $('#hidden_nm').val();
 			window.open('${pageContext.request.contextPath}/customer/cusRegist.do?prt_cd='+prt_cd+'&prt_nm='+prt_nm,'market','width=700,height=900');
 		});
+		//회원 수정 이력 팝업
 		$(document).on('click','.recBtn',function(){
 			var cust_no = $(this).parent().eq(0).find('span').html();
 			window.open('${pageContext.request.contextPath}/customer/showRecord.do?cust_no='+cust_no,'record','width=900,height=700');
+		});
+		//회원 상세정보 팝업
+		$(document).on('click','.detBtn',function(){
+			/* var cust_no = $(this).parent().eq(0).find('span').html(); */
+			window.open('${pageContext.request.contextPath}/customer/showCustomer.do','cusInfo','width=900,height=700');
 		});
 		
 		//달력 기본값
@@ -56,21 +69,9 @@
 				success:function(param){
 					count = param.count;
 					if(count<=0){
-						output+="<div>검색 결과가 존재하지 않습니다.</div>";
+						output+="<tr><td colspan='8'>검색 결과가 존재하지 않습니다.</td></tr>";
 					}else{
-						output+='<table class="mainTable">';
-						output+='<tr>';
-						output+='<th>고객번호</th>';
-						output+='<th>고객이름</th>';
-						output+='<th>핸드폰번호</th>';
-						output+='<th>고객상태</th>';
-						output+='<th>가입일자</th>';
-						output+='<th>가입매장</th>';
-						output+='<th>등록자</th>';
-						output+='<th>수정일자</th>';
-						output+='</tr>';
 						$(param.list).each(function(index,item) {
-							
 							output += '<tr>';
 							output +='<td id="cusNo"><span>'+item.cust_no+'</span><input type="button" class="recBtn" value="변경이력"></td>';
 							output +='<td id="cusNm"><span>'+item.cust_nm+'</span><input type="button" class="detBtn" value="상세"></td>';
@@ -81,13 +82,10 @@
 							output += '<td id="regP">'+item.fst_user_id+'/'+item.user_nm+'</td>';
 							output += '<td>'+item.lst_upd_dt+'</td>';
 							output += '</tr>';
-					
 					});
-						output+='</table>';
-					
 				};
 					init();
-					$('.list').append(output);
+					$('#mTbody').append(output);
 				},
 				error:function(){
 					alert('네트워크 오류 발생');
@@ -96,17 +94,12 @@
 			event.preventDefault();
 
 		});		//click이벤트 끝 
-		//리스트 기본 값 초기화
-			function init(){
-				$('.list').empty();
-			}
-		
 		
 		//테이블 mouseover, mouseout 효과
-		$(document).on('mouseover','.mainTable tr',function(){
+		$(document).on('mouseover','#mainTable tr',function(){
 			$(this).css('backgroundColor', '#ebf2fc');
 		});
-		$(document).on('mouseout','.mainTable tr',function(){
+		$(document).on('mouseout','#mainTable tr',function(){
 			$(this).css('backgroundColor', 'white');
 		});
 		
@@ -192,8 +185,9 @@
 <div class="btn">
 <input type="button" id="cusInsert" value="신규등록">
 </div>
-<div class="align-center table list">
-	<table class="mainTable">
+<div id="mainList">
+	<table id="mainTable">
+		<thead>
 		<tr>
 			<th>고객번호</th>
 			<th>고객이름</th>
@@ -204,7 +198,9 @@
 			<th>등록자</th>
 			<th>수정일자</th>
 		</tr>
-		<c:if test="${market.prt_dt_cd eq '2'}">
+		</thead>
+		<tbody id="mTbody">
+ 		<c:if test="${market.prt_dt_cd eq '2'}"> 
 			<c:forEach var="customer" items="${custList}">
 			<tr>
 				<td id="cusNo"><span>${customer.cust_no}</span><input type="button" class="recBtn" value="변경이력"></td>
@@ -217,12 +213,12 @@
 				<td>${customer.lst_upd_dt}</td>
 			</tr>
 			</c:forEach>
-		</c:if>	
-		<c:if test="${market.prt_dt_cd eq '1'}">
+ 		</c:if>
+ 		<c:if test="${market.prt_dt_cd eq '1'}">
 			<c:forEach var="customer2" items="${cList}">
 			<tr>
 				<td id="cusNo"><span>${customer2.cust_no}</span><input type="button" class="recBtn" value="변경이력"></td>
-				<td id="cusNm">${customer2.cust_nm}<input type="button" class="detBtn" value="상세" onclick="location.href='#'"></td>
+				<td id="cusNm"><span>${customer2.cust_nm}</span><input type="button" class="detBtn" value="상세"></td>
 				<td>${customer2.mbl_no}</td>
 				<td>${customer2.cust_ss_cd}</td>
 				<td>${customer2.js_dt}</td>
@@ -231,7 +227,8 @@
 				<td>${customer2.lst_upd_dt}</td>
 			</tr>
 			</c:forEach>
-		</c:if>	
+		</c:if>	 
+		</tbody>
 	</table>
 </div>
 </div>

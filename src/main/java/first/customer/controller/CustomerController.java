@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -138,7 +139,8 @@ public class CustomerController {
 	//휴대폰 번호 중복
 	
 	  @PostMapping("/customer/checkMbl.do")
-	  @ResponseBody public Map<String,String> checkMblNo(HttpServletRequest request){ 
+	  @ResponseBody 
+	  public Map<String,String> checkMblNo(HttpServletRequest request){ 
 		  Map<String,String> ajaxMap = new HashMap<String, String>(); 
 		  String mbl_no = request.getParameter("mbl_no");
 	  
@@ -178,13 +180,27 @@ public class CustomerController {
 		return "/customer/result";
 	}
 	
-	
-	//고객정보조회
+	//고객정보조회 화면
 	@RequestMapping("/customer/showCustomer.do")
 	public String inquireCustomer() {
 		
 		return "/customer/cusInfo";
 	}
 	
+	//회원번호로 고객정보 가져오기
+	@RequestMapping("/customer/getCustInfo.do")
+	@ResponseBody 
+	public Map<String,Object> getCustInfo(HttpServletRequest request){
+		
+		String cust_no = request.getParameter("cust_no");
+		
+		System.out.println(cust_no);
+		
+		Map<String,Object> ajaxMap = new HashMap<String, Object>();
+		
+		ajaxMap.put("cust_no", cust_no);
+		
+		return ajaxMap;
+	}
 	
 }

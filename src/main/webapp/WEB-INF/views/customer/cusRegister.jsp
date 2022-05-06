@@ -15,7 +15,7 @@
 		});
 		
 		//휴대폰번호 중복 확인
-		/* $('#chMbl').click(function(){
+		 $('#chMbl').click(function(){
 			if($('#mbl_no1').val().length==0 || $('#mbl_no2').val().length==0 || $('#mbl_no3').val().length==0){
 				alert('빈칸을 입력하세요.');
 				return false;
@@ -44,9 +44,9 @@
 				}
 			});	
 			
-		}); */
+		});
 		
-		$('#chMbl').click(function(){
+		/* $('#chMbl').click(function(){
 			if($('#mbl_no1').val().length==0 || $('#mbl_no2').val().length==0 || $('#mbl_no3').val().length==0){
 				alert('빈칸을 입력하세요.');
 				return false;
@@ -82,13 +82,16 @@
 				}
 			});	
 			
-		});
-		//고객명 2자 이상
-		
+		}); */
 		//생년월일 미래 날짜 안됨
 		
-		//제출 시 체크 (고객명 2자 이상, 휴대폰 번호 중복)
-		
+		//제출 시 체크 (고객명 2자 이상, 필수항목, 휴대폰 번호 중복)
+		$('#regBtn').click(function(){
+			if(check==0){
+				alert('휴대폰 번호 중복 확인 해주세요.');
+				return false;
+			}
+		});
 		
 	});	
 </script>
@@ -186,7 +189,7 @@
 		</div>
 		<div>
 			<input type="button" id="closeForm" value="닫기">
-			<input type="submit" id="" value="등록">
+			<input type="submit" id="regBtn" value="등록">
 		</div>
 	</form>
 </div>

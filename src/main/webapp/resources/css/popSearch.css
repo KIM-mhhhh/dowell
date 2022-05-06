@@ -72,20 +72,8 @@ h4{
 }
 
 /* 테이블 */
-table{
-	border-top: 1px solid #444444;
-	border-collapse: collapse;
-	width:80%;
-	margin:0 auto;
-	margin-top : 30px;
-	margin-bottom : 20px;
-	text-align : center;
-	
-}
 
-#recTable{
-	width:90%;
-}
+
 th, td {
 	border-bottom: 1px solid #444444; 
     padding: 10px;
@@ -104,11 +92,10 @@ th{
 	border-top: 1px solid #444444;
 	border-collapse: collapse;
 	margin:0 auto;
-
 	margin-bottom : 20px;
 	text-align : center;
 }
-#customTable{
+#cusTable{
 	width:100%; 
 	border:"0" ;
 	cellspacing:"0" ;
@@ -116,7 +103,17 @@ th{
 	border-top: 1px solid #444444;
 	border-collapse: collapse;
 	margin:0 auto;
-	margin-top : 30px;
+	margin-bottom : 20px;
+	text-align : center;
+}
+#recTable{
+	width:100%; 
+	border:"0" ;
+	cellspacing:"0" ;
+	ellpadding:"0";
+	border-top: 1px solid #444444;
+	border-collapse: collapse;
+	margin:0 auto;
 	margin-bottom : 20px;
 	text-align : center;
 }
@@ -154,11 +151,17 @@ th{
 	height:500px; 
 	margin:40px auto 0 auto;
 }
-.customerList{
+.cusList{
 	width:80%; 
 	overflow:auto;
 	height:500px; 
-	margin:0 auto;
+	margin:40px auto 0 auto;
+}
+#recList{
+	width:80%; 
+	overflow:auto;
+	height:500px; 
+	margin:40px auto 0 auto;
 }
 
 thead{

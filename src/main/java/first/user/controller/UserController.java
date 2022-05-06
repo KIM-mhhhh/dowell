@@ -47,22 +47,13 @@ public class UserController {
 			MarketVO market = userService.getMarket(user.getPrt_cd());
 			session.setAttribute("prt_dt_cd", market.getPrt_dt_cd());
 			
+			//검색폼 state의 list
+			
+			
 			// 거래처 코드로 가져온 list(매장용)
 			List<CustomerVO> custList = userService.getCustomer(user.getPrt_cd());
 			// 전체 list (본사용)
-			
 			  List<CustomerVO> cList = customerService.getCustomerList(); 
-			  for(int i=0;i<cList.size();i++) { 
-				 CustomerVO customer = cList.get(i); 
-				 //고객 상태
-				 if(customer.getCust_ss_cd().equals("10")) { 
-					 customer.setCust_ss_cd("정상");
-				 }else if(customer.getCust_ss_cd().equals("80")){
-					 customer.setCust_ss_cd("중지"); 
-				}else if(customer.getCust_ss_cd().equals("90")){
-					customer.setCust_ss_cd("해지"); 
-				}
-			  }
 			 
 			ModelAndView mv = new ModelAndView("/customer/cusList");
 			mv.addObject("market", market);

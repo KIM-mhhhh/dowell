@@ -24,20 +24,6 @@ public class UserServiceImpl implements UserService {
 		return user;
 	}
 
-	
-	
-	/*
-	 * @Override public HashMap<String, Object> getInfo(String prt_cd) {
-	 * 
-	 * HashMap<String,Object> map = new HashMap<String, Object>(); MarketVO market =
-	 * userMapper.getMarket(prt_cd); // CustomerVO customer =
-	 * userMapper.getCustomer(prt_cd); List<CustomerVO> customerList =
-	 * userMapper.getCustomer(prt_cd); map.put("market", market); //
-	 * map.put("customer", customer); map.put("customerList", customerList);
-	 * 
-	 * return map; }
-	 */
-
 
 
 	@Override

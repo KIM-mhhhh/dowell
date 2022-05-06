@@ -4,7 +4,7 @@
 
 	<!-- 고객 전체 조회	 -->
 
- 	<select id="getCustomerList" resultType="CustomerVO">
+ 	 <select id="getCustomerList" resultType="CustomerVO">
 		SELECT m.prt_nm 
 		       ,u.user_nm
 		       ,c.cust_no 
@@ -26,7 +26,7 @@
 		JOIN ma_prt_mt m ON c.jn_prt_cd = m.prt_cd
 		JOIN ma_user_mt u ON c.fst_user_id = u.user_id 
 		ORDER BY c.cust_no
- 	</select>
+ 	</select> 
 
  	<!-- 고객 조회(고객이름, 핸드폰번호로)	 -->
  	<select id="searchCustomer" resultType="CustomerVO" parameterType="map">
@@ -62,17 +62,18 @@
 				,h.lst_upd_dt
 				,h.lst_upd_id
 				,u.user_nm
-				,(CASE WHEN upper(h.chg_cd) = 'CUST_NO' THEN '고객번호'
-			      WHEN upper(h.chg_cd) = 'CUST_NM' THEN '고객명'
-				  WHEN upper(h.chg_cd) = 'SEX_CD' THEN '성별코드'
-				  WHEN upper(h.chg_cd) = 'BRDY_DT' THEN '생년월일'
-				  WHEN upper(h.chg_cd) = 'POC_CD' THEN '직업코드'
-				  WHEN upper(h.chg_cd) = 'MBL_NO' THEN '휴대폰번호'
-				  WHEN upper(h.chg_cd) = 'CUST_SS_CD' THEN '고객상태코드'
-				  WHEN upper(h.chg_cd) = 'JN_PRT_CD' THEN '가입매장'
-				  WHEN upper(h.chg_cd) = 'STP_DT' THEN '중지일자'
-				  WHEN upper(h.chg_cd) = 'CNCL_DT' THEN '해지일자'
-			      END) AS chg_cd		
+				,(CASE upper(h.chg_cd)
+					WHEN 'CUST_NO' THEN '고객번호'
+					WHEN 'CUST_NM' THEN '고객명'
+					WHEN 'SEX_CD' THEN '성별코드'
+					WHEN 'BRDY_DT' THEN '생년월일'
+					WHEN 'POC_CD' THEN '직업코드'
+					WHEN 'MBL_NO' THEN '휴대폰번호'
+					WHEN 'CUST_SS_CD' THEN '고객상태코드'
+					WHEN 'JN_PRT_CD' THEN '가입매장'
+					WHEN 'STP_DT' THEN '중지일자'
+					WHEN 'CNCL_DT' THEN '해지일자'
+				END) AS chg_cd		
 		FROM SD_CUST01_HT h 
 		JOIN ma_user_mt u ON h.lst_upd_id=u.user_id 
 		WHERE h.CUST_NO=#{cust_no} 

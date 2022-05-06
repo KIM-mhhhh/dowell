@@ -18,7 +18,7 @@
 		 
 		//리스트 기본 값 초기화
 		function init(){
-			$('.marketList').empty();
+			$('#mTbody').empty();
 		}
 		 
 		 //중복체크 막기
@@ -64,15 +64,7 @@
 				$('#keyword').val('');
 					return false;
 			}
-			var count;
 			var output ="";
-				output+='<table id="marketTable">';
-				output+='<thead><tr>';
-				output+='<th>선택</th>';
-				output+='<th>매장코드</th>';
-				output+='<th>매장명</th>';
-				output+='<th>매장상태</th>';
-				output+='</tr></thead>';
 			$.ajax({
 				type:'post',
 				data:{keyword:keyword},
@@ -81,35 +73,35 @@
 				cache:false,
 				timeout:30000,
 				success:function(param){
-					count = param.marketCount;
+					var count = param.marketCount;
 					if(count<=0){
-						output+="<tbody><tr><td colspan='5'>검색 결과가 존재하지 않습니다.</td></tr></div>";
+						output+="<tr><td colspan='5'>검색 결과가 존재하지 않습니다.</td></tr>";
 					}else{
-						$(param.market).each(function(index,item) {
+				 		$(param.market).each(function(index,item) {
 							output += '<tr class="checkTr">';
 							output +='<td><input type="checkbox" name="checkbox" class="checkbox"></td>';
-							output +='<td><span>'+item.prt_cd+'</span></td>';
+/* 							for(var i=0;i<item.length;i++){
+								output +='<td><span>'+item[i]+'</span></td>';
+							} */
+							
+ 							output +='<td><span>'+item.prt_cd+'</span></td>';
 							output +='<td><span>'+item.prt_nm+'</span></td>';
-							output += '<td>'+item.prt_ss_cd+'</td>';
+							output += '<td>'+item.prt_ss_cd+'</td>'; 
 							output += '</tr>';
-					
-					});
-						output+='</table>';	
-				};
+						}); 
+					};
 					init();
-					$('.marketList').append(output);		
-			},
-			error:function(){
-				alert('네트워크 오류 발생');
-			}
+					$('#mTbody').append(output);		
+				},
+				error:function(){
+					alert('네트워크 오류 발생');
+				}
 				
 			});				//ajax 끝	
 			//submit이벤트 삭제
 			event.preventDefault();
 		});
 									
-	
-		
 		//테이블 mouseover
 		$(document).on('mouseover','.checkTr',function(){
 			$(this).css('backgroundColor', '#ebf2fc');
@@ -117,8 +109,6 @@
 		$(document).on('mouseout','.checkTr',function(){
 			$(this).css('backgroundColor', 'white');
 		});
-		
-		
 	});
 </script>
 </head>
@@ -138,13 +128,15 @@
 
 <div class="marketList" >
 	<table id="marketTable">
+		<thead>
 		<tr>
 			<th>선택</th>
 			<th>매장코드</th>
 			<th>매장명</th>
 			<th>매장상태</th>
 		</tr>
-		<tbody>
+		</thead>
+		<tbody id="mTbody">
 		</tbody>
 	</table>
 </div>

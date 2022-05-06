@@ -14,6 +14,12 @@
 	$(document).ready(function(){
 		var cust_no = "";
 		var cust_nm = "";
+		
+		//리스트 기본 값 초기화
+		function init(){
+			$('#cTbody').empty();
+		}
+		
 		//중복체크 막기
 		$(document).on('click','.checkbox',function(){
 			if($(this).prop('checked')){
@@ -49,19 +55,7 @@
 	 		 $(opener.document).find('#cust_nm').val(custNm);
 				self.close();
 		});
-		//검색창 빈칸인 경우 작동 안되게.
-		/* $('#submitCus').click(function(){
-		 if($('#cust_nm').val().trim()=='' || $('#mbl_no').val().trim()==''){
-			 alert('검색어를 입력하세요');
-				return false;
-		 };
-		 if($('#cust_nm').val().length =1){
-			 alert('이름을 두글자 이상 입력하세요');
-			 $('#cust_nm').focus();
-				return false;
-		 };
-		}); */
-		
+
 		//팝업 내 검색 결과
 		$('#submitCus').click(function(event){
 			
@@ -77,17 +71,7 @@
 				 $('#cust_nm').focus();
 					return false;
 			 };
-			
-			var count;
 			var output ="";
-				output+='<table class="list">';
-				output+='<tr>';
-				output+='<th>선택</th>';
-				output+='<th>고객번호</th>';
-				output+='<th>고객명</th>';
-				output+='<th>핸드폰번호</th>';
-				output+='<th>고객상태</th>';
-				output+='</tr>';
 			$.ajax({
 				type:'post',
 				data:{cust_nm:cust_nm,mbl_no:mbl_no},
@@ -96,9 +80,9 @@
 				cache:false,
 				timeout:30000,
 				success:function(param){
-					count = param.customerCount;
+					var count = param.customerCount;
 					if(count<=0){
-						output+="<tbody><tr><td colspan='5'>검색 결과가 존재하지 않습니다.</td></tr></tbody>";
+						output+="<tr><td colspan='5'>검색 결과가 존재하지 않습니다.</td></tr>";
 					}else{
 						$(param.customer).each(function(index,item) {
 							
@@ -115,7 +99,7 @@
 					
 				};
 					init();
-					$('.list').append(output);
+					$('#cTbody').append(output);
 					
 			},
 			error:function(){
@@ -126,10 +110,7 @@
 			event.preventDefault();
 		});
 									
-		//리스트 기본 값 초기화
-		function init(){
-			$('.list').empty();
-		}
+
 		//테이블 mouseover
 		$(document).on('mouseover','.checkTr',function(){
 			$(this).css('backgroundColor', '#ebf2fc');
@@ -156,8 +137,9 @@
 	</form>
 </div>
 
-<div class="list">
-	<table>
+<div class="cusList">
+	<table id="cusTable">
+		<thead>
 		<tr>
 			<th>선택</th>
 			<th>고객번호</th>
@@ -165,7 +147,9 @@
 			<th>핸드폰번호</th>
 			<th>고객상태</th>
 		</tr>
-
+		</thead>
+		<tbody id="cTbody">
+		</tbody>
 	</table>
 </div>
 

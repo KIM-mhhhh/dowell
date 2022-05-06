@@ -13,18 +13,84 @@
 	$(document).ready(function(){
 		
 		//고객번호 검색 클릭시 고객검색 팝업
+		$('#searchCust').click(function(){
+			if($('#cust_no').val().length<=0){	//고객번호칸이 빈칸이면 고객검색 팝업 연다
+				window.open('${pageContext.request.contextPath}/customer/searchCustomer.do','market','width=700,height=900');
+			}else{
+				alert('ajax로 고객명 가져오기');
+			}
+		});
 		
 		//고객조회 검색시 정보 가져와서 반영
+		$('#submitBtn').click(function(event){
+			if($('#cust_no').val().length<=0){
+				alert('고객번호를 입력하세요.');
+				return false;
+			}else{
+				$.ajax({
+					type:'post',
+					data:{cust_no:$('#cust_no').val()}, 	
+					url: '${pageContext.request.contextPath}/customer/getCustInfo.do', 
+					dataType:'json',
+					cache:false,
+					timeout:30000,
+					success:function(param){
+						 if(param){
+							
+						}else{
+							alert('네트워크 오류 발생');
+						} 
+					},
+					error:function(error){
+						alert(error);
+					}
+				});	
+			}
+			event.preventDefault();
+		});
+		//휴대폰번호 중복 확인
+		 $('#chMbl').click(function(){
+			if($('#mbl_no1').val().length==0 || $('#mbl_no2').val().length==0 || $('#mbl_no3').val().length==0){
+				alert('빈칸을 입력하세요.');
+				return false;
+			}
+			var mbl_no = $('#mbl_no1').val() + $('#mbl_no2').val() + $('#mbl_no3').val();
+			$.ajax({
+				type:'post',
+				data:{mbl_no:mbl_no}, 	
+				url: '${pageContext.request.contextPath}/customer/checkMbl.do', 
+				dataType:'json',
+				cache:false,
+				timeout:30000,
+				success:function(param){
+					if(param.result=='NotDuplicated'){
+						alert('사용가능한 번호입니다.');
+						check=1;
+					}else if(param.result=='Duplicated'){
+						alert('이미 가입된 번호입니다.');
+					}else{
+						alert('네트워크 오류 발생');
+					}
+				},
+				error:function(){
+					alert('네트워크 오류 발생');
+				}
+			});		//ajax 끝
+		});
 		
-		//휴대폰번호 변경버튼 클릭 시 존재하는 번호인지
-		
-		//저장 시 휴대폰번호 변경버튼 안눌렀으면 버튼확인하라고
+		//저장 시 휴대폰번호 변경버튼 안눌렀으면 버튼확인하라고, 필수항목 검사
 		
 		//정보 변경 후 다른 고객 조회 시 변경된 내용 있다고 알리기
 		
 		//저장버튼 클릭 시 창 띄우고 yes면 저장.
-		
-		//닫기 버튼 누르면 ?
+		$('#confBtn').click(function(){
+			var yn = confirm("고객정보를 수정하시겠습니까?");
+			alert(yn);
+		});
+		//닫기 버튼 누르면 다시 복귀
+		 $('#closeBtn').click(function(){
+			window.location.href="";
+		}); 
 		
 		
 	});
@@ -35,7 +101,7 @@
 <div class="searchBox">
 <form action="cust_no" method="post" id="searchForm">
 	<label for="">고객번호</label>
-	<input type="text" id="cust_no" >
+	<input type="text" id="cust_no" value="${cust_no }" >
 	<img id="searchCust" class="searchIcon" alt="고객조회" src="${pageContext.request.contextPath}/images/search.png">
 	<input type="text"  id="cust_nm">
 	<div class="submitBtn">
@@ -89,12 +155,12 @@
 					<input type="text" id="mbl_no1">
 					<input type="text" id="mbl_no2">
 					<input type="text" id="mbl_no3">
-					<button id="chMbl">변경</button>
+					<input type="button" value="확인" id="chMbl">
 				</li>
 				<li>
 					<label for="prt_cd">가입매장</label>
-					<input type="text" id="prt_cd">
-					<input type="text" id="prt_nm">
+					<input type="text" id="prt_cd" >
+					<input type="text" id="prt_nm" >
 				</li>
 				<li>
 					<label for="psmt_grc_cd">우편물수령</label>
@@ -178,8 +244,8 @@
 			</ul>
 		</div>
 		<div class="btn">
-			<input type="button" id="" value="닫기">
-			<input type="button" id="" value="저장">
+			<input type="button" id="closeBtn" value="닫기">
+			<input type="button" id="confBtn" value="저장">
 		</div>
 	</form>
 </div>
