@@ -47,43 +47,6 @@
 			
 		});
 		
-		/* $('#chMbl').click(function(){
-			if($('#mbl_no1').val().length==0 || $('#mbl_no2').val().length==0 || $('#mbl_no3').val().length==0){
-				alert('빈칸을 입력하세요.');
-				return false;
-			}
-			var mbl_no1 = $('#mbl_no1').val();
-			var mbl_no2 = $('#mbl_no2').val();
-			var mbl_no3 = $('#mbl_no3').val();
-			
-			var mbl_no={};
-			mbl_no.mbl_no1=mbl_no1;
-			mbl_no.mbl_no2=mbl_no2;
-			mbl_no.mbl_no3=mbl_no3;
-			
-			$.ajax({
-				type:'post',
-				data:mbl_no 	
-				url: '${pageContext.request.contextPath}/customer/checkMbl.do', 
-				dataType:'json',
-				cache:false,
-				timeout:30000,
-				success:function(param){
-					if(param.result=='NotDuplicated'){
-						alert('사용가능한 번호입니다.');
-						check=1;
-					}else if(param.result=='Duplicated'){
-						alert('이미 가입된 번호입니다.');
-					}else{
-						alert('네트워크 오류 발생');
-					}
-				},
-				error:function(){
-					alert('네트워크 오류 발생');
-				}
-			});	
-			
-		}); */
 		//생년월일 미래 날짜 안됨
 		
 		//제출 시 체크 (고객명 2자 이상, 필수항목, 휴대폰 번호 중복)
@@ -114,14 +77,6 @@
 						<c:forEach var="code" items="${codeList }">
 							<option value="${code.DTL_CD }">${code.DTL_CD_NM }</option>
 						</c:forEach>
-						<!-- <option value="10">학생</option>
-						<option value="20">회사원</option>
-						<option value="30">공무원</option>
-						<option value="40">전문직</option>
-						<option value="50">군인</option>
-						<option value="60">주부</option>
-						<option value="90">연예인</option>
-						<option value="99">기타</option> -->
 					</select>
 				</li>
 				<li>
@@ -167,8 +122,8 @@
 				</li>
 				<li>
 					<label>매장</label>
-					<input type="text" id="prt_cd" value="${requestScope.prt_cd}">
-					<input type="text" id="prt_nm" value="${requestScope.prt_nm}">
+					<input type="text" id="prt_cd" value="${prt_cd}">
+					<input type="text" id="prt_nm" value="${prt_nm}">
 				</li>
 			</ul>
 		</div>

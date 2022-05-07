@@ -26,9 +26,8 @@
 		});
 		//신규회원 등록 팝업
 		$('#cusInsert').click(function(){
-			var prt_cd = $('#hidden_cd').val();
-			var prt_nm = $('#hidden_nm').val();
-			window.open('${pageContext.request.contextPath}/customer/cusRegist.do?prt_cd='+prt_cd+'&prt_nm='+prt_nm,'market','width=700,height=900');
+
+			window.open('${pageContext.request.contextPath}/customer/cusRegist.do','market','width=700,height=900');
 		});
 		//회원 수정 이력 팝업
 		$(document).on('click','.recBtn',function(){
@@ -139,8 +138,6 @@
 
 <div>
 	<form method="post" id="mainForm">
-			<input type="hidden" id="hidden_cd" value="${market.prt_cd }">
-			<input type="hidden" id="hidden_nm" value="${market.prt_nm }">
 		<ul class="fullSearch">
 			<li>
 				<label for="prt_cd">매장</label>
@@ -182,9 +179,11 @@
 		</div>
 	</form>
 </div>
+<c:if test="${prt_dt_cd eq '2'}">
 <div class="btn">
 <input type="button" id="cusInsert" value="신규등록">
 </div>
+</c:if>
 <div id="mainList">
 	<table id="mainTable">
 		<thead>
@@ -200,7 +199,6 @@
 		</tr>
 		</thead>
 		<tbody id="mTbody">
- 		<c:if test="${market.prt_dt_cd eq '2'}"> 
 			<c:forEach var="customer" items="${custList}">
 			<tr>
 				<td id="cusNo"><span>${customer.cust_no}</span><input type="button" class="recBtn" value="변경이력"></td>
@@ -213,21 +211,6 @@
 				<td>${customer.lst_upd_dt}</td>
 			</tr>
 			</c:forEach>
- 		</c:if>
- 		<c:if test="${market.prt_dt_cd eq '1'}">
-			<c:forEach var="customer2" items="${cList}">
-			<tr>
-				<td id="cusNo"><span>${customer2.cust_no}</span><input type="button" class="recBtn" value="변경이력"></td>
-				<td id="cusNm"><span>${customer2.cust_nm}</span><input type="button" class="detBtn" value="상세"></td>
-				<td>${customer2.mbl_no}</td>
-				<td>${customer2.cust_ss_cd}</td>
-				<td>${customer2.js_dt}</td>
-				<td id="regM">${customer2.prt_nm}</td>
-				<td id="regP">${customer2.fst_user_id}/${customer2.user_nm}</td>
-				<td>${customer2.lst_upd_dt}</td>
-			</tr>
-			</c:forEach>
-		</c:if>	 
 		</tbody>
 	</table>
 </div>

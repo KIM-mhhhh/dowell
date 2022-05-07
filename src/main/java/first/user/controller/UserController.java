@@ -1,5 +1,6 @@
 package first.user.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,18 +48,20 @@ public class UserController {
 			
 			MarketVO market = userService.getMarket(user.getPrt_cd());
 			session.setAttribute("prt_dt_cd", market.getPrt_dt_cd());
+			session.setAttribute("prt_cd", market.getPrt_cd());
+			session.setAttribute("prt_nm", market.getPrt_nm());
+			
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("uPrt_dt_cd", market.getPrt_dt_cd());
+			map.put("prt_cd", market.getPrt_cd());
 			
 			//검색폼 state의 list
 			List<Map<String,Object>> codeList = userService.getSScode();
 			// 거래처 코드로 가져온 list(매장용)
-			List<CustomerVO> custList = userService.getCustomer(user.getPrt_cd());
-			// 전체 list (본사용)
-			 List<CustomerVO> cList = customerService.getCustomerList(); 
-			 
+			List<CustomerVO> custList = userService.getCustomer(map);
 			ModelAndView mv = new ModelAndView("/customer/cusList");
 			mv.addObject("market", market);
 			mv.addObject("custList", custList);
-			mv.addObject("cList", cList); 
 			mv.addObject("codeList", codeList);
 			return mv;
 		} else { // 불일치
@@ -67,7 +70,8 @@ public class UserController {
 		}
 
 	}
-
+	
+	//로그아웃
 	@RequestMapping("/user/logout.do")
 	public String logout(HttpSession session) {
 		session.invalidate();

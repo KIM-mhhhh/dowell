@@ -1,6 +1,7 @@
 package first.user.service;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,8 +37,8 @@ public class UserServiceImpl implements UserService {
 
 
 	@Override
-	public List<CustomerVO> getCustomer(String prt_cd) {
-		List<CustomerVO> customerList = userMapper.getCustomer(prt_cd);
+	public List<CustomerVO> getCustomer(Map<String,Object> map) {
+		List<CustomerVO> customerList = userMapper.getCustomer(map);
 		return customerList;
 	}
 

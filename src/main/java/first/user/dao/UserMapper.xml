@@ -4,7 +4,7 @@
 
  	
  	<!-- 매장코드로 고객조회 테이블 고객정보 불러오기 -->
- 	 <select id="getCustomer" resultType="CustomerVO" parameterType="String">
+  	 <select id="getCustomer" resultType="CustomerVO" parameterType="map">
  		SELECT m.prt_nm
  			   ,u.user_nm
  			   ,c.cust_no
@@ -26,37 +26,12 @@
 		JOIN ma_prt_mt m ON c.jn_prt_cd = m.prt_cd
 		JOIN ma_user_mt u ON c.fst_user_id = u.user_id 
 		JOIN (SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='CUST_SS_CD') d ON c.cust_ss_cd= d.dtl_cd
-		WHERE jn_prt_cd=#{prt_cd} AND c.js_dt between SYSDATE-7 and SYSDATE
- 	</select>
- 	
- <!-- 	 	 <select id="getCustomer" resultType="CustomerVO" parameterType="String">
- 		SELECT m.prt_nm
- 			   ,u.user_nm
- 			   ,c.cust_no
- 			   ,(CASE WHEN LENGTH(c.CUST_NM) = 2 THEN (substr(c.cust_nm,1,1)) || '*'
-          		      WHEN LENGTH(c.CUST_NM) <![CDATA[>=]]>3 THEN  (substr(c.cust_nm,1,1) || lpad('*',length(c.cust_nm)-2,'*') || substr(c.cust_nm,length(c.cust_nm),1))
-            	 END) AS cust_nm 
- 			   ,(CASE WHEN LENGTH(c.MBL_NO) = 10 THEN (substr(c.MBL_NO,1,3) || '-' || '***' || '-' || substr(c.MBL_NO,7,4))
-          		      WHEN LENGTH(c.MBL_NO) = 11 THEN (substr(c.MBL_NO,1,3) || '-' || '****' || '-' || substr(c.MBL_NO,8,4))
-           		      WHEN LENGTH(c.MBL_NO) <![CDATA[ <= ]]> 9 THEN c.mbl_no
-           		      WHEN LENGTH(c.MBL_NO) <![CDATA[ >= ]]> 12 THEN (substr(c.MBL_NO,1,3) || '-' || lpad('*',length(c.MBL_NO)-7,'*') || '-' || substr(c.MBL_NO,length(c.mbl_no)-3,4))
-			    END) AS MBL_NO	 
- 			   ,d.dtl_cd_nm AS cust_ss_cd
- 			   ,(substr(c.js_dt,1,4) || '-' || substr(c.js_dt,5,2) || '-' || substr(c.js_dt,7,2)) AS js_dt
- 			   ,c.jn_prt_cd
- 			   ,c.fst_user_id
- 			   ,c.lst_upd_dt
- 			   ,c.lst_upd_id 
-		FROM cs_cust01_mt c 
-		JOIN ma_prt_mt m ON c.jn_prt_cd = m.prt_cd
-		JOIN ma_user_mt u ON c.fst_user_id = u.user_id 
-		JOIN (SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='CUST_SS_CD') d ON c.cust_ss_cd= d.dtl_cd
-		WHERE c.js_dt between SYSDATE-7 and SYSDATE
-			<if test="prt_cd != ''">
+		WHERE (c.js_dt between SYSDATE-7 and SYSDATE)
+			<if test='uPrt_dt_cd.equals("2")'>
   				AND	c.jn_prt_cd=#{prt_cd}
   			</if>
   			 
- 	</select> -->
+ 	</select>
  	
  	<!-- 회원상태코드 항목 db에서 불러오기 -->
  	<select id="getSScode" resultType="java.util.HashMap">

@@ -29,24 +29,11 @@ public class CustomerController {
 	@Autowired
 	private CustomerService customerService;
 	
-	//고객전체조회
+	//고객검색 팝업
 	@RequestMapping("/customer/searchCustomer.do")
-	public ModelAndView searchCustomer() {
+	public String searchCustomer() {
 		
-		
-		List<CustomerVO> custList = customerService.getCustomerList();
-		
-		for(int i=0;i<custList.size();i++) {
-			CustomerVO customer = custList.get(i);
-			//고객상태
-			customer.setCust_ss_cd(FormatUtil.CustomerState(customer.getCust_ss_cd()));
-		}
-		
-		
-		ModelAndView mv = new ModelAndView("/customer/cusSearch");
-		mv.addObject("custList", custList);
-
-		return mv;
+		return "/customer/cusSearch";
 	}
 	
 	//고객 이력 조회
@@ -122,19 +109,17 @@ public class CustomerController {
 	
 	//신규 고객 등록 팝업
 	@RequestMapping("/customer/cusRegist.do")
-	public ModelAndView CustomerRegister(HttpServletRequest request) throws Exception {
+	public ModelAndView CustomerRegister() throws Exception {
 		
-		request.setCharacterEncoding("utf-8");
+		
 		
 		//폼 직업 list
 		List<Map<String,Object>> codeList = customerService.getPocCode();
 		
-		String prt_cd = request.getParameter("prt_cd");
-//		String prt_nm = request.getParameter("prt_nm");
+
 		ModelAndView mav = new ModelAndView("/customer/cusRegister");
 		mav.addObject("codeList", codeList);
-		mav.addObject("prt_cd", prt_cd);
-//		mav.addObject("prt_nm", prt_nm);
+
 		
 		return mav;
 	}
