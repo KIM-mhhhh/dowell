@@ -35,7 +35,7 @@ public class CustomerVO {					//������ ���̺�
 	
 	private String prt_nm;				// 조인해서 매장명(거래처명) 가져오기
 	private String user_nm;				// 조인해서 등록자명 가져오기
-	private String strLst_upd_dt;		// 수정일자 string으로 변환
+	private String sLst_upd_dt;			//수정일 string으로 가져오기.
 	private String cTot_sal_amt;		// 조인해서 고객의 총 구매금액 가져오기
 	private String mTot_sal_amt;		// 조인해서 당 월 총 구매금액
 	private String lSal_dt;				// 조인해서 최종 구매일자
@@ -220,11 +220,12 @@ public class CustomerVO {					//������ ���̺�
 	public void setUser_nm(String user_nm) {
 		this.user_nm = user_nm;
 	}
-	public String getStrLst_upd_dt() {
-		return strLst_upd_dt;
+	
+	public String getsLst_upd_dt() {
+		return sLst_upd_dt;
 	}
-	public void setStrLst_upd_dt(String strLst_upd_dt) {
-		this.strLst_upd_dt = strLst_upd_dt;
+	public void setsLst_upd_dt(String sLst_upd_dt) {
+		this.sLst_upd_dt = sLst_upd_dt;
 	}
 	public String getcTot_sal_amt() {
 		return cTot_sal_amt;

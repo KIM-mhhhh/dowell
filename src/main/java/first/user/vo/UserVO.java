@@ -2,23 +2,23 @@ package first.user.vo;
 
 import java.util.Date;
 
-public class UserVO {			//»ç¿ëÀÚ Å×ÀÌºí
+public class UserVO {			//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½
 	
-	private String user_id;			//»ç¿ëÀÚid
-	private String user_nm;			//»ç¿ëÀÚ¸í
-	private String user_dt_cd;		//»ç¿ëÀÚ±¸ºĞÄÚµå
-	private String use_yn;			//»ç¿ë¿©ºÎ
-	private String use_pwd;			//ºñ¹Ğ¹øÈ£
-	private String st_dt;			//½ÃÀÛÀÏÀÚ
-	private String ed_dt;			//Á¾·áÀÏÀÚ
-	private String prt_cd;			//°Å·¡Ã³ÄÚµå
-	private String pwd_upd_dt;		//ºñ¹Ğ¹øÈ£º¯°æÀÏÀÚ
-	private Date fst_reg_dt;		//ÃÖÃÊµî·ÏÀÏÀÚ
-	private String fst_user_id;		//ÃÖÃÊµî·ÏÀÚ
-	private Date lst_upd_dt;		//ÃÖÁ¾¼öÁ¤ÀÏÀÚ
-	private String lst_upd_id;		//ÃÖÁ¾¼öÁ¤ÀÚ
+	private String user_id;			//ï¿½ï¿½ï¿½ï¿½ï¿½id
+	private String user_nm;			//ï¿½ï¿½ï¿½ï¿½Ú¸ï¿½
+	private String user_dt_cd;		//ï¿½ï¿½ï¿½ï¿½Ú±ï¿½ï¿½ï¿½ï¿½Úµï¿½
+	private String use_yn;			//ï¿½ï¿½ë¿©ï¿½ï¿½
+	private String use_pwd;			//ï¿½ï¿½Ğ¹ï¿½È£
+	private String st_dt;			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	private String ed_dt;			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	private String prt_cd;			//ï¿½Å·ï¿½Ã³ï¿½Úµï¿½
+	private String pwd_upd_dt;		//ï¿½ï¿½Ğ¹ï¿½È£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	private Date fst_reg_dt;		//ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	private String fst_user_id;		//ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½
+	private Date lst_upd_dt;		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	private String lst_upd_id;		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	
-	//ºñ¹Ğ¹øÈ£ È®ÀÎ
+	//ï¿½ï¿½Ğ¹ï¿½È£ È®ï¿½ï¿½
 	public boolean checkPassword(String password) {
 		
 		if(password.equals(use_pwd)) {
@@ -108,7 +108,7 @@ public class UserVO {			//»ç¿ëÀÚ Å×ÀÌºí
 	public void setLst_upd_id(String lst_upd_id) {
 		this.lst_upd_id = lst_upd_id;
 	}
-	
+
 	
 
 }

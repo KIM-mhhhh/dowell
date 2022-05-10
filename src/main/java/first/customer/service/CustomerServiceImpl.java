@@ -56,4 +56,16 @@ public class CustomerServiceImpl implements CustomerService {
 		return pocList;
 	}
 
+	@Override
+	public CustomerVO getCustInfo(String cust_no) {
+		CustomerVO customer = customerMapper.getCustInfo(cust_no);
+		return customer;
+	}
+
+	@Override
+	public void custRegister(CustomerVO customerVO) {
+		customerMapper.custRegister(customerVO);
+		
+	}
+
 }

@@ -14,18 +14,23 @@
 		$('#closeForm').click(function(){
 			self.close();
 		});
+		//생년월일 미래일자 입력 불가
+		$('#birth').click(function(){
+			var today = new Date().toISOString().substring(0,10);
+			$(this).attr('max',today);
+		});
 		
 		//휴대폰번호 중복 확인
 		 $('#chMbl').click(function(){
 			if($('#mbl_no1').val().length==0 || $('#mbl_no2').val().length==0 || $('#mbl_no3').val().length==0){
 				alert('빈칸을 입력하세요.');
 				return false;
-			}
-			var mbl_no = $('#mbl_no1').val() + $('#mbl_no2').val() + $('#mbl_no3').val();
-			
+			};
+			$('#mbl_no').val( $('#mbl_no1').val() + $('#mbl_no2').val() + $('#mbl_no3').val());			//핸드폰번호 값 할당
+
 			$.ajax({
 				type:'post',
-				data:{mbl_no:mbl_no}, 	
+				data:{mbl_no:$('#mbl_no').val()}, 	
 				url: '${pageContext.request.contextPath}/customer/checkMbl.do', 
 				dataType:'json',
 				cache:false,
@@ -43,16 +48,50 @@
 				error:function(){
 					alert('네트워크 오류 발생');
 				}
-			});	
-			
+			});			//ajax끝
 		});
 		
-		//생년월일 미래 날짜 안됨
-		
-		//제출 시 체크 (고객명 2자 이상, 필수항목, 휴대폰 번호 중복)
+		//제출 시 체크 (고객명 2자 이상, 필수항목, 휴대폰 번호 중복, 주소 하나입력하면 둘다 입력되어야함.)
 		$('#regBtn').click(function(){
+			//고객명 2자 이상 체크
+			if($('#cust_nm').val().trim().length<2){
+				alert('고객명을 2자 이상 입력해 주세요.');
+				return false;
+			}
+			//필수항목
+			if($('#email1').val().trim().length<=0 || $('#email2').val().trim().length<=0){
+				alert('이메일을 입력하세요.');
+				return false;
+			}
+			$('#email').val( $('#email1').val() +"@"+ $('#email2').val());				//email값 할당
+			
+			//주소 하나 입력되어 있으면 둘 다 입력
+			if($('#addr').val().trim().length>0 && $('#addr_dtl').val().trim().length<=0 ){
+				alert('상세주소를 입력해 주세요.');
+				return false;
+			}else if($('#addr').val().trim().length<=0 && $('#addr_dtl').val().trim().length>0 ){
+				alert('주소를 입력해 주세요.');
+				return false;
+			}
+			//휴대폰번호 확인 체크
 			if(check==0){
 				alert('휴대폰 번호 중복 확인 해주세요.');
+				return false;
+			}
+ 			//생년월일 값 체크, -제거
+			if($('#birth').val()==''){
+				alert('날짜를 입력해 주세요');
+				return false;
+			}
+			 $('#brdy_dt').val($('#birth').val().replace(/\-/g,''));
+ 			//결혼기념일 - 제거
+			if($('#merry').val() !=''){
+				$('#mrrg_dt').val($('#merry').val().replace(/\-/g,''));
+			}
+			 
+			//컨펌 창 띄우기
+ 			var yn = confirm("신규고객으로 등록하시겠습니까?");
+			if(yn==false){
 				return false;
 			}
 		});
@@ -66,6 +105,7 @@
 	<h4>고객기본정보</h4>
 	<form action="${pageContext.request.contextPath}/customer/registerSubmit.do" method="post" id="registerForm">
 		<div class="infoBox">
+					<input type="hidden" name="fst_user_id" value="${id}">
 			<ul>
 				<li>
 					<label for="cust_nm">고객명</label>
@@ -81,7 +121,8 @@
 				</li>
 				<li>
 					<label for="brdy_dt">생년월일</label>
-					<input type="date" id="brdy_dt">
+					<input type="hidden" id="brdy_dt" name="brdy_dt">
+					<input type="date" id="birth" name="birth">
 				</li>
 				<li>
 					<label for="sex_cd">성별</label>
@@ -90,6 +131,7 @@
 				</li>
 				<li>
 					<label for="mbl_no">휴대폰번호</label>
+					<input type="hidden" name="mbl_no" id="mbl_no">
 					<input type="text" id="mbl_no1">
 					<input type="text" id="mbl_no2">
 					<input type="text" id="mbl_no3">
@@ -107,22 +149,24 @@
 				</li>
 				<li>
 					<label for="email">이메일</label>
+					<input type="hidden" name="email" id="email">
 					<input type="text" id="email1">
 					<span>@</span>
 					<input type="text" id="email2">
 				</li>
 				<li>
 					<label for="addr">주소</label>
-					<input type="text" id="addr">
-					<input type="text" id="addr_dtl">
+					<input type="text" id="addr" name="addr">
+					<input type="text" id="addr_dtl" name="addr_dtl">
 				</li>
 				<li>
 					<label for="mrrg_dt">결혼기념일</label>
-					<input type="date" id="mrrg_dt">
+					<input type="hidden" id="mrrg_dt" name="mrrg_dt">
+					<input type="date" id="merry" name="merry">
 				</li>
 				<li>
 					<label>매장</label>
-					<input type="text" id="prt_cd" value="${prt_cd}">
+					<input type="text" name="jn_prt_cd" id="prt_cd" value="${prt_cd}">
 					<input type="text" id="prt_nm" value="${prt_nm}">
 				</li>
 			</ul>

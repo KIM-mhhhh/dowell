@@ -47,7 +47,8 @@
 		$('#from').val(new Date(now.setDate(now.getDate() - 7)).toISOString().substring(0, 10));
 		
 		//전체 검색결과 ajax로 보내고 목록 받아오기
-		  $('#submitCus').click(function(event){	
+		  $('#submitCus').click(function(event){
+ 			  
 			var count;
 			var output ="";
 			var prt_cd = $('input[name="prt_cd"]').val().trim();
@@ -57,7 +58,8 @@
 			var cust_ss_cd =$('input[name="cust_ss_cd"]:checked').val();
 			var from = $('input[name="from"]').val().replace(/\-/g,'');
 			var to = $('input[name="to"]').val().replace(/\-/g,'');
-			
+			   
+		 	 
 			$.ajax({
 				type:'post',
 				data:{prt_cd:prt_cd, prt_nm:prt_nm,cust_no:cust_no,cust_nm:cust_nm, cust_ss_cd:cust_ss_cd,from:from,to:to }, 	
@@ -79,7 +81,7 @@
 							output += '<td>'+item.js_dt+'</td>';
 							output += '<td id="regM">'+item.prt_nm+'</td>';
 							output += '<td id="regP">'+item.fst_user_id+'/'+item.user_nm+'</td>';
-							output += '<td>'+item.lst_upd_dt+'</td>';
+							output += '<td>'+item.sLst_upd_dt+'</td>';
 							output += '</tr>';
 					});
 				};
@@ -208,7 +210,7 @@
 				<td>${customer.js_dt}</td>
 				<td id="regM">${customer.prt_nm}</td>
 				<td id="regP">${customer.fst_user_id}/${customer.user_nm}</td>
-				<td>${customer.lst_upd_dt}</td>
+				<td>${customer.sLst_upd_dt}</td>
 			</tr>
 			</c:forEach>
 		</tbody>

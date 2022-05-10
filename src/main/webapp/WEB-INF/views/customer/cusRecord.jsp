@@ -18,7 +18,7 @@
 </head>
 <body>
 <div id="info">
-<span>고객 ${cust_no}</span>
+<span>고객 ${cust_no} / ${cust_nm }</span>
 </div>
 <div id="recList">
 	<table id="recTable">
@@ -40,7 +40,7 @@
 					<td>${record.chg_bf_cnt }</td>
 					<td>${record.chg_aft_cnt }</td>
 					<td>${record.lst_upd_id }/${record.user_nm }</td>
-					<td>${record.lst_upd_dt }</td>
+					<td>${record.sLst_upd_dt }</td>
 				</tr>
 			</c:forEach>	
 		</tbody>

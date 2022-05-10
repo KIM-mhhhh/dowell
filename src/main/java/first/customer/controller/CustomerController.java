@@ -13,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -21,7 +20,6 @@ import first.customer.service.CustomerService;
 import first.customer.vo.CustomerVO;
 
 import first.record.vo.RecordVO;
-import kr.util.FormatUtil;
 
 @Controller
 public class CustomerController {
@@ -43,9 +41,11 @@ public class CustomerController {
 		String cust_no = request.getParameter("cust_no");
 		
 		List<RecordVO> recordList = customerService.getRecord(cust_no);
+		String cust_nm = customerService.getCustInfo(cust_no).getCust_nm();
 
 		ModelAndView mv = new ModelAndView("/customer/cusRecord");
 		mv.addObject("cust_no", cust_no);
+		mv.addObject("cust_nm", cust_nm);
 		mv.addObject("recordList",recordList);
 		
 		return mv;
@@ -84,7 +84,7 @@ public class CustomerController {
 		String from =request.getParameter("from"); 
 		String to = request.getParameter("to");
 		
-//		System.out.println("from : " + from +"/ to:"+ to );
+		System.out.println("from : " + from +"/ to:"+ to );
 
 		Map<String,Object> map = new HashMap<String,Object>();
 			map.put("prt_cd", prt_cd);
@@ -160,11 +160,11 @@ public class CustomerController {
 	@RequestMapping("/customer/registerSubmit.do")
 	public String submitRegister(@ModelAttribute CustomerVO customerVO, Model model ) {
 		
-		System.out.println(customerVO.getCust_nm());
-		System.out.println(customerVO.getScal_yn());
+		customerService.custRegister(customerVO);
 		model.addAttribute("customerVO", customerVO);
 		
-		return "/customer/result";
+		return "/customer/register";
+	
 	}
 	
 	//고객정보조회 화면
@@ -180,18 +180,19 @@ public class CustomerController {
 		return mav;
 	}
 	
-	//회원번호로 고객정보 가져오기
+	//회원번호로 고객정보 가져오기 
 	@RequestMapping("/customer/getCustInfo.do")
 	@ResponseBody 
 	public Map<String,Object> getCustInfo(HttpServletRequest request){
 		
 		String cust_no = request.getParameter("cust_no");
-		
 		System.out.println(cust_no);
 		
-		Map<String,Object> ajaxMap = new HashMap<String, Object>();
+		CustomerVO customer = customerService.getCustInfo(cust_no);
+		System.out.println(customer.getSex_cd());
 		
-		ajaxMap.put("cust_no", cust_no);
+		Map<String,Object> ajaxMap = new HashMap<String, Object>();
+		ajaxMap.put("customer", customer);
 		
 		return ajaxMap;
 	}

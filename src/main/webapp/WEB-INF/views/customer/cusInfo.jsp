@@ -13,6 +13,40 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		
+		//오늘 날짜 구하는 함수
+		var getToday = function(){
+			var date = new Date();
+
+			var year = date.getFullYear();
+			var month = date.getMonth();
+			month += 1;
+			if (month <= 9){
+			    month = "0" + month;
+			}
+			var day = date.getDate();
+			if (day <= 9){
+			    day = "0" + month;
+			}
+			var today = year + '-' + month + '-' + day;
+			return today;
+		}
+		
+/*  		if($(":radio[name='cust_ss_cd'][value='10']").is(':checked')){		//정상이면 중지만 가능하게
+ 			$(":radio[name='cust_ss_cd'][value='10']").attr('disabled', false);
+			$(":radio[name='cust_ss_cd'][value='90']").attr('disabled', true);
+			$(":radio[name='cust_ss_cd'][value='80']").attr('disabled', false);
+		}
+ 		if($(":radio[name='cust_ss_cd'][value='80']").is(':checked')){		//중지면 해지만 가능하게
+			$(":radio[name='cust_ss_cd'][value='90']").attr('disabled', false);
+			$(":radio[name='cust_ss_cd'][value='80']").attr('disabled', false);
+			$(":radio[name='cust_ss_cd'][value='10']").attr('disabled', true);
+		}
+		if($(":radio[name='cust_ss_cd'][value='90']").is(':checked')){		//해지면 정상만 가능하게
+			$(":radio[name='cust_ss_cd'][value='90']").attr('disabled', false);
+			$(":radio[name='cust_ss_cd'][value='10']").attr('disabled', false);
+			$(":radio[name='cust_ss_cd'][value='80']").attr('disabled', true);
+		}  */
+		
 		//고객번호 검색 클릭시 고객검색 팝업
 		$('#searchCust').click(function(){
 			if($('#cust_no').val().length<=0){	//고객번호칸이 빈칸이면 고객검색 팝업 연다
@@ -28,19 +62,34 @@
 				alert('고객번호를 입력하세요.');
 				return false;
 			}else{
+				$('#infoForm')[0].reset();
 				$.ajax({
 					type:'post',
 					data:{cust_no:$('#cust_no').val()}, 	
-					url: '${pageContext.request.contextPath}/customer/getCustInfo.do', 
+					url:'${pageContext.request.contextPath}/customer/getCustInfo.do', 
 					dataType:'json',
 					cache:false,
 					timeout:30000,
 					success:function(param){
-						 if(param){
-							
-						}else{
-							alert('네트워크 오류 발생');
-						} 
+						 
+							$('#cust_nm').val(param.customer.cust_nm);
+ 							$('#brdy_dt').val(param.customer.brdy_dt);
+							$('#mrrg_dt').val(param.customer.mrrg_dt);
+							$('#addr').val(param.customer.addr);
+							$('#addr_dtl').val(param.customer.addr_dtl);
+							$('#mbl_no').val(param.customer.mbl_no);
+							$('#fst_js_dt').val(param.customer.fst_js_dt);
+							$('#js_dt').val(param.customer.js_dt);
+							$('#cncl_cnts').val(param.customer.cncl_cnts);
+							$('#stp_dt').val(param.customer.stp_dt);
+							$('#cncl_dt').val(param.customer.cncl_dt); 
+							$('input:radio[name =sex_cd]:input[value='+param.customer.sex_cd+']').attr("checked", true);
+							$('input:radio[name =cust_ss_cd]:input[value='+param.customer.cust_ss_cd+']').attr("checked", true);
+							$('input:radio[name =psmt_grc_cd]:input[value='+param.customer.psmt_grc_cd+']').prop("checked");
+							$('input:radio[name =email_rcv_yn]:input[value='+param.customer.email_rcv_yn+']').prop("checked");
+							$('input:radio[name =sms_rcv_yn]:input[value='+param.customer.sms_rcv_yn+']').prop("checked");
+							$('input:radio[name =dm_rcv_yn]:input[value='+param.customer.dm_rcv_yn+']').prop("checked");
+
 					},
 					error:function(error){
 						alert(error);
@@ -68,7 +117,7 @@
 						alert('사용가능한 번호입니다.');
 						check=1;
 					}else if(param.result=='Duplicated'){
-						alert('이미 가입된 번호입니다.');
+						alert('동일한 번호가 있습니다. / '+ mbl_no);
 					}else{
 						alert('네트워크 오류 발생');
 					}
@@ -78,12 +127,36 @@
 				}
 			});		//ajax 끝
 		});
-		
-		//저장 시 휴대폰번호 변경버튼 안눌렀으면 버튼확인하라고, 필수항목 검사
-		
+		//해지버튼
+ 		$(":radio[name='cust_ss_cd'][value='90']").click(function(){
+ 			$('#cncl_cnts').attr("readonly",false);
+ 			$('#cncl_cnts').focus();
+ 			$('#cust_nm').val('해지고객');
+ 			$('#mbl_no1').val('000');
+ 			$('#mbl_no2').val('0000');
+ 			$('#mbl_no3').val('0000');
+ 			$('#cncl_dt').val(getToday())
+ 		});
+		//중지버튼
+		$(":radio[name='cust_ss_cd'][value='80']").click(function(){
+ 			$('#stp_dt').val(getToday());
+ 		});
+ 		//정상버튼
+ 		$(":radio[name='cust_ss_cd'][value='10']").click(function(){
+ 			$('#cncl_cnts').attr("readonly",true);
+ 			$('#cncl_cnts').val('');
+ 			$('#cust_nm').val('');
+ 			$('#mbl_no1').val('');
+ 			$('#mbl_no2').val('');
+ 			$('#mbl_no3').val('');
+ 			$('#cncl_dt').val('');
+ 			$('#stp_dt').val('');
+ 			$('#js_dt').val(getToday());
+ 		});
+
 		//정보 변경 후 다른 고객 조회 시 변경된 내용 있다고 알리기
 		
-		//저장버튼 클릭 시 창 띄우고 yes면 저장.
+		//저장버튼 클릭 시 휴대폰번호 변경버튼 안눌렀으면 버튼확인하라고, 필수항목 검사. 창 띄우고 yes면 저장.
 		$('#confBtn').click(function(){
 			var yn = confirm("고객정보를 수정하시겠습니까?");
 			alert(yn);
@@ -100,11 +173,11 @@
 <body>
 <h2>고객정보조회</h2>
 <div class="searchBox">
-<form action="cust_no" method="post" id="searchForm">
+<form method="post" id="searchForm">
 	<label for="">고객번호</label>
 	<input type="text" id="cust_no" value="${cust_no }" >
 	<img id="searchCust" class="searchIcon" alt="고객조회" src="${pageContext.request.contextPath}/images/search.png">
-	<input type="text"  id="cust_nm">
+	<input type="text"  id="sCust_nm">
 	<div class="submitBtn">
 			<button id="submitBtn"><span class="material-icons">search</span></button>
 	</div>
@@ -112,7 +185,7 @@
 </div>
 
 <div>
-	<form action="" method="post">
+	<form action="" method="post" id="infoForm">
 	<h4>고객기본정보</h4>
 		<div class="infoBox">
 			<ul>
@@ -144,14 +217,7 @@
 						<c:forEach var="code" items="${codeList }">
 							<option value="${code.DTL_CD }">${code.DTL_CD_NM }</option>
 						</c:forEach>
-						<!-- <option value="10">학생</option>
-						<option value="20">회사원</option>
-						<option value="30">공무원</option>
-						<option value="40">전문직</option>
-						<option value="50">군인</option>
-						<option value="60">주부</option>
-						<option value="90">연예인</option>
-						<option value="99">기타</option> -->
+
 					</select>
 				</li>
 				<li>
@@ -198,7 +264,7 @@
 				</li>
 				<li>
 					<label for="cncl_cnts">해지사유</label>
-					<input type="text" id="cncl_cnts">
+					<input type="text" id="cncl_cnts" readonly>
 				</li>
 				<li>
 					<label for="stp_dt">중지일자</label>
@@ -249,7 +315,9 @@
 		</div>
 		<div class="btn">
 			<input type="button" id="closeBtn" value="닫기">
-			<input type="button" id="confBtn" value="저장">
+			<c:if test="${prt_dt_cd eq '2'}">
+				<input type="button" id="confBtn" value="저장">
+			</c:if>
 		</div>
 	</form>
 </div>

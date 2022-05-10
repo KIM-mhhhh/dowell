@@ -25,5 +25,11 @@ public interface CustomerService {
 	
 	//직업코드 가져오기
 	public List<Map<String,Object>> getPocCode();
+	
+	//고객정보 가져오기
+	public CustomerVO getCustInfo(String cust_no);
+	
+	//신규 고객 등록
+	public void custRegister(CustomerVO customerVO);
 
 }

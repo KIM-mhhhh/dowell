@@ -17,7 +17,8 @@ public class RecordVO {		//���̷� ���̺�
 	
 	//수정자 이름 위한 이름(사용자 테이블에서 조인해서 가져오기)
 	private String user_nm;
-	private String strLst_upd_dt;
+	private String sLst_upd_dt; 
+	private String cust_nm;
 	
 	
 	public String getCust_no() {
@@ -86,12 +87,19 @@ public class RecordVO {		//���̷� ���̺�
 	public void setUser_nm(String user_nm) {
 		this.user_nm = user_nm;
 	}
-	public String getStrLst_upd_dt() {
-		return strLst_upd_dt;
+	public String getsLst_upd_dt() {
+		return sLst_upd_dt;
 	}
-	public void setStrLst_upd_dt(String strLst_upd_dt) {
-		this.strLst_upd_dt = strLst_upd_dt;
+	public void setsLst_upd_dt(String sLst_upd_dt) {
+		this.sLst_upd_dt = sLst_upd_dt;
 	}
+	public String getCust_nm() {
+		return cust_nm;
+	}
+	public void setCust_nm(String cust_nm) {
+		this.cust_nm = cust_nm;
+	}
+	
 	
 	
 	

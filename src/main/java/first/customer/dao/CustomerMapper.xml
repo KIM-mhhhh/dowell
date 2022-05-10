@@ -28,12 +28,12 @@
  	</select>
  	
  	<!-- 고객번호로 고객 이력 가져오기.	 -->
- 	<select id="getRecord" resultType="RecordVO" parameterType="String">
+<!--  	<select id="getRecord" resultType="RecordVO" parameterType="String">
  		SELECT h.cust_no
  				,(substr(h.chg_dt,1,4) || '-' || substr(h.chg_dt,5,2) || '-' || substr(h.chg_dt,7,2)) AS chg_dt
  				,h.chg_bf_cnt
 				,h.chg_aft_cnt
-				,h.lst_upd_dt
+				,h.lst_upd_dt 
 				,h.lst_upd_id
 				,u.user_nm
 				,(CASE upper(h.chg_cd)
@@ -52,7 +52,61 @@
 		JOIN ma_user_mt u ON h.lst_upd_id=u.user_id 
 		WHERE h.CUST_NO=#{cust_no} 
 		ORDER BY h.CHG_DT DESC	
- 	</select>
+ 	</select> -->
+ 	
+ <!-- 	 	<select id="getRecord" resultType="RecordVO" parameterType="String">
+ 		SELECT h.cust_no
+ 				,(substr(h.chg_dt,1,4) || '-' || substr(h.chg_dt,5,2) || '-' || substr(h.chg_dt,7,2)) AS chg_dt
+ 				,h.chg_bf_cnt
+				,h.chg_aft_cnt
+				,TO_CHAR(h.lst_upd_dt,'yyyy-MM-dd hh24miss') AS sLst_upd_dt
+				,h.lst_upd_id
+				,u.user_nm
+				,(CASE upper(h.chg_cd)
+					WHEN 'CUST_NO' THEN '고객번호'
+					WHEN 'CUST_NM' THEN '고객명'
+					WHEN 'SEX_CD' THEN '성별코드'
+					WHEN 'BRDY_DT' THEN '생년월일'
+					WHEN 'POC_CD' THEN '직업코드'
+					WHEN 'MBL_NO' THEN '휴대폰번호'
+					WHEN 'CUST_SS_CD' THEN '고객상태코드'
+					WHEN 'JN_PRT_CD' THEN '가입매장'
+					WHEN 'STP_DT' THEN '중지일자'
+					WHEN 'CNCL_DT' THEN '해지일자'
+				END) AS chg_cd		
+		FROM SD_CUST01_HT h 
+		JOIN ma_user_mt u ON h.lst_upd_id=u.user_id 
+		WHERE h.CUST_NO=#{cust_no} 
+		ORDER BY h.CHG_DT DESC	
+ 	</select> -->
+ 	
+ 	 	 	<select id="getRecord" resultType="RecordVO" parameterType="String">
+ 		SELECT h.cust_no
+ 				,c.cust_nm
+ 				,(substr(h.chg_dt,1,4) || '-' || substr(h.chg_dt,5,2) || '-' || substr(h.chg_dt,7,2)) AS chg_dt
+ 				,h.chg_bf_cnt
+				,h.chg_aft_cnt
+				,TO_CHAR(h.lst_upd_dt,'yyyy-MM-dd hh24miss') AS sLst_upd_dt
+				,h.lst_upd_id
+				,u.user_nm
+				,(CASE upper(h.chg_cd)
+					WHEN 'CUST_NO' THEN '고객번호'
+					WHEN 'CUST_NM' THEN '고객명'
+					WHEN 'SEX_CD' THEN '성별코드'
+					WHEN 'BRDY_DT' THEN '생년월일'
+					WHEN 'POC_CD' THEN '직업코드'
+					WHEN 'MBL_NO' THEN '휴대폰번호'
+					WHEN 'CUST_SS_CD' THEN '고객상태코드'
+					WHEN 'JN_PRT_CD' THEN '가입매장'
+					WHEN 'STP_DT' THEN '중지일자'
+					WHEN 'CNCL_DT' THEN '해지일자'
+				END) AS chg_cd		
+		FROM SD_CUST01_HT h 
+		JOIN ma_user_mt u ON h.lst_upd_id=u.user_id 
+		JOIN cs_cust01_mt c ON h.cust_no=c.cust_no
+		WHERE h.CUST_NO=#{cust_no} 
+		ORDER BY h.CHG_DT DESC	
+ 	</select> 
  	
  	<!-- 메인검색 결과 -->
  	<select id="getMainCustomer" resultType="CustomerVO" parameterType="map">
@@ -71,7 +125,7 @@
  	 		   ,(substr(c.js_dt,1,4) || '-' || substr(c.js_dt,5,2) || '-' || substr(c.js_dt,7,2)) AS js_dt
  			   ,c.jn_prt_cd
  			   ,c.fst_user_id
- 			   ,c.lst_upd_dt
+ 			   ,TO_CHAR(c.lst_upd_dt,'yyyy-MM-dd hh24miss') AS sLst_upd_dt
  			   ,c.lst_upd_id
 	  	FROM cs_cust01_mt c JOIN ma_prt_mt m ON c.jn_prt_cd = m.prt_cd
 	  		                JOIN ma_user_mt u ON c.fst_user_id= u.user_id
@@ -115,7 +169,160 @@
  		SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='POC_CD'
  	</select>
  	
+ 	 <!-- 고객 정보 불러오기 -->
+<!--  	<select id="getCustInfo" resultType="CustomerVO" parameterType="String">
+ 		SELECT 	 m.mTot_sal_amt
+ 			   , s.cTot_sal_amt
+ 			   , s.lSal_dt
+ 			   , c.cust_nm
+ 			   , c.brdy_dt
+ 			   , c.sex_cd
+ 			   , c.scal_yn
+ 			   , c.mrrg_dt
+ 			   , c.poc_cd
+ 			   , c.mbl_no
+ 			   , p.prt_cd
+ 			   , p.prt_nm
+ 			   , c.psmt_grc_cd
+ 			   , c.email
+ 			   , c.addr
+ 			   , c.addr_dtl
+ 			   , c.cust_ss_cd
+ 			   , c.fst_js_dt
+ 			   , c.js_dt
+ 			   , c.cncl_cnts
+ 			   , c.stp_dt
+ 			   , c.cncl_dt
+ 			   , c.email_rcv_yn
+ 			   , c.sms_rcv_yn
+ 			   , c.dm_rcv_yn 
+		FROM (SELECT SUM(tot_sal_amt) as mTot_sal_amt 
+			  FROM cs_sal01_mt 
+			  WHERE cust_no=#{cust_no} AND substr(sal_dt,1,6)=TO_CHAR(SYSDATE,'yyyyMM')) m,
+			 CS_CUST01_MT c
+		JOIN MA_PRT_MT p 
+			ON c.jn_prt_cd=p.prt_cd
+		JOIN (SELECT SUM(tot_sal_amt) AS cTot_sal_amt 
+					 ,max(sal_dt) AS lSal_dt
+					 ,cust_no 
+			  FROM cs_sal01_mt 
+			  WHERE cust_no=#{cust_no} 
+			  group by cust_no) s 
+			ON c.cust_no=s.cust_no 
+		WHERE c.cust_no=#{cust_no}
+ 	</select>  -->
+ 	 	<select id="getCustInfo" resultType="CustomerVO" parameterType="String">
+ 		SELECT 	 c.cust_nm
+ 			   , m.mTot_sal_amt
+ 			   , c.brdy_dt
+ 			   , c.sex_cd
+ 			   , c.scal_yn
+ 			   , c.mrrg_dt
+ 			   , c.poc_cd
+ 			   , c.mbl_no
+ 			   , p.prt_cd
+ 			   , p.prt_nm
+ 			   , c.psmt_grc_cd
+ 			   , c.email
+ 			   , c.addr
+ 			   , c.addr_dtl
+ 			   , c.cust_ss_cd
+ 			   , c.fst_js_dt
+ 			   , c.js_dt
+ 			   , c.cncl_cnts
+ 			   , c.stp_dt
+ 			   , c.cncl_dt
+ 			   , c.email_rcv_yn
+ 			   , c.sms_rcv_yn
+ 			   , c.dm_rcv_yn 
+		FROM (SELECT SUM(tot_sal_amt) as mTot_sal_amt 
+			  FROM cs_sal01_mt 
+			  WHERE cust_no=#{cust_no} AND substr(sal_dt,1,6)=TO_CHAR(SYSDATE,'yyyyMM')) m, 
+			CS_CUST01_MT c
+		JOIN MA_PRT_MT p 
+			ON c.jn_prt_cd=p.prt_cd
+		WHERE c.cust_no=#{cust_no}
+ 	</select> 
  	
- 	
- 	
+ 	<!--회원 정보 수정-->
+ 	<!-- <update id="" parameterType="CustomerVO" resultType="integer">
+ 		UPDATE CS_CUST01_MT 
+ 		SET cust_nm=#{cust_nm},
+ 			brdy_dt=#{brdy_dt},
+ 			sex_cd=#{sex_cd},
+ 			scal_yn=#{scal_yn},
+ 			mrrg_dt=#{mrrg_dt},
+ 			poc_cd=#{poc_cd},
+ 			mbl_no=#{mbl_no},
+ 			psmt_grc_cd=#{psmt_grc_cd},
+ 			email=#{email},
+ 			addr=#{addr},
+ 			addr_dtl=#{addr_dtl},
+ 			cust_ss_cd=#{cust_ss_cd},
+ 			js_dt=#{js_dt},
+ 			stp_dt=#{stp_dt},
+ 			cncl_dt=#{cncl_dt},
+ 			cncl_cnts=#{cncl_cnts},
+ 			email_rcv_yn=#{email_rcv_yn},
+ 			sms_rcv_yn=#{sms_rcv_yn},
+ 			dm_rcv_yn=#{dm_rcv_yn}
+ 		WHERE cust_no=#{cust_no}
+ 			
+ 			
+ 	</update>
+ 	 -->
+ 	<!-- 신규 회원 등록 -->
+  	<insert id="custRegister" parameterType="CustomerVO">
+ 		INSERT INTO CS_CUST01_MT
+				(cust_no, 
+				 cust_nm, 
+				 sex_cd, 
+				 scal_yn, 
+				 brdy_dt, 
+				 poc_cd, 
+				 mbl_no, 
+				 psmt_grc_cd,				
+				 email,						
+				 addr,						
+				 addr_dtl,					
+				 mrrg_dt,
+				 cust_ss_cd, 
+				 jn_prt_cd, 
+				 email_rcv_yn, 
+				 sms_rcv_yn,
+				 tm_rcv_yn, 			
+				 dm_rcv_yn, 
+				 fst_js_dt, 
+				 js_dt, 
+				 fst_reg_dt, 
+				 fst_user_id, 
+				 lst_upd_dt, 
+				 lst_upd_id)
+		VALUES ((SELECT MAX(cust_no)+1 FROM CS_CUST01_MT), 
+				#{cust_nm}, 
+				#{sex_cd}, 
+				#{scal_yn}, 
+				#{brdy_dt}, 
+				#{poc_cd},
+				#{mbl_no}, 
+				#{psmt_grc_cd},
+				#{email},
+				#{addr},
+				#{addr_dtl},
+				#{mrrg_dt},
+				'10', 
+				#{jn_prt_cd}, 
+				#{email_rcv_yn},
+				#{sms_rcv_yn}, 
+				'N',
+				#{dm_rcv_yn}, 
+				to_char(SYSDATE,'yyyyMMdd'), 						
+				to_char(SYSDATE,'yyyyMMdd'), 						
+				SYSDATE, 
+				#{fst_user_id}, 
+				SYSDATE, 
+				#{fst_user_id}
+				)
+ 	</insert> 
+
 </mapper>
