@@ -25,8 +25,8 @@
 			if($(this).prop('checked')){
 		    	  $('.checkbox').prop('checked',false);
 		    	  $(this).prop('checked',true);
-			    	cust_no = $(this).parent().parent().find('td').find('span').eq(0).html();
-			    	cust_nm = $(this).parent().parent().find('td').find('span').eq(1).html();
+			    	cust_no = $(this).parent().parent().find('td').find('span').eq(0).text();
+			    	cust_nm = $(this).parent().parent().find('td').find('span').eq(1).text();
 		      }
 		});	
 		//창 종료
@@ -49,8 +49,8 @@
 		  });  
 		//더블클릭 시 본문에 반영하고 창 닫기
 		$(document).on('dblclick','.checkTr',function(){
-			var custNo = $(this).find('td').find('span').eq(0).html();
-			var custNm = $(this).find('td').find('span').eq(1).html();
+			var custNo = $(this).find('td').find('span').eq(0).text();
+			var custNm = $(this).find('td').find('span').eq(1).text();
 			$(opener.document).find('#cust_no').val(custNo);
 	 		 $(opener.document).find('#cust_nm').val(custNm);
 				self.close();

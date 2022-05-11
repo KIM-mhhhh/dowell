@@ -80,11 +80,10 @@
 		ORDER BY h.CHG_DT DESC	
  	</select> -->
  	
- 	 	 	<select id="getRecord" resultType="RecordVO" parameterType="String">
+  	 	 	<select id="getRecord" resultType="RecordVO" parameterType="String">
  		SELECT h.cust_no
  				,c.cust_nm
  				,(substr(h.chg_dt,1,4) || '-' || substr(h.chg_dt,5,2) || '-' || substr(h.chg_dt,7,2)) AS chg_dt
- 				,h.chg_bf_cnt
 				,h.chg_aft_cnt
 				,TO_CHAR(h.lst_upd_dt,'yyyy-MM-dd hh24miss') AS sLst_upd_dt
 				,h.lst_upd_id
@@ -101,12 +100,50 @@
 					WHEN 'STP_DT' THEN '중지일자'
 					WHEN 'CNCL_DT' THEN '해지일자'
 				END) AS chg_cd		
+ 				,(CASE upper(h.chg_cd)
+ 					WHEN 'SEX_CD' THEN  
+ 						(CASE h.chg_bf_cnt
+ 						WHEN 'M' THEN '남' 
+ 						WHEN 'F' THEN '여'
+ 						END) 
+ 					WHEN 'BRDY_DT' THEN 						 	
+						(CASE LENGTH(h.chg_bf_cnt)
+							WHEN 10 THEN h.chg_bf_cnt
+							WHEN 8 THEN (substr(h.chg_bf_cnt,1,4) || '-' || substr(h.chg_bf_cnt,5,2) || '-' || substr(h.chg_bf_cnt,7,2))						 	
+						END) 
+
+<!-- 					WHEN 'POC_CD' THEN-->
+<!-- 					 WHEN 'MBL_NO' THEN 
+						(CASE LENGTH(h.chg_bf_cnt)
+							WHEN 11 THEN (substr(h.chg_bf_cnt,1,3) || '-' || substr(h.chg_bf_cnt,4,4) || '-' || substr(h.chg_bf_cnt,8,4))
+							WHEN 10 THEN (substr(h.chg_bf_cnt,1,3) || '-' || substr(h.chg_bf_cnt,4,3) || '-' || substr(h.chg_bf_cnt,7,4))
+							WHEN <![CDATA[ <= ]]> 9 THEN h.chg_bf_cnt
+           		     		WHEN <![CDATA[ >= ]]> 12 THEN (substr(h.chg_bf_cnt,1,3) || '-' || lpad('*',length(h.chg_bf_cnt)-7,'*') || '-' || substr(h.chg_bf_cnt,length(h.chg_bf_cnt)-3,4))
+						END)  -->
+<!-- 					WHEN 'CUST_SS_CD' THEN  (SELECT d.dtl_cd_nm
+    									    FROM CS_CUST01_MT c
+ 											JOIN ( SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='PRT_SS_CD') d 
+ 											ON h.chg_bf_cnt=d.dtl_cd) -->
+ 					<!-- WHEN 'JN_PRT_CD' THEN   -->
+
+					WHEN 'STP_DT' THEN 
+						(CASE LENGTH(h.chg_bf_cnt)
+							WHEN 10 THEN h.chg_bf_cnt
+							WHEN 8 THEN (substr(h.chg_bf_cnt,1,4) || '-' || substr(h.chg_bf_cnt,5,2) || '-' || substr(h.chg_bf_cnt,7,2))						 	
+						END)
+					WHEN 'CNCL_DT' THEN 
+						(CASE LENGTH(h.chg_bf_cnt)
+							WHEN 10 THEN h.chg_bf_cnt
+							WHEN 8 THEN (substr(h.chg_bf_cnt,1,4) || '-' || substr(h.chg_bf_cnt,5,2) || '-' || substr(h.chg_bf_cnt,7,2))						 	
+						END)
+					ELSE h.chg_bf_cnt
+				END) AS chg_bf_cnt
 		FROM SD_CUST01_HT h 
 		JOIN ma_user_mt u ON h.lst_upd_id=u.user_id 
 		JOIN cs_cust01_mt c ON h.cust_no=c.cust_no
 		WHERE h.CUST_NO=#{cust_no} 
 		ORDER BY h.CHG_DT DESC	
- 	</select> 
+ 	</select>  
  	
  	<!-- 메인검색 결과 -->
  	<select id="getMainCustomer" resultType="CustomerVO" parameterType="map">

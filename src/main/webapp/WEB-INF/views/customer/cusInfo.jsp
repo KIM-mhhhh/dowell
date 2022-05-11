@@ -83,12 +83,13 @@
 							$('#cncl_cnts').val(param.customer.cncl_cnts);
 							$('#stp_dt').val(param.customer.stp_dt);
 							$('#cncl_dt').val(param.customer.cncl_dt); 
-							$('input:radio[name =sex_cd]:input[value='+param.customer.sex_cd+']').attr("checked", true);
-							$('input:radio[name =cust_ss_cd]:input[value='+param.customer.cust_ss_cd+']').attr("checked", true);
-							$('input:radio[name =psmt_grc_cd]:input[value='+param.customer.psmt_grc_cd+']').prop("checked");
-							$('input:radio[name =email_rcv_yn]:input[value='+param.customer.email_rcv_yn+']').prop("checked");
-							$('input:radio[name =sms_rcv_yn]:input[value='+param.customer.sms_rcv_yn+']').prop("checked");
-							$('input:radio[name =dm_rcv_yn]:input[value='+param.customer.dm_rcv_yn+']').prop("checked");
+							$('input:radio[name =sex_cd]:input[value='+param.customer.sex_cd+']').prop("checked", true);
+							$('input:radio[name =cust_ss_cd]:input[value='+param.customer.cust_ss_cd+']').prop("checked", true);
+							$('input:radio[name =psmt_grc_cd]:input[value='+param.customer.psmt_grc_cd+']').prop("checked",true);
+							$('input:radio[name =scal_yn]:input[value='+param.customer.scal_yn+']').prop("checked",true);
+							$('input:radio[name =email_rcv_yn]:input[value='+param.customer.email_rcv_yn+']').prop("checked",true);
+							$('input:radio[name =sms_rcv_yn]:input[value='+param.customer.sms_rcv_yn+']').prop("checked",true);
+							$('input:radio[name =dm_rcv_yn]:input[value='+param.customer.dm_rcv_yn+']').prop("checked",true);
 
 					},
 					error:function(error){

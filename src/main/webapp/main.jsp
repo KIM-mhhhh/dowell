@@ -12,12 +12,12 @@
  $(document).ready(function(){
 		//로그인 submit할 때 textbox가 빈칸이면 submit되지 않게
 	 $('#submitBtn').click(function(){
-		 if($('#id').val().trim()==''){
+		 if($('#id').val().trim().length<=0){
 			 alert('아이디를 입력하세요');
 			 $('#id').focus();
 				$('#id').val('');
 				return false;
-		 }else if($('#password').val().trim()==''){
+		 }else if($('#password').val().length<=0){
 				alert('비밀번호를 입력하세요.');
 				$('#password').focus();
 				$('#password').val('');

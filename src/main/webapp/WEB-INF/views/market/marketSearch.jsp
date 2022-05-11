@@ -26,8 +26,8 @@
 			if($(this).prop('checked')){
 		    	  $('.checkbox').prop('checked',false);
 		    	  $(this).prop('checked',true);
-				     	 prt_cd = $(this).parent().parent().find('td').find('span').eq(0).html();
-				    	prt_nm = $(this).parent().parent().find('td').find('span').eq(1).html(); 
+				     	 prt_cd = $(this).parent().parent().find('td').find('span').eq(0).text();
+				    	prt_nm = $(this).parent().parent().find('td').find('span').eq(1).text(); 
 		       }
 		});	
 		//닫기 버튼
@@ -48,8 +48,8 @@
 		 
 		//더블클릭 시 본문에 반영하고 창 닫기
 		$(document).on('dblclick','.checkTr',function(){
-			var custNo = $(this).find('td').find('span').eq(0).html();
-			var custNm = $(this).find('td').find('span').eq(1).html();
+			var custNo = $(this).find('td').find('span').eq(0).text();
+			var custNm = $(this).find('td').find('span').eq(1).text();
 			$(opener.document).find('#prt_cd').val(custNo);
 	 		 $(opener.document).find('#prt_nm').val(custNm);
 				self.close();
@@ -80,10 +80,6 @@
 				 		$(param.market).each(function(index,item) {
 							output += '<tr class="checkTr">';
 							output +='<td><input type="checkbox" name="checkbox" class="checkbox"></td>';
-/* 							for(var i=0;i<item.length;i++){
-								output +='<td><span>'+item[i]+'</span></td>';
-							} */
-							
  							output +='<td><span>'+item.prt_cd+'</span></td>';
 							output +='<td><span>'+item.prt_nm+'</span></td>';
 							output += '<td>'+item.prt_ss_cd+'</td>'; 
