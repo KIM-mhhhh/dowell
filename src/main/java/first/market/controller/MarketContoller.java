@@ -37,14 +37,28 @@ public class MarketContoller {
 	@RequestMapping("/market/marketResult.do")
 	@ResponseBody
 	public Map<String,Object> searchMarket(HttpServletRequest request) {
-		String keyword = request.getParameter("keyword");
 		
-		Map<String,Object> map = new HashMap<String, Object>();
+		/*
+		 * String keyword = request.getParameter("keyword");
+		 * 
+		 * Map<String,Object> map = new HashMap<String, Object>();
+		 * 
+		 * List<MarketVO> market = marketService.searchMarket(keyword);
+		 * 
+		 * int marketCount = market.size(); map.put("marketCount", marketCount);
+		 * map.put("market", market);
+		 */
+			Map<String,Object> map = new HashMap<String, Object>();
+			List<MarketVO> market;
+		try {
+			String keyword = request.getParameter("keyword");
+			market = marketService.searchMarket(keyword);
+			int marketCount = market.size(); map.put("marketCount", marketCount);
+			map.put("market", market);
+		} catch (Exception e) {
+			map.put("error", "정보를 가져올 수 없습니다.");
+		}
 		
-		List<MarketVO> market = marketService.searchMarket(keyword);
-		int marketCount = market.size();
-		map.put("marketCount", marketCount);
-		map.put("market", market);
 		
 		return map;
 	}

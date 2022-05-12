@@ -76,7 +76,7 @@
 					var count = param.marketCount;
 					if(count<=0){
 						output+="<tr><td colspan='5'>검색 결과가 존재하지 않습니다.</td></tr>";
-					}else{
+					}else if(count>0){
 				 		$(param.market).each(function(index,item) {
 							output += '<tr class="checkTr">';
 							output +='<td><input type="checkbox" name="checkbox" class="checkbox"></td>';
@@ -85,6 +85,8 @@
 							output += '<td>'+item.prt_ss_cd+'</td>'; 
 							output += '</tr>';
 						}); 
+					}else{
+						alert(param.error);
 					};
 					init();
 					$('#mTbody').append(output);		

@@ -13,7 +13,7 @@
 			    END) AS MBL_NO	
  			   ,d.dtl_cd_nm AS cust_ss_cd
  		FROM CS_CUST01_MT c
- 				JOIN (SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='CUST_SS_CD') d ON c.cust_ss_cd= d.dtl_cd
+ 				LEFT OUTER JOIN (SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='CUST_SS_CD') d ON c.cust_ss_cd= d.dtl_cd
 		WHERE
   			<if test="cust_nm != '' and mbl_no ==''">
   				c.cust_nm LIKE '%' || #{cust_nm} || '%'
@@ -27,64 +27,28 @@
   			</if>
  	</select>
  	
+<!--  	<select id="searchCustomer" resultType="CustomerVO" parameterType="map">
+ 		SELECT c.cust_no
+ 			   ,c.cust_nm
+ 			   ,(CASE WHEN LENGTH(c.MBL_NO) = 10 THEN (substr(c.MBL_NO,1,3) || '-' || substr(c.MBL_NO,4,3) || '-' || substr(c.MBL_NO,7,4))
+          		      WHEN LENGTH(c.MBL_NO) = 11 THEN (substr(c.MBL_NO,1,3) || '-' || substr(c.MBL_NO,4,4) || '-' || substr(c.MBL_NO,8,4))
+           		      WHEN LENGTH(c.MBL_NO) <![CDATA[ <= ]]> 9 THEN c.mbl_no
+           		      WHEN LENGTH(c.MBL_NO) <![CDATA[ >= ]]> 12 THEN (substr(c.MBL_NO,1,3) || '-' || lpad('*',length(c.MBL_NO)-7,'*') || '-' || substr(c.MBL_NO,length(c.mbl_no)-3,4))
+			    END) AS MBL_NO	
+ 			   ,d.dtl_cd_nm AS cust_ss_cd
+ 		FROM CS_CUST01_MT c
+ 				JOIN (SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='CUST_SS_CD') d ON c.cust_ss_cd= d.dtl_cd
+		WHERE mbl_no = #{mbl_no} 
+  			<if test="cust_nm != ''">
+  			OR	c.cust_nm LIKE '%' || #{cust_nm} || '%'
+ 			</if>
+ 	</select> -->
+ 	
  	<!-- 고객번호로 고객 이력 가져오기.	 -->
-<!--  	<select id="getRecord" resultType="RecordVO" parameterType="String">
- 		SELECT h.cust_no
- 				,(substr(h.chg_dt,1,4) || '-' || substr(h.chg_dt,5,2) || '-' || substr(h.chg_dt,7,2)) AS chg_dt
- 				,h.chg_bf_cnt
-				,h.chg_aft_cnt
-				,h.lst_upd_dt 
-				,h.lst_upd_id
-				,u.user_nm
-				,(CASE upper(h.chg_cd)
-					WHEN 'CUST_NO' THEN '고객번호'
-					WHEN 'CUST_NM' THEN '고객명'
-					WHEN 'SEX_CD' THEN '성별코드'
-					WHEN 'BRDY_DT' THEN '생년월일'
-					WHEN 'POC_CD' THEN '직업코드'
-					WHEN 'MBL_NO' THEN '휴대폰번호'
-					WHEN 'CUST_SS_CD' THEN '고객상태코드'
-					WHEN 'JN_PRT_CD' THEN '가입매장'
-					WHEN 'STP_DT' THEN '중지일자'
-					WHEN 'CNCL_DT' THEN '해지일자'
-				END) AS chg_cd		
-		FROM SD_CUST01_HT h 
-		JOIN ma_user_mt u ON h.lst_upd_id=u.user_id 
-		WHERE h.CUST_NO=#{cust_no} 
-		ORDER BY h.CHG_DT DESC	
- 	</select> -->
- 	
- <!-- 	 	<select id="getRecord" resultType="RecordVO" parameterType="String">
- 		SELECT h.cust_no
- 				,(substr(h.chg_dt,1,4) || '-' || substr(h.chg_dt,5,2) || '-' || substr(h.chg_dt,7,2)) AS chg_dt
- 				,h.chg_bf_cnt
-				,h.chg_aft_cnt
-				,TO_CHAR(h.lst_upd_dt,'yyyy-MM-dd hh24miss') AS sLst_upd_dt
-				,h.lst_upd_id
-				,u.user_nm
-				,(CASE upper(h.chg_cd)
-					WHEN 'CUST_NO' THEN '고객번호'
-					WHEN 'CUST_NM' THEN '고객명'
-					WHEN 'SEX_CD' THEN '성별코드'
-					WHEN 'BRDY_DT' THEN '생년월일'
-					WHEN 'POC_CD' THEN '직업코드'
-					WHEN 'MBL_NO' THEN '휴대폰번호'
-					WHEN 'CUST_SS_CD' THEN '고객상태코드'
-					WHEN 'JN_PRT_CD' THEN '가입매장'
-					WHEN 'STP_DT' THEN '중지일자'
-					WHEN 'CNCL_DT' THEN '해지일자'
-				END) AS chg_cd		
-		FROM SD_CUST01_HT h 
-		JOIN ma_user_mt u ON h.lst_upd_id=u.user_id 
-		WHERE h.CUST_NO=#{cust_no} 
-		ORDER BY h.CHG_DT DESC	
- 	</select> -->
- 	
-  	 	 	<select id="getRecord" resultType="RecordVO" parameterType="String">
+ 	<select id="getRecord" resultType="RecordVO" parameterType="String">
  		SELECT h.cust_no
  				,c.cust_nm
  				,(substr(h.chg_dt,1,4) || '-' || substr(h.chg_dt,5,2) || '-' || substr(h.chg_dt,7,2)) AS chg_dt
-				,h.chg_aft_cnt
 				,TO_CHAR(h.lst_upd_dt,'yyyy-MM-dd hh24miss') AS sLst_upd_dt
 				,h.lst_upd_id
 				,u.user_nm
@@ -112,20 +76,22 @@
 							WHEN 8 THEN (substr(h.chg_bf_cnt,1,4) || '-' || substr(h.chg_bf_cnt,5,2) || '-' || substr(h.chg_bf_cnt,7,2))						 	
 						END) 
 
-<!-- 					WHEN 'POC_CD' THEN-->
-<!-- 					 WHEN 'MBL_NO' THEN 
-						(CASE LENGTH(h.chg_bf_cnt)
-							WHEN 11 THEN (substr(h.chg_bf_cnt,1,3) || '-' || substr(h.chg_bf_cnt,4,4) || '-' || substr(h.chg_bf_cnt,8,4))
-							WHEN 10 THEN (substr(h.chg_bf_cnt,1,3) || '-' || substr(h.chg_bf_cnt,4,3) || '-' || substr(h.chg_bf_cnt,7,4))
-							WHEN <![CDATA[ <= ]]> 9 THEN h.chg_bf_cnt
-           		     		WHEN <![CDATA[ >= ]]> 12 THEN (substr(h.chg_bf_cnt,1,3) || '-' || lpad('*',length(h.chg_bf_cnt)-7,'*') || '-' || substr(h.chg_bf_cnt,length(h.chg_bf_cnt)-3,4))
-						END)  -->
-<!-- 					WHEN 'CUST_SS_CD' THEN  (SELECT d.dtl_cd_nm
-    									    FROM CS_CUST01_MT c
- 											JOIN ( SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='PRT_SS_CD') d 
- 											ON h.chg_bf_cnt=d.dtl_cd) -->
- 					<!-- WHEN 'JN_PRT_CD' THEN   -->
-
+ 					WHEN 'POC_CD' THEN (SELECT dtl_cd_nm 
+ 										FROM ma_code_dt 
+ 										WHERE code_cd='POC_CD' AND dtl_cd = h.chg_bf_cnt)
+					WHEN 'MBL_NO' THEN 
+						(CASE 
+							WHEN LENGTH(h.chg_bf_cnt) = 11 THEN (substr(h.chg_bf_cnt,1,3) || '-' || substr(h.chg_bf_cnt,4,4) || '-' || substr(h.chg_bf_cnt,8,4))
+							WHEN LENGTH(h.chg_bf_cnt) = 10 THEN (substr(h.chg_bf_cnt,1,3) || '-' || substr(h.chg_bf_cnt,4,3) || '-' || substr(h.chg_bf_cnt,7,4))
+							WHEN LENGTH(h.chg_bf_cnt) <![CDATA[ <= ]]>  9 THEN h.chg_bf_cnt
+           		     		WHEN LENGTH(h.chg_bf_cnt) <![CDATA[ >= ]]> 12 THEN (substr(h.chg_bf_cnt,1,3) || '-' || lpad('*',length(h.chg_bf_cnt)-7,'*') || '-' || substr(h.chg_bf_cnt,length(h.chg_bf_cnt)-3,4))
+						END)
+					WHEN 'CUST_SS_CD' THEN (SELECT dtl_cd_nm 
+											FROM ma_code_dt 
+											WHERE code_cd='CUST_SS_CD' AND dtl_cd = h.chg_bf_cnt )
+  					WHEN 'JN_PRT_CD' THEN (SELECT prt_nm 
+ 										   FROM  MA_PRT_MT p
+ 										   WHERE p.prt_cd = h.chg_bf_cnt)
 					WHEN 'STP_DT' THEN 
 						(CASE LENGTH(h.chg_bf_cnt)
 							WHEN 10 THEN h.chg_bf_cnt
@@ -138,9 +104,50 @@
 						END)
 					ELSE h.chg_bf_cnt
 				END) AS chg_bf_cnt
+				
+				,(CASE upper(h.chg_cd)
+ 					WHEN 'SEX_CD' THEN  
+ 						(CASE h.chg_aft_cnt
+ 						WHEN 'M' THEN '남' 
+ 						WHEN 'F' THEN '여'
+ 						END) 
+ 					WHEN 'BRDY_DT' THEN 						 	
+						(CASE LENGTH(h.chg_aft_cnt)
+							WHEN 10 THEN h.chg_aft_cnt
+							WHEN 8 THEN (substr(h.chg_aft_cnt,1,4) || '-' || substr(h.chg_aft_cnt,5,2) || '-' || substr(h.chg_aft_cnt,7,2))						 	
+						END) 
+
+  					WHEN 'POC_CD' THEN  (SELECT dtl_cd_nm 
+ 										FROM ma_code_dt 
+ 										WHERE code_cd='POC_CD' AND dtl_cd = h.chg_aft_cnt)
+					WHEN 'MBL_NO' THEN 
+						(CASE 
+							WHEN LENGTH(h.chg_aft_cnt) = 11 THEN (substr(h.chg_aft_cnt,1,3) || '-' || substr(h.chg_aft_cnt,4,4) || '-' || substr(h.chg_aft_cnt,8,4))
+							WHEN LENGTH(h.chg_aft_cnt) = 10 THEN (substr(h.chg_aft_cnt,1,3) || '-' || substr(h.chg_aft_cnt,4,3) || '-' || substr(h.chg_aft_cnt,7,4))
+							WHEN LENGTH(h.chg_aft_cnt) <![CDATA[ <= ]]> 9 THEN h.chg_aft_cnt
+           		     		WHEN LENGTH(h.chg_aft_cnt) <![CDATA[ >= ]]> 12 THEN (substr(h.chg_aft_cnt,1,3) || '-' || lpad('*',length(h.chg_aft_cnt)-7,'*') || '-' || substr(h.chg_aft_cnt,length(h.chg_aft_cnt)-3,4))
+						END)
+					WHEN 'CUST_SS_CD' THEN  (SELECT dtl_cd_nm 
+											 FROM ma_code_dt 
+											 WHERE code_cd='CUST_SS_CD' AND dtl_cd = h.chg_aft_cnt )
+ 					WHEN 'JN_PRT_CD' THEN (SELECT prt_nm 
+ 										   FROM  MA_PRT_MT p
+ 										   WHERE p.prt_cd = h.chg_aft_cnt)
+					WHEN 'STP_DT' THEN 
+						(CASE LENGTH(h.chg_aft_cnt)
+							WHEN 10 THEN h.chg_aft_cnt
+							WHEN 8 THEN (substr(h.chg_aft_cnt,1,4) || '-' || substr(h.chg_aft_cnt,5,2) || '-' || substr(h.chg_aft_cnt,7,2))						 	
+						END)
+					WHEN 'CNCL_DT' THEN 
+						(CASE LENGTH(h.chg_aft_cnt)
+							WHEN 10 THEN h.chg_aft_cnt
+							WHEN 8 THEN (substr(h.chg_aft_cnt,1,4) || '-' || substr(h.chg_aft_cnt,5,2) || '-' || substr(h.chg_aft_cnt,7,2))						 	
+						END)
+					ELSE h.chg_aft_cnt
+				END) AS chg_aft_cnt
 		FROM SD_CUST01_HT h 
-		JOIN ma_user_mt u ON h.lst_upd_id=u.user_id 
-		JOIN cs_cust01_mt c ON h.cust_no=c.cust_no
+		LEFT OUTER JOIN ma_user_mt u ON h.lst_upd_id=u.user_id 
+		LEFT OUTER JOIN cs_cust01_mt c ON h.cust_no=c.cust_no										
 		WHERE h.CUST_NO=#{cust_no} 
 		ORDER BY h.CHG_DT DESC	
  	</select>  
@@ -164,36 +171,26 @@
  			   ,c.fst_user_id
  			   ,TO_CHAR(c.lst_upd_dt,'yyyy-MM-dd hh24miss') AS sLst_upd_dt
  			   ,c.lst_upd_id
-	  	FROM cs_cust01_mt c JOIN ma_prt_mt m ON c.jn_prt_cd = m.prt_cd
-	  		                JOIN ma_user_mt u ON c.fst_user_id= u.user_id
-	  		                JOIN (SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='CUST_SS_CD') d ON c.cust_ss_cd= d.dtl_cd
-	  	WHERE
-					  			 <if test="prt_cd != '' and cust_no ==''">
-					  				m.prt_cd=#{prt_cd} AND m.prt_nm=#{prt_nm} and
-					  			</if>
-					  			<if test="prt_cd == '' and cust_no !=''">
-					  				c.cust_no=#{cust_no} AND c.cust_nm=#{cust_nm}  and
-					  			</if>
-					  			<if test="prt_cd != '' and cust_no !=''">
-					  				m.prt_cd=#{prt_cd} AND m.prt_nm=#{prt_nm} and
-					  				c.cust_no=#{cust_no} AND c.cust_nm=#{cust_nm}  and
-					  			</if>
-					  			<if test='cust_ss_cd.equals("0")'>
-					  				c.cust_ss_cd LIKE '%'|| '0' ||'%' AND
-					  			</if>
-					  			<if test='cust_ss_cd.equals("10")'>
-					  				c.cust_ss_cd = #{cust_ss_cd}  AND
-					  			</if>
-					  			<if test='cust_ss_cd.equals("80")'>
-					  				c.cust_ss_cd = #{cust_ss_cd}  AND
-					  			</if>
-					  			<if test='cust_ss_cd.equals("90")'>
-					  				c.cust_ss_cd = #{cust_ss_cd}  AND
-					  			</if> 
-					  			
-	  				  (c.js_dt BETWEEN #{fromDate} AND #{toDate})
+	  	FROM cs_cust01_mt c LEFT OUTER JOIN ma_prt_mt m 
+	  							ON c.jn_prt_cd = m.prt_cd
+	  		                LEFT OUTER JOIN ma_user_mt u 
+	  		                	ON c.fst_user_id= u.user_id
+	  		                LEFT OUTER JOIN (SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='CUST_SS_CD') d 
+	  		                	ON c.cust_ss_cd= d.dtl_cd
+	  	WHERE 1=1
+	  			AND c.js_dt BETWEEN #{fromDate} AND #{toDate}
+			<if test="prt_cd != null and prt_cd != ''">
+				AND	m.prt_cd=#{prt_cd}
+			</if>
+			<if test="cust_no != null and cust_no !=''">
+				AND	c.cust_no=#{cust_no}
+			</if>
+			<if test='! cust_ss_cd.equals("0")'>
+				AND	c.cust_ss_cd = #{cust_ss_cd}
+			</if>
 	  ORDER BY c.cust_no
  	</select>
+ 	
  	<!-- 휴대폰번호 중복 검사 -->
  	<select id="getMblCheck" parameterType="String" resultType="integer">
  		SELECT COUNT(MBL_NO) 

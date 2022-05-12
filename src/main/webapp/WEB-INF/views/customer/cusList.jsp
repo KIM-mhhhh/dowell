@@ -47,8 +47,8 @@
 		$('#from').val(new Date(now.setDate(now.getDate() - 7)).toISOString().substring(0, 10));
 		
 		//전체 검색결과 ajax로 보내고 목록 받아오기
-		  $('#submitCus').click(function(event){
- 			  
+		$('#submitCus').click(function(event){
+
 			var count;
 			var output ="";
 			var prt_cd = $('input[name="prt_cd"]').val().trim();
@@ -58,8 +58,12 @@
 			var cust_ss_cd =$('input[name="cust_ss_cd"]:checked').val();
 			var from = $('input[name="from"]').val().replace(/\-/g,'');
 			var to = $('input[name="to"]').val().replace(/\-/g,'');
-			   
-		 	 
+			
+			if(from>to){
+				alert('선택하신 날짜가 범위에 맞지 않습니다.');
+				return false;
+			}
+			    
 			$.ajax({
 				type:'post',
 				data:{prt_cd:prt_cd, prt_nm:prt_nm,cust_no:cust_no,cust_nm:cust_nm, cust_ss_cd:cust_ss_cd,from:from,to:to }, 	
@@ -115,7 +119,63 @@
 			$(this).attr('min', fromD);
 			$(this).attr('max',originto);
 		}); 
+			
+		//캘린더 정규식
+ 	 	function checkValidDate(value) {
+			var result = true;
+			try {
+			    var date = value.split("-");
+			    var y = parseInt(date[0], 10),
+			        m = parseInt(date[1], 10),
+			        d = parseInt(date[2], 10);
+			    
+	   			var dateRegex = /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
+	   				 result = dateRegex.test(d+'-'+m+'-'+y);
+				} catch (err) {
+					result = false;
+				}    
+			    return result;
+		};  
+	/* 	function checkValidDate(value) {
+			var result = true;	
+				
+			
+			    switch(m){
+			    case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+			    	if(value>31){
+			    		alert('31일까지 입니다');
+			    		result = false;
+			    	}
+			    	break;
+			    case 4: case 6: case 11:
+			    	if(d>30){
+			    		alert('30일까지 입니다');
+			    		result = false;
+			    	}
+			    	break;
+				default : 
+					if(d>28){
+						alert('28일까지 입니다');
+			    		result = false;
+					}
+			    }
+
+			    return result;
+		};   */
 		
+		$('#from').keydown(function(key){
+			if (key.keyCode == 13) {		//엔터키를 누르면
+				//날짜 정규식
+				var date = $('input[name="from"]').val();
+				if(checkValidDate(date)){
+					alert('유효');
+				}else{
+					alert('유효하지 않음');
+					return false;
+				}
+            }
+
+		}) 
 	});
 </script>
 </head>
@@ -201,6 +261,11 @@
 		</tr>
 		</thead>
 		<tbody id="mTbody">
+			<c:if test="${count<=0 }">
+				<tr>
+					<td colspan='8'>검색 결과가 존재하지 않습니다.</td>
+				</tr>
+			</c:if>
 			<c:forEach var="customer" items="${custList}">
 			<tr>
 				<td id="cusNo"><span>${customer.cust_no}</span><input type="button" class="recBtn" value="변경이력"></td>

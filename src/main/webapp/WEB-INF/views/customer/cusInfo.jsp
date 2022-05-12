@@ -90,7 +90,6 @@
 							$('input:radio[name =email_rcv_yn]:input[value='+param.customer.email_rcv_yn+']').prop("checked",true);
 							$('input:radio[name =sms_rcv_yn]:input[value='+param.customer.sms_rcv_yn+']').prop("checked",true);
 							$('input:radio[name =dm_rcv_yn]:input[value='+param.customer.dm_rcv_yn+']').prop("checked",true);
-
 					},
 					error:function(error){
 						alert(error);
@@ -215,6 +214,7 @@
 				<li>
 					<label for="poc_cd">직업코드</label>
 					<select name="poc_cd">
+							<option selected disabled>-선택-</option>
 						<c:forEach var="code" items="${codeList }">
 							<option value="${code.DTL_CD }">${code.DTL_CD_NM }</option>
 						</c:forEach>
@@ -257,11 +257,11 @@
 				</li>
 				<li>
 					<label for="fst_js_dt">최초가입일자</label>
-					<input type="text" id="fst_js_dt">
+					<input type="text" id="fst_js_dt" readonly>
 				</li>
 				<li>
 					<label for="js_dt">가입일자</label>
-					<input type="text" id="js_dt">
+					<input type="text" id="js_dt" readonly>
 				</li>
 				<li>
 					<label for="cncl_cnts">해지사유</label>
@@ -269,11 +269,11 @@
 				</li>
 				<li>
 					<label for="stp_dt">중지일자</label>
-					<input type="text" id="stp_dt">
+					<input type="text" id="stp_dt" readonly>
 				</li>
 				<li>
 					<label for="cncl_dt">해지일자</label>
-					<input type="text" id="cncl_dt">
+					<input type="text" id="cncl_dt" readonly>
 				</li>
 			</ul>
 		</div>
@@ -282,15 +282,15 @@
 			<ul>
 				<li>
 					<label for="">총구매금액</label>
-					<input type="text" id="">
+					<input type="text" id="" readonly>
 				</li>
 				<li>
 					<label for="">당월구매금액</label>
-					<input type="text" id="">
+					<input type="text" id="" readonly>
 				</li>
 				<li>
 					<label for="">최종구매일</label>
-					<input type="text" id="">
+					<input type="text" id="" readonly>
 				</li>
 			</ul>
 		</div>

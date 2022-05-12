@@ -1,5 +1,8 @@
 package first.user.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,13 +56,34 @@ public class UserController {
 			
 			Map<String,Object> map = new HashMap<String,Object>();
 			map.put("uPrt_dt_cd", market.getPrt_dt_cd());
-			map.put("prt_cd", market.getPrt_cd());
+			if(market.getPrt_dt_cd().equals("2")) {
+				map.put("prt_cd", market.getPrt_cd());
+			}
 			
 			//검색폼 state의 list
 			List<Map<String,Object>> codeList = userService.getSScode();
-			// 거래처 코드로 가져온 list(매장용)
-			List<CustomerVO> custList = userService.getCustomer(map);
+
+			// 날짜 넣기
+				//오늘 날짜
+			  Date today = new Date(); 
+			  SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd"); 
+			  String toToday = sdf.format(today); 
+			  	//일주일 전 날짜
+			  Calendar calendar = Calendar.getInstance();
+			  calendar.add(Calendar.DAY_OF_MONTH, -7); 
+			  Date date = calendar.getTime();
+			  String fromD = sdf.format(date); 
+			  System.out.println("toToday : " + toToday +"/ fromDate:"+fromD);
+			  
+			  map.put("fromDate", fromD); 
+			  map.put("toDate", toToday);
+			  map.put("cust_ss_cd","0");
+			  
+			  List<CustomerVO> custList = customerService.getMainCustomer(map); 
+			  int searchCount = custList.size();
+			 
 			ModelAndView mv = new ModelAndView("/customer/cusList");
+			mv.addObject("count", searchCount);
 			mv.addObject("market", market);
 			mv.addObject("custList", custList);
 			mv.addObject("codeList", codeList);

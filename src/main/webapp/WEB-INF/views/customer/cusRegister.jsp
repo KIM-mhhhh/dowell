@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>신규고객등록</title>
+<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/popSearch.css" type="text/css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -104,7 +105,7 @@
 	<h2>신규고객등록</h2>
 	<h4>고객기본정보</h4>
 	<form action="${pageContext.request.contextPath}/customer/registerSubmit.do" method="post" id="registerForm">
-		<div class="infoBox">
+		<div id="infoBox">
 					<input type="hidden" name="fst_user_id" value="${id}">
 			<ul>
 				<li>
@@ -114,6 +115,7 @@
 				<li>
 					<label for="poc_cd">직업코드</label>
 					<select name="poc_cd">
+						<option selected disabled>-선택-</option>
 						<c:forEach var="code" items="${codeList }">
 							<option value="${code.DTL_CD }">${code.DTL_CD_NM }</option>
 						</c:forEach>
@@ -171,7 +173,7 @@
 				</li>
 			</ul>
 		</div>
-		<div class="ynBox">
+		<div id="ynBox">
 			<ul>
 				<li>
 					<label for="email_rcv_yn">이메일수신동의</label>
@@ -190,7 +192,7 @@
 				</li>
 			</ul>
 		</div>
-		<div>
+		<div id=btnBox>
 			<input type="button" id="closeForm" value="닫기">
 			<input type="submit" id="regBtn" value="등록">
 		</div>

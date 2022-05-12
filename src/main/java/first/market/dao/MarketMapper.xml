@@ -6,7 +6,7 @@
  	 <select id="searchMarket" resultType="MarketVO" parameterType="String">
  		 SELECT m.prt_cd
      		   ,m.prt_nm
-      		   ,d.dtl_cd_nm AS prt_ss_cd 
+      		   ,d.dtl_cd_nm AS prt_ss_cd
 		FROM ma_prt_mt m
  		JOIN (SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='PRT_SS_CD') d ON m.prt_ss_cd=d.dtl_cd
  		WHERE m.PRT_DT_CD=2 AND (m.prt_cd LIKE '%' || #{keyword} || '%' OR m.prt_nm LIKE '%' || #{keyword} || '%')
