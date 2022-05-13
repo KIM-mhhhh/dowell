@@ -26,18 +26,17 @@
 		});
 		//신규회원 등록 팝업
 		$('#cusInsert').click(function(){
-
 			window.open('${pageContext.request.contextPath}/customer/cusRegist.do','market','width=700,height=900');
 		});
 		//회원 수정 이력 팝업
 		$(document).on('click','.recBtn',function(){
-			var cust_no = $(this).parent().eq(0).find('span').html();
+			var cust_no = $(this).parent().eq(0).find('span').text();
 			window.open('${pageContext.request.contextPath}/customer/showRecord.do?cust_no='+cust_no,'record','width=900,height=700');
 		});
-		//회원 상세정보 팝업
+		//회원 상세정보 이동
 		$(document).on('click','.detBtn',function(){
-			/* var cust_no = $(this).parent().eq(0).find('span').html(); */
-			window.open('${pageContext.request.contextPath}/customer/showCustomer.do','cusInfo','width=900,height=700');
+			 var cust_no = $(this).parent().parent().find('span').text(); 
+			location.href="${pageContext.request.contextPath}/customer/showCustomer.do?cust_no="+cust_no
 		});
 		
 		//달력 기본값
@@ -59,12 +58,12 @@
 			var from = $('input[name="from"]').val().replace(/\-/g,'');
 			var to = $('input[name="to"]').val().replace(/\-/g,'');
 			
-			if(from>to){
+			if(from>to){																//from의 숫자가 to보다 큰 경우 제출 안됨.
 				alert('선택하신 날짜가 범위에 맞지 않습니다.');
 				return false;
 			}
 			    
-			$.ajax({
+			$.ajax({																	//ajax로 검색값 보낸 후 list 가져온다. 
 				type:'post',
 				data:{prt_cd:prt_cd, prt_nm:prt_nm,cust_no:cust_no,cust_nm:cust_nm, cust_ss_cd:cust_ss_cd,from:from,to:to }, 	
 				url: '${pageContext.request.contextPath}/customer/mainCustomer.do', 
@@ -73,9 +72,9 @@
 				timeout:30000,
 				success:function(param){
 					count = param.count;
-					if(count<=0){
+					if(count<=0){																		
 						output+="<tr><td colspan='8'>검색 결과가 존재하지 않습니다.</td></tr>";
-					}else{
+					}else if(count>0){																			//list 결과값이 있는 경우 table에 append해서 적용.
 						$(param.list).each(function(index,item) {
 							output += '<tr>';
 							output +='<td id="cusNo"><span>'+item.cust_no+'</span><input type="button" class="recBtn" value="변경이력"></td>';
@@ -88,7 +87,9 @@
 							output += '<td>'+item.sLst_upd_dt+'</td>';
 							output += '</tr>';
 					});
-				};
+				}else{
+					alert(error)
+				}
 					init();
 					$('#mTbody').append(output);
 				},
@@ -109,19 +110,19 @@
 		});
 		
 		//캘린더 날짜 제한
-	 	$('#from').click(function(){
+	 	$('#from').click(function(){								//from값이 최대값을 to 값으로
 			var originTo = $('#to').val();
 			$(this).attr('max', originTo);
 		});
-		$('#to').click(function(){
+		$('#to').click(function(){									//to값에 최소값을 from으로
 			var fromD = $('#from').val();
 			var originto = $(this).val();
 			$(this).attr('min', fromD);
-			$(this).attr('max',originto);
+		
 		}); 
 			
 		//캘린더 정규식
- 	 	function checkValidDate(value) {
+ 	 	function checkValidDate(value) {										//캘린더 정규식. 날짜 가져와서 적용.
 			var result = true;
 			try {
 			    var date = value.split("-");
@@ -168,8 +169,8 @@
 				//날짜 정규식
 				var date = $('input[name="from"]').val();
 				if(checkValidDate(date)){
-					alert('유효');
-				}else{
+					
+				}else{													//정규식에 맞지 않는 경우
 					alert('유효하지 않음');
 					return false;
 				}
@@ -224,20 +225,20 @@
 				<input type="text" id="cust_nm" name="cust_nm">
 			</li>
 			<li>
-				<label>고객상태</label>
+				<label>*고객상태</label>
 				<input type="radio" name="cust_ss_cd" value="0" checked> 전체
 				<c:forEach var="code" items="${codeList }">
 					<input type="radio" name="cust_ss_cd" value="${code.DTL_CD }"> ${code.DTL_CD_NM }
 				</c:forEach>
 			</li>
 			<li>
-				<label>가입일자</label>
+				<label>*가입일자</label>
 				<input type="date" name="from" id="from" >
 				<input type="date" name="to" id="to" >
 			</li>
 		</ul>
 		<div class="submitBtn">
-			<button id="submitCus"><span class="material-icons">search</span></button>
+			<button id="submitCus" ><span class="material-icons">search</span></button>
 		</div>
 	</form>
 </div>

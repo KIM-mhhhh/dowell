@@ -8,9 +8,6 @@ import first.record.vo.RecordVO;
 
 public interface CustomerService {
 	
-	//고객 전체 리스트 조회
-	public List<CustomerVO> getCustomerList();
-	
 	//고객번호로 고객 이력 가져오기.
 	public List<RecordVO> getRecord(String cust_no);
 	

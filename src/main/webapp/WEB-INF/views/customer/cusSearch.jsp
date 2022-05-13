@@ -21,11 +21,11 @@
 		}
 		
 		//중복체크 막기
-		$(document).on('click','.checkbox',function(){
-			if($(this).prop('checked')){
+		$(document).on('click','.checkbox',function(){													
+			if($(this).prop('checked')){																	//체크박스에 체크한 경우 전에 체크한 것은 풀리고 새로운것에 체크적용.
 		    	  $('.checkbox').prop('checked',false);
 		    	  $(this).prop('checked',true);
-			    	cust_no = $(this).parent().parent().find('td').find('span').eq(0).text();
+			    	cust_no = $(this).parent().parent().find('td').find('span').eq(0).text();				//변수에 체크한 값의 항목 할당.
 			    	cust_nm = $(this).parent().parent().find('td').find('span').eq(1).text();
 		      }
 		});	
@@ -36,10 +36,10 @@
 		
 		//팝업 결과 본문에 반영
 		$('#resultBtn').click(function(){
-			if(cust_no==""){
+			if(cust_no.length==0){															//체크하지 않은 경우 제출 안됨.
 				alert('값을 선택하세요');
 				return false;
-			}else{
+			}else{																			//체크한 값을 본 페이지의 각 부분에 할당.
 				$(opener.document).find('#cust_no').val(cust_no);
 		 		 $(opener.document).find('#cust_nm').val(cust_nm);
 					self.close();
@@ -48,7 +48,7 @@
  		  
 		  });  
 		//더블클릭 시 본문에 반영하고 창 닫기
-		$(document).on('dblclick','.checkTr',function(){
+		$(document).on('dblclick','.checkTr',function(){										//행 더블클릭 시  더블클릭한 행의 값 변수에 할당하고 본문에 적용
 			var custNo = $(this).find('td').find('span').eq(0).text();
 			var custNm = $(this).find('td').find('span').eq(1).text();
 			$(opener.document).find('#cust_no').val(custNo);
@@ -62,17 +62,17 @@
 			var cust_nm = $('#cust_nm').val().trim();
 			var mbl_no = $('#mbl_no').val().trim();
 			
-			if(cust_nm.length==0 && mbl_no.length==0){
+			if(cust_nm.length==0 && mbl_no.length==0){							//검색어가 입력되지 않은 경우
 				 alert('검색어를 입력하세요');
 					return false;
 			 };
-			 if(cust_nm.length ==1){
+			 if(cust_nm.length ==1){											//이름은 두글자 이상 입력 제한
 				 alert('이름을 두글자 이상 입력하세요');
 				 $('#cust_nm').focus();
 					return false;
 			 };
 			var output ="";
-			$.ajax({
+			$.ajax({																//비동기로 검색값 전송해서 list받아옴.
 				type:'post',
 				data:{cust_nm:cust_nm,mbl_no:mbl_no},
 				url: '${pageContext.request.contextPath}/customer/customerResult.do',
@@ -83,7 +83,7 @@
 					var count = param.customerCount;
 					if(count<=0){
 						output+="<tr><td colspan='5'>검색 결과가 존재하지 않습니다.</td></tr>";
-					}else{
+					}else if(count>0){																//list가 존재하면 테이블에 결과 넣어줌.
 						$(param.customer).each(function(index,item) {
 							
 							output += '<tr class="checkTr">';
@@ -95,9 +95,10 @@
 							output += '</tr>';
 					
 					});
-						output+='</table>';
 					
-				};
+				}else{
+					alert(param.error)
+				}
 					init();
 					$('#cTbody').append(output);
 					

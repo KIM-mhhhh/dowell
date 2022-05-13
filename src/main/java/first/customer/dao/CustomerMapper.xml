@@ -4,27 +4,33 @@
 
  	<!-- 고객 조회(고객이름, 핸드폰번호로)	 -->
  	<select id="searchCustomer" resultType="CustomerVO" parameterType="map">
- 		SELECT c.cust_no
- 			   ,c.cust_nm
- 			   ,(CASE WHEN LENGTH(c.MBL_NO) = 10 THEN (substr(c.MBL_NO,1,3) || '-' || substr(c.MBL_NO,4,3) || '-' || substr(c.MBL_NO,7,4))
-          		      WHEN LENGTH(c.MBL_NO) = 11 THEN (substr(c.MBL_NO,1,3) || '-' || substr(c.MBL_NO,4,4) || '-' || substr(c.MBL_NO,8,4))
-           		      WHEN LENGTH(c.MBL_NO) <![CDATA[ <= ]]> 9 THEN c.mbl_no
-           		      WHEN LENGTH(c.MBL_NO) <![CDATA[ >= ]]> 12 THEN (substr(c.MBL_NO,1,3) || '-' || lpad('*',length(c.MBL_NO)-7,'*') || '-' || substr(c.MBL_NO,length(c.mbl_no)-3,4))
+ 		SELECT c.cust_no																																		<!--고객관리 테이블의 고객번호  -->
+ 			   ,c.cust_nm																																		<!--고객관리 테이블의 고객명  -->
+ 			   ,(CASE WHEN LENGTH(c.MBL_NO) = 10 																												<!--고객관리 테이블의 휴대폰 번호  -->
+ 			   				THEN (substr(c.MBL_NO,1,3) || '-' || substr(c.MBL_NO,4,3) || '-' || substr(c.MBL_NO,7,4))											<!--번호가 10글자면 3-3-4 / 11글자면 3-4-4  -->
+          		      WHEN LENGTH(c.MBL_NO) = 11 
+          		      		THEN (substr(c.MBL_NO,1,3) || '-' || substr(c.MBL_NO,4,4) || '-' || substr(c.MBL_NO,8,4))
+           		      WHEN LENGTH(c.MBL_NO) <![CDATA[ <= ]]> 9 																									<!--번호가 9글자 이하면 그대로 내보낸다  -->
+           		      		THEN c.mbl_no
+           		      WHEN LENGTH(c.MBL_NO) <![CDATA[ >= ]]> 12 																								<!--번호가 12글자 이상이면 첫 3글자, 뒤 4글제 제외하고 *처리  -->
+           		      		THEN (substr(c.MBL_NO,1,3) || '-' || lpad('*',length(c.MBL_NO)-7,'*') || '-' || substr(c.MBL_NO,length(c.mbl_no)-3,4))
 			    END) AS MBL_NO	
- 			   ,d.dtl_cd_nm AS cust_ss_cd
- 		FROM CS_CUST01_MT c
- 				LEFT OUTER JOIN (SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='CUST_SS_CD') d ON c.cust_ss_cd= d.dtl_cd
+ 			   ,d.dtl_cd_nm AS cust_ss_cd																														<!--코드테이블의 상세코드명  -->
+ 		FROM CS_CUST01_MT c																																		<!--고객관리 테이블  -->
+ 				LEFT OUTER JOIN (SELECT dtl_cd, dtl_cd_nm 
+ 								 FROM ma_code_dt WHERE code_cd='CUST_SS_CD') d ON c.cust_ss_cd= d.dtl_cd														<!--코드 테이블에서 코드가 고객상태코드인 것의 상세코드명과 상세코드를 가져와 조인.  -->
 		WHERE
-  			<if test="cust_nm != '' and mbl_no ==''">
+  			<if test="cust_nm != '' and mbl_no ==''">																											<!--회원명 o / 휴대폰번호 x면 회원명 조건만 적용  -->																	
   				c.cust_nm LIKE '%' || #{cust_nm} || '%'
   			</if>
-  			<if test="cust_nm == '' and mbl_no !=''">
+  			<if test="cust_nm == '' and mbl_no !=''">																											<!--회원명 x / 휴대폰번호 o면 휴대폰번호 조건만 적용  -->	
   				c.mbl_no LIKE '%' || #{mbl_no} || '%'
   			</if>
-  			<if test="cust_nm != '' and mbl_no !=''">
+  			<if test="cust_nm != '' and mbl_no !=''">																											<!--회원명 o / 휴대폰번호 o면 두 조건 다 만족하게 적용  -->	
   				c.mbl_no LIKE '%' || #{mbl_no} || '%' and
   				c.cust_nm LIKE '%' || #{cust_nm} || '%'
   			</if>
+  		ORDER BY c.cust_no ASC
  	</select>
  	
 <!--  	<select id="searchCustomer" resultType="CustomerVO" parameterType="map">
@@ -46,13 +52,13 @@
  	
  	<!-- 고객번호로 고객 이력 가져오기.	 -->
  	<select id="getRecord" resultType="RecordVO" parameterType="String">
- 		SELECT h.cust_no
- 				,c.cust_nm
- 				,(substr(h.chg_dt,1,4) || '-' || substr(h.chg_dt,5,2) || '-' || substr(h.chg_dt,7,2)) AS chg_dt
-				,TO_CHAR(h.lst_upd_dt,'yyyy-MM-dd hh24miss') AS sLst_upd_dt
-				,h.lst_upd_id
-				,u.user_nm
-				,(CASE upper(h.chg_cd)
+ 		SELECT  h.cust_no																																						<!--고객 이력 테이블의 고객번호 -->									
+ 				,c.cust_nm																																						<!--고객 관리 테이블의 고객명  -->	
+ 				,(substr(h.chg_dt,1,4) || '-' || substr(h.chg_dt,5,2) || '-' || substr(h.chg_dt,7,2)) AS chg_dt																	<!--고객이력 테이블의 변경날짜에 - 추가 -->
+				,TO_CHAR(h.lst_upd_dt,'yyyy-MM-dd hh24miss') AS sLst_upd_dt																										<!-- 최종 변경날짜 yyyy-MM-dd hh24miss 형식으로 문자열로 바꿈 -->
+				,h.lst_upd_id																																					<!--고객 이력 테이블의 최종 변경일 -->			
+				,u.user_nm																																						<!-- 사용자 테이블의 사용자명 -->			
+				,(CASE upper(h.chg_cd)																																			<!--고객 이력 테이블의 변경코드. 각 코드에 따라 코드명으로 case문 사용해서 바꿈  -->											
 					WHEN 'CUST_NO' THEN '고객번호'
 					WHEN 'CUST_NM' THEN '고객명'
 					WHEN 'SEX_CD' THEN '성별코드'
@@ -64,143 +70,161 @@
 					WHEN 'STP_DT' THEN '중지일자'
 					WHEN 'CNCL_DT' THEN '해지일자'
 				END) AS chg_cd		
- 				,(CASE upper(h.chg_cd)
- 					WHEN 'SEX_CD' THEN  
+ 				,(CASE upper(h.chg_cd)																																			<!-- 변경 전 내용은 변경 코드에 따라 case문 사용해서 변경 -->																										
+ 					WHEN 'SEX_CD' THEN  																																		<!-- 성별인 경우 M이면 남성 F이면 여성 -->
  						(CASE h.chg_bf_cnt
- 						WHEN 'M' THEN '남' 
- 						WHEN 'F' THEN '여'
+ 							WHEN 'M' THEN '남' 
+ 							WHEN 'F' THEN '여'
  						END) 
- 					WHEN 'BRDY_DT' THEN 						 	
+ 					WHEN 'BRDY_DT' THEN 																																		<!-- 생일인 경우 날짜에 - 추가 -->						 	
 						(CASE LENGTH(h.chg_bf_cnt)
 							WHEN 10 THEN h.chg_bf_cnt
 							WHEN 8 THEN (substr(h.chg_bf_cnt,1,4) || '-' || substr(h.chg_bf_cnt,5,2) || '-' || substr(h.chg_bf_cnt,7,2))						 	
 						END) 
 
- 					WHEN 'POC_CD' THEN (SELECT dtl_cd_nm 
+ 					WHEN 'POC_CD' THEN (SELECT dtl_cd_nm 																														<!-- 직업코드인 경우 코드 테이블에서 직업코드에 해당하는 부분 가져와서 상세 코드명으로 출력한다 -->
  										FROM ma_code_dt 
  										WHERE code_cd='POC_CD' AND dtl_cd = h.chg_bf_cnt)
-					WHEN 'MBL_NO' THEN 
+					WHEN 'MBL_NO' THEN 																																			<!--핸드폰 번호인 경우 - 추가-->
 						(CASE 
-							WHEN LENGTH(h.chg_bf_cnt) = 11 THEN (substr(h.chg_bf_cnt,1,3) || '-' || substr(h.chg_bf_cnt,4,4) || '-' || substr(h.chg_bf_cnt,8,4))
-							WHEN LENGTH(h.chg_bf_cnt) = 10 THEN (substr(h.chg_bf_cnt,1,3) || '-' || substr(h.chg_bf_cnt,4,3) || '-' || substr(h.chg_bf_cnt,7,4))
-							WHEN LENGTH(h.chg_bf_cnt) <![CDATA[ <= ]]>  9 THEN h.chg_bf_cnt
-           		     		WHEN LENGTH(h.chg_bf_cnt) <![CDATA[ >= ]]> 12 THEN (substr(h.chg_bf_cnt,1,3) || '-' || lpad('*',length(h.chg_bf_cnt)-7,'*') || '-' || substr(h.chg_bf_cnt,length(h.chg_bf_cnt)-3,4))
+							WHEN LENGTH(h.chg_bf_cnt) = 11 																														<!--번호가 11자인 경우 3-4-4 -->
+								THEN (substr(h.chg_bf_cnt,1,3) || '-' || substr(h.chg_bf_cnt,4,4) || '-' || substr(h.chg_bf_cnt,8,4))	
+							WHEN LENGTH(h.chg_bf_cnt) = 10 																														<!--번호가 10자인 경우 3-3-4-->	
+								THEN (substr(h.chg_bf_cnt,1,3) || '-' || substr(h.chg_bf_cnt,4,3) || '-' || substr(h.chg_bf_cnt,7,4))
+							WHEN LENGTH(h.chg_bf_cnt) <![CDATA[ <= ]]>  9 																										<!--번호가 9자 이하인 경우 그대로 출력-->
+								THEN h.chg_bf_cnt
+           		     		WHEN LENGTH(h.chg_bf_cnt) <![CDATA[ >= ]]> 12 																										<!--번호가 12자 이상인 경우 3-*처리-4-->
+           		     			THEN (substr(h.chg_bf_cnt,1,3) || '-' || lpad('*',length(h.chg_bf_cnt)-7,'*') || '-' || substr(h.chg_bf_cnt,length(h.chg_bf_cnt)-3,4))
 						END)
-					WHEN 'CUST_SS_CD' THEN (SELECT dtl_cd_nm 
+					WHEN 'CUST_SS_CD' THEN (SELECT dtl_cd_nm 																													<!-- 고객상태코드인 경우 코드 테이블에서 고객상태코드에 해당하는 부분 가져와서 상세 코드명으로 출력한다 -->
 											FROM ma_code_dt 
-											WHERE code_cd='CUST_SS_CD' AND dtl_cd = h.chg_bf_cnt )
-  					WHEN 'JN_PRT_CD' THEN (SELECT prt_nm 
+											WHERE code_cd='CUST_SS_CD' AND dtl_cd = h.chg_bf_cnt)
+  					WHEN 'JN_PRT_CD' THEN (SELECT prt_nm 																														<!-- 매장코드인 경우 매장관리 테이블에서 변경전 부분과 매장코드가 일치하는 경우 그 해당 매장명으로 출력 -->
  										   FROM  MA_PRT_MT p
  										   WHERE p.prt_cd = h.chg_bf_cnt)
-					WHEN 'STP_DT' THEN 
+					WHEN 'STP_DT' THEN 																																			<!-- 정지일자인 경우 10자인 경우 그대로 출력. 8자인 경우 - 추가 -->																																			
 						(CASE LENGTH(h.chg_bf_cnt)
 							WHEN 10 THEN h.chg_bf_cnt
 							WHEN 8 THEN (substr(h.chg_bf_cnt,1,4) || '-' || substr(h.chg_bf_cnt,5,2) || '-' || substr(h.chg_bf_cnt,7,2))						 	
 						END)
-					WHEN 'CNCL_DT' THEN 
+					WHEN 'CNCL_DT' THEN 																																		<!-- 해지일자인 경우 10자인 경우 그대로 출력. 8자인 경우 - 추가 -->
 						(CASE LENGTH(h.chg_bf_cnt)
 							WHEN 10 THEN h.chg_bf_cnt
 							WHEN 8 THEN (substr(h.chg_bf_cnt,1,4) || '-' || substr(h.chg_bf_cnt,5,2) || '-' || substr(h.chg_bf_cnt,7,2))						 	
 						END)
-					ELSE h.chg_bf_cnt
+					ELSE h.chg_bf_cnt																																			<!-- 그 외의 항목은 그대로 출력 -->
 				END) AS chg_bf_cnt
 				
-				,(CASE upper(h.chg_cd)
- 					WHEN 'SEX_CD' THEN  
+				,(CASE upper(h.chg_cd)																																			<!-- 변경 후 내용 변경 코드에 따라 case문 사용해서 변경 -->	
+ 					WHEN 'SEX_CD' THEN  																																		<!-- 성별인 경우 M이면 남성 F이면 여성 -->
  						(CASE h.chg_aft_cnt
  						WHEN 'M' THEN '남' 
  						WHEN 'F' THEN '여'
  						END) 
- 					WHEN 'BRDY_DT' THEN 						 	
+ 					WHEN 'BRDY_DT' THEN 																																		<!-- 생일인 경우 10자인 경우 그대로 출력. 8자인 경우 - 추가  -->							 	
 						(CASE LENGTH(h.chg_aft_cnt)
 							WHEN 10 THEN h.chg_aft_cnt
 							WHEN 8 THEN (substr(h.chg_aft_cnt,1,4) || '-' || substr(h.chg_aft_cnt,5,2) || '-' || substr(h.chg_aft_cnt,7,2))						 	
 						END) 
 
-  					WHEN 'POC_CD' THEN  (SELECT dtl_cd_nm 
+  					WHEN 'POC_CD' THEN  (SELECT dtl_cd_nm 																														<!-- 직업코드인 경우 코드 테이블에서 직업코드에 해당하는 부분 가져와서 상세 코드명으로 출력한다 -->
  										FROM ma_code_dt 
  										WHERE code_cd='POC_CD' AND dtl_cd = h.chg_aft_cnt)
-					WHEN 'MBL_NO' THEN 
+					WHEN 'MBL_NO' THEN 																																			<!--핸드폰 번호인 경우 - 추가-->
 						(CASE 
-							WHEN LENGTH(h.chg_aft_cnt) = 11 THEN (substr(h.chg_aft_cnt,1,3) || '-' || substr(h.chg_aft_cnt,4,4) || '-' || substr(h.chg_aft_cnt,8,4))
-							WHEN LENGTH(h.chg_aft_cnt) = 10 THEN (substr(h.chg_aft_cnt,1,3) || '-' || substr(h.chg_aft_cnt,4,3) || '-' || substr(h.chg_aft_cnt,7,4))
-							WHEN LENGTH(h.chg_aft_cnt) <![CDATA[ <= ]]> 9 THEN h.chg_aft_cnt
-           		     		WHEN LENGTH(h.chg_aft_cnt) <![CDATA[ >= ]]> 12 THEN (substr(h.chg_aft_cnt,1,3) || '-' || lpad('*',length(h.chg_aft_cnt)-7,'*') || '-' || substr(h.chg_aft_cnt,length(h.chg_aft_cnt)-3,4))
+							WHEN LENGTH(h.chg_aft_cnt) = 11 																													<!--번호가 11자인 경우 3-4-4 -->
+								THEN (substr(h.chg_aft_cnt,1,3) || '-' || substr(h.chg_aft_cnt,4,4) || '-' || substr(h.chg_aft_cnt,8,4))
+							WHEN LENGTH(h.chg_aft_cnt) = 10 																													<!--번호가 10자인 경우 3-3-4-->
+								THEN (substr(h.chg_aft_cnt,1,3) || '-' || substr(h.chg_aft_cnt,4,3) || '-' || substr(h.chg_aft_cnt,7,4))
+							WHEN LENGTH(h.chg_aft_cnt) <![CDATA[ <= ]]> 9 																										<!--번호가 9자 이하인 경우 그대로 출력-->
+								THEN h.chg_aft_cnt
+           		     		WHEN LENGTH(h.chg_aft_cnt) <![CDATA[ >= ]]> 12 																										<!--번호가 12자 이상인 경우 3-*처리-4-->
+           		     			THEN (substr(h.chg_aft_cnt,1,3) || '-' || lpad('*',length(h.chg_aft_cnt)-7,'*') || '-' || substr(h.chg_aft_cnt,length(h.chg_aft_cnt)-3,4))
 						END)
-					WHEN 'CUST_SS_CD' THEN  (SELECT dtl_cd_nm 
+					WHEN 'CUST_SS_CD' THEN  (SELECT dtl_cd_nm 																													<!-- 고객상태코드인 경우 코드 테이블에서 고객상태코드에 해당하는 부분 가져와서 상세 코드명으로 출력한다 -->
 											 FROM ma_code_dt 
 											 WHERE code_cd='CUST_SS_CD' AND dtl_cd = h.chg_aft_cnt )
- 					WHEN 'JN_PRT_CD' THEN (SELECT prt_nm 
+ 					WHEN 'JN_PRT_CD' THEN (SELECT prt_nm 																														<!-- 가입매장코드인 경우 매장관리 테이블에서 변경후 부분과 매장코드가 일치하는 경우 그 해당 매장명으로 출력 -->
  										   FROM  MA_PRT_MT p
  										   WHERE p.prt_cd = h.chg_aft_cnt)
-					WHEN 'STP_DT' THEN 
+					WHEN 'STP_DT' THEN 																																			<!-- 정지일자인 경우 10자인 경우 그대로 출력. 8자인 경우 - 추가 -->
 						(CASE LENGTH(h.chg_aft_cnt)
 							WHEN 10 THEN h.chg_aft_cnt
 							WHEN 8 THEN (substr(h.chg_aft_cnt,1,4) || '-' || substr(h.chg_aft_cnt,5,2) || '-' || substr(h.chg_aft_cnt,7,2))						 	
 						END)
-					WHEN 'CNCL_DT' THEN 
+					WHEN 'CNCL_DT' THEN 																																		<!-- 해지일자인 경우 10자인 경우 그대로 출력. 8자인 경우 - 추가 -->
 						(CASE LENGTH(h.chg_aft_cnt)
 							WHEN 10 THEN h.chg_aft_cnt
 							WHEN 8 THEN (substr(h.chg_aft_cnt,1,4) || '-' || substr(h.chg_aft_cnt,5,2) || '-' || substr(h.chg_aft_cnt,7,2))						 	
 						END)
-					ELSE h.chg_aft_cnt
+					ELSE h.chg_aft_cnt																																			<!-- 그 외의 항목은 그대로 출력 -->
 				END) AS chg_aft_cnt
-		FROM SD_CUST01_HT h 
-		LEFT OUTER JOIN ma_user_mt u ON h.lst_upd_id=u.user_id 
-		LEFT OUTER JOIN cs_cust01_mt c ON h.cust_no=c.cust_no										
-		WHERE h.CUST_NO=#{cust_no} 
-		ORDER BY h.CHG_DT DESC	
+				, h.chg_seq
+		FROM SD_CUST01_HT h 																																					<!-- 고객이력 테이블 -->
+			LEFT OUTER JOIN ma_user_mt u ON h.lst_upd_id=u.user_id 																													<!-- 매장관리 테이블과 조인 -->								
+			LEFT OUTER JOIN cs_cust01_mt c ON h.cust_no=c.cust_no																													<!-- 고객관리 테이블과 조인 -->									
+		WHERE h.CUST_NO=#{cust_no} 																																				<!-- 조건. 회원번호가 parameter의 회원번호와 동일할 것 -->				
+		ORDER BY h.CHG_DT DESC, h.chg_seq DESC																																				<!-- 변경일자를 기준으로 내림차순 -->	
  	</select>  
  	
  	<!-- 메인검색 결과 -->
  	<select id="getMainCustomer" resultType="CustomerVO" parameterType="map">
- 		SELECT m.prt_nm
- 			   ,u.user_nm
- 			   ,c.cust_no 
- 			   ,(CASE WHEN LENGTH(c.CUST_NM) = 2 THEN (substr(c.cust_nm,1,1)) || '*'
-          		      WHEN LENGTH(c.CUST_NM) <![CDATA[>=]]>3 THEN  (substr(c.cust_nm,1,1) || lpad('*',length(c.cust_nm)-2,'*') || substr(c.cust_nm,length(c.cust_nm),1))
+ 		SELECT m.prt_nm																																<!--거래처 관리 테이블의 거래처 이름  -->
+ 			   ,u.user_nm																															<!--사용자 테이블의 사용자 이름  -->
+ 			   ,c.cust_no 																															<!--고객 관리 테이블의 고객번호  -->
+ 			   ,(CASE WHEN LENGTH(c.CUST_NM) = 2 																									<!--고객명 * 처리. 2자일 때는 성 제외 * -->
+ 			   			THEN (substr(c.cust_nm,1,1)) || '*'
+          		      WHEN LENGTH(c.CUST_NM) <![CDATA[>=]]>3 																						<!--고객명 * 처리. 3자 이상일 때는 성과 마지막한글자 빼고 * -->
+          		      	THEN  (substr(c.cust_nm,1,1) || lpad('*',length(c.cust_nm)-2,'*') || substr(c.cust_nm,length(c.cust_nm),1))
             		  END) AS cust_nm 
- 			   ,(CASE WHEN LENGTH(c.MBL_NO) = 10 THEN (substr(c.MBL_NO,1,3) || '-' || '***' || '-' || substr(c.MBL_NO,7,4))
-          		      WHEN LENGTH(c.MBL_NO) = 11 THEN (substr(c.MBL_NO,1,3) || '-' || '****' || '-' || substr(c.MBL_NO,8,4))
-           		      WHEN LENGTH(c.MBL_NO) <![CDATA[ <= ]]> 9 THEN c.mbl_no
-           		      WHEN LENGTH(c.MBL_NO) <![CDATA[ >= ]]> 12 THEN (substr(c.MBL_NO,1,3) || '-' || lpad('*',length(c.MBL_NO)-7,'*') || '-' || substr(c.MBL_NO,length(c.mbl_no)-3,4))
+ 			   ,(CASE WHEN LENGTH(c.MBL_NO) = 10 																									<!--휴대폰번호 * 처리와 - 넣기. 10자인 경우 3-***-4 -->
+ 			   			THEN (substr(c.MBL_NO,1,3) || '-' || '***' || '-' || substr(c.MBL_NO,7,4))
+          		      WHEN LENGTH(c.MBL_NO) = 11 																									<!--휴대폰번호 * 처리와 - 넣기. 11자인 경우 3-****-4 -->
+          		      	THEN (substr(c.MBL_NO,1,3) || '-' || '****' || '-' || substr(c.MBL_NO,8,4))
+           		      WHEN LENGTH(c.MBL_NO) <![CDATA[ <= ]]> 9 																						<!--휴대폰번호 * 처리와 - 넣기. 9자 이하인 경우 그대로 내보낸다 -->
+           		      	THEN c.mbl_no
+           		      WHEN LENGTH(c.MBL_NO) <![CDATA[ >= ]]> 12 																					<!--휴대폰번호 * 처리와 - 넣기. 12자 이상인 경우 3-가운데 수만큼 *-4 -->
+           		      	THEN (substr(c.MBL_NO,1,3) || '-' || lpad('*',length(c.MBL_NO)-7,'*') || '-' || substr(c.MBL_NO,length(c.mbl_no)-3,4))
 			 	      END) AS MBL_NO 
  			   ,d.dtl_cd_nm AS cust_ss_cd
- 	 		   ,(substr(c.js_dt,1,4) || '-' || substr(c.js_dt,5,2) || '-' || substr(c.js_dt,7,2)) AS js_dt
- 			   ,c.jn_prt_cd
- 			   ,c.fst_user_id
- 			   ,TO_CHAR(c.lst_upd_dt,'yyyy-MM-dd hh24miss') AS sLst_upd_dt
- 			   ,c.lst_upd_id
-	  	FROM cs_cust01_mt c LEFT OUTER JOIN ma_prt_mt m 
-	  							ON c.jn_prt_cd = m.prt_cd
-	  		                LEFT OUTER JOIN ma_user_mt u 
+ 	 		   ,(substr(c.js_dt,1,4) || '-' || substr(c.js_dt,5,2) || '-' || substr(c.js_dt,7,2)) AS js_dt											<!--가입날짜 - 넣기.  -->
+ 			   ,c.jn_prt_cd																															<!--고객 관리 테이블의 가입매장코드  -->
+ 			   ,c.fst_user_id																														<!--고객 관리 테이블의 최초 등록자  -->
+ 			   ,TO_CHAR(c.lst_upd_dt,'yyyy-MM-dd hh24miss') AS sLst_upd_dt																			<!--고객 관리 테이블의 최종 수정일 'yyyy-MM-dd hh24miss' 형식으로 문자로 바꾸기  -->
+ 			   ,c.lst_upd_id																														<!--고객 관리 테이블의 최종 수정자  -->	
+	  	FROM cs_cust01_mt c LEFT OUTER JOIN ma_prt_mt m 																							<!--고객 관리 테이블의 최초 등록자  -->
+	  							ON c.jn_prt_cd = m.prt_cd																							<!--고객 관리 테이블. 매장관리 테이블과 조인  -->
+	  		                LEFT OUTER JOIN ma_user_mt u 																							<!--고객 관리 테이블. 사용자 테이블과 조인  -->
 	  		                	ON c.fst_user_id= u.user_id
-	  		                LEFT OUTER JOIN (SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='CUST_SS_CD') d 
+	  		                LEFT OUTER JOIN (SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='CUST_SS_CD') d 								<!--고객 관리 테이블. 코드테이블에서 고객상태코드만 가져와서 조인  -->
 	  		                	ON c.cust_ss_cd= d.dtl_cd
 	  	WHERE 1=1
-	  			AND c.js_dt BETWEEN #{fromDate} AND #{toDate}
-			<if test="prt_cd != null and prt_cd != ''">
+	  			AND c.js_dt BETWEEN #{fromDate} AND #{toDate}																						<!--조건. 기간이 from과 to사이일 것  -->
+			<if test="prt_cd != null and prt_cd != ''">																								<!--조건. 매장코드가 있다면 매장코드가 parameter와 일치하는 조건 적용 -->
 				AND	m.prt_cd=#{prt_cd}
 			</if>
-			<if test="cust_no != null and cust_no !=''">
+			<if test="cust_no != null and cust_no !=''">																							<!--조건. 고객코드가 있다면 고객코드가 parameter와 일치하는 조건 적용 -->
 				AND	c.cust_no=#{cust_no}
 			</if>
-			<if test='! cust_ss_cd.equals("0")'>
+			<if test='! cust_ss_cd.equals("0")'>																									<!--조건. 고객상태코드가 0(전체)가 아니면 parameter와 일치하는 조건 적용 -->
 				AND	c.cust_ss_cd = #{cust_ss_cd}
 			</if>
-	  ORDER BY c.cust_no
+	  ORDER BY c.cust_no 																														<!--고객번호로 내림차순으로 정렬 -->
  	</select>
  	
  	<!-- 휴대폰번호 중복 검사 -->
  	<select id="getMblCheck" parameterType="String" resultType="integer">
- 		SELECT COUNT(MBL_NO) 
- 		FROM CS_CUST01_MT
-		WHERE mbl_no=#{mbl_no}
+ 		SELECT COUNT(MBL_NO) 												<!--휴대폰 번호의 수 -->
+ 		FROM CS_CUST01_MT													<!--회원관리 테이블 -->
+		WHERE mbl_no=#{mbl_no}												<!--파라미터로 넘어오는 번호와 일치할 조건 -->
  	</select>
  	
  	 <!-- 직업코드 항목 db에서 불러오기 -->
  	<select id="getPocCode" resultType="java.util.HashMap">
- 		SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='POC_CD'
+ 		SELECT dtl_cd														<!--상세코드  -->
+ 			   , dtl_cd_nm 													<!--상세코드명  -->	
+ 		FROM ma_code_dt 													<!--코드테이블 -->
+ 		WHERE code_cd='POC_CD'												<!--공통코드가 직업코드인 조건.  -->
  	</select>
  	
  	 <!-- 고객 정보 불러오기 -->
@@ -246,36 +270,37 @@
 		WHERE c.cust_no=#{cust_no}
  	</select>  -->
  	 	<select id="getCustInfo" resultType="CustomerVO" parameterType="String">
- 		SELECT 	 c.cust_nm
+ 		SELECT 	 c.cust_nm															<!-- 고객관리 테이블의 고객명  -->
  			   , m.mTot_sal_amt
- 			   , c.brdy_dt
- 			   , c.sex_cd
- 			   , c.scal_yn
- 			   , c.mrrg_dt
- 			   , c.poc_cd
- 			   , c.mbl_no
- 			   , p.prt_cd
- 			   , p.prt_nm
- 			   , c.psmt_grc_cd
- 			   , c.email
- 			   , c.addr
- 			   , c.addr_dtl
- 			   , c.cust_ss_cd
- 			   , c.fst_js_dt
- 			   , c.js_dt
- 			   , c.cncl_cnts
- 			   , c.stp_dt
- 			   , c.cncl_dt
- 			   , c.email_rcv_yn
- 			   , c.sms_rcv_yn
- 			   , c.dm_rcv_yn 
-		FROM (SELECT SUM(tot_sal_amt) as mTot_sal_amt 
+ 			   , c.brdy_dt															<!-- 고객관리 테이블의 생일 --> 
+ 			   , c.sex_cd															<!-- 고객관리 테이블의 성별코드 --> 
+ 			   , c.scal_yn															<!-- 고객관리 테이블의 양음력구분 --> 
+ 			   , c.mrrg_dt															<!-- 결혼기념일 --> 
+ 			   , c.poc_cd															<!-- 직업코드 -->
+ 			   , c.mbl_no															<!-- 휴대폰번호 -->
+ 			   , p.prt_cd AS jn_prt_cd												<!-- 매장관리 테이블의 매장코드를 가입매장코드로 가져옴 -->
+ 			   , p.prt_nm															<!-- 매장관리 테이블의 매장명 --> 
+ 			   , c.psmt_grc_cd														<!-- 고객관리 테이블의 우편물 수령코드  -->
+ 			   , c.email															<!-- 고객관리 테이블의 이메일  -->
+ 			   , c.addr																<!-- 고객관리 테이블의 주소 --> 
+ 			   , c.addr_dtl															<!-- 고객관리 테이블의 상세주소 --> 
+ 			   , c.cust_ss_cd														<!-- 고객관리 테이블의 고객상태코드 --> 
+ 			   , c.fst_js_dt														<!-- 고객관리 테이블의 최조가입일자  -->
+ 			   , c.js_dt															<!-- 고객관리 테이블의 가입일자 --> 
+ 			   , c.cncl_cnts														<!-- 고객관리 테이블의 해지사유 내용 --> 
+ 			   , c.stp_dt															<!-- 고객관리 테이블의 중지일자 -->
+ 			   , c.cncl_dt															<!-- 고객관리 테이블의 해지일자 --> 
+ 			   , c.email_rcv_yn														<!-- 고객관리 테이블의 이메일수신동의여부 --> 
+ 			   , c.sms_rcv_yn														<!-- 고객관리 테이블의 sms수신동의여부 --> 
+ 			   , c.dm_rcv_yn 														<!-- 고객관리 테이블의 dm수신동의여부 --> 
+		FROM 																		<!-- 고객관리 테이블 -->
+			 (SELECT SUM(tot_sal_amt) as mTot_sal_amt 
 			  FROM cs_sal01_mt 
-			  WHERE cust_no=#{cust_no} AND substr(sal_dt,1,6)=TO_CHAR(SYSDATE,'yyyyMM')) m, 
-			CS_CUST01_MT c
-		JOIN MA_PRT_MT p 
-			ON c.jn_prt_cd=p.prt_cd
-		WHERE c.cust_no=#{cust_no}
+			  WHERE cust_no=#{cust_no} AND substr(sal_dt,1,6)=TO_CHAR(SYSDATE,'yyyyMM')) m,
+			  CS_CUST01_MT c	
+			JOIN MA_PRT_MT p 														<!-- 매장관리 테이블과 매장코드와 가입매장코드가 같은 조건으로 조인 -->
+				ON c.jn_prt_cd=p.prt_cd												
+		WHERE c.cust_no=#{cust_no}													<!-- 회원번호가 파라미터와 일치할 조건. -->
  	</select> 
  	
  	<!--회원 정보 수정-->
@@ -308,31 +333,31 @@
  	<!-- 신규 회원 등록 -->
   	<insert id="custRegister" parameterType="CustomerVO">
  		INSERT INTO CS_CUST01_MT
-				(cust_no, 
-				 cust_nm, 
-				 sex_cd, 
-				 scal_yn, 
-				 brdy_dt, 
-				 poc_cd, 
-				 mbl_no, 
-				 psmt_grc_cd,				
-				 email,						
-				 addr,						
-				 addr_dtl,					
-				 mrrg_dt,
-				 cust_ss_cd, 
-				 jn_prt_cd, 
-				 email_rcv_yn, 
-				 sms_rcv_yn,
-				 tm_rcv_yn, 			
-				 dm_rcv_yn, 
-				 fst_js_dt, 
-				 js_dt, 
-				 fst_reg_dt, 
-				 fst_user_id, 
-				 lst_upd_dt, 
-				 lst_upd_id)
-		VALUES ((SELECT MAX(cust_no)+1 FROM CS_CUST01_MT), 
+				(cust_no, 											<!-- 고객번호 -->
+				 cust_nm, 											<!-- 고객명 -->
+				 sex_cd, 											<!-- 성별코드 -->
+				 scal_yn, 											<!-- 양음력구분 -->
+				 brdy_dt, 											<!-- 생년월일 -->
+				 poc_cd, 											<!-- 직업코드 -->
+				 mbl_no, 											<!-- 휴대폰번호 -->
+				 psmt_grc_cd,										<!-- 우편물 수령 코드 -->
+				 email,												<!-- 이메일 -->
+				 addr,												<!-- 주소 -->
+				 addr_dtl,											<!-- 상세주소 -->
+				 mrrg_dt,											<!-- 결혼기념일 -->		
+				 cust_ss_cd, 										<!-- 고객상태코드 -->
+				 jn_prt_cd, 										<!-- 가입매장코드 -->
+				 email_rcv_yn, 										<!-- 이메일 수신 등의 여부 -->
+				 sms_rcv_yn,										<!-- SMS 수신 등의 여부 -->	
+				 tm_rcv_yn, 										<!-- TM 수신 등의 여부 -->		
+				 dm_rcv_yn, 										<!-- DM 수신 등의 여부 -->
+				 fst_js_dt, 										<!-- 최초가입일자 -->
+				 js_dt, 											<!-- 가입일자 -->
+				 fst_reg_dt, 										<!-- 최초등록일자 -->
+				 fst_user_id, 										<!-- 최초등록자 -->
+				 lst_upd_dt, 										<!-- 최종수정일자 -->
+				 lst_upd_id)										<!-- 최초등록일자 -->			
+		VALUES ((SELECT MAX(cust_no)+1 FROM CS_CUST01_MT), 			<!-- 최종 회원번호의 다음 번호 -->
 				#{cust_nm}, 
 				#{sex_cd}, 
 				#{scal_yn}, 
@@ -344,7 +369,7 @@
 				#{addr},
 				#{addr_dtl},
 				#{mrrg_dt},
-				'10', 
+				'10', 									
 				#{jn_prt_cd}, 
 				#{email_rcv_yn},
 				#{sms_rcv_yn}, 
@@ -359,4 +384,31 @@
 				)
  	</insert> 
 
+	<!-- 회원 정보 기록 -->
+<!--   	<insert id="custRegister" parameterType="CustomerVO">
+ 		      
+			INSERT INTO SD_CUST01_HT 
+					(CUST_NO
+					, CHG_DT
+					, CHG_SEQ
+					, CHG_CD
+					, CHG_BF_CNT
+					, CHG_AFT_CNT
+					, FST_REG_DT
+					, FST_USER_ID
+					, LST_UPD_DT
+					, LST_UDT_ID)
+			VALUES #{cust_no}
+					,SYSDATE
+					,
+					,#{chg_cd}
+					,#{chg_bf_cnt}
+					,#{chg_aft_cnt}
+					,SYSDATE						//회원 자체를 처음 등록한 날짜인가?
+					,#{fst_user_id}					//마찬가지로 회원을 처음 등록한 등록자인가?
+					,SYSDATE
+					,#{lst_udt_id}
+							
+ 	</insert>  -->
+	
 </mapper>

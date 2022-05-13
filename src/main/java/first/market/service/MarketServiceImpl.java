@@ -14,24 +14,12 @@ public class MarketServiceImpl implements MarketService {
 	@Autowired
 	private MarketMapper marketMapper;
 	
+	//키워드로 매장 검색해서 list 반환
 	@Override
 	public List<MarketVO> searchMarket(String keyword) {
 		List<MarketVO> market = marketMapper.searchMarket(keyword);
 		return market;
 	}
-	//매장 조건에 맞는 count 
-	public int getMarketCount(String keyword) {
-		
-		int marketCount = marketMapper.getMarketCount(keyword);
-		
-		return marketCount;
-		
-	}
 
-	@Override
-	public List<MarketVO> marketList() {
-		List<MarketVO> marketList = marketMapper.marketList();
-		return marketList;
-	}
 
 }

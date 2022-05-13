@@ -9,6 +9,8 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/popSearch.css" type="text/css">
 <script type="text/javascript">
 	window.onload = function(){
+		
+		//닫기버튼 클릭하면 폼 닫힘.
 		var cloBtn = document.getElementById('closeForm');
 			cloBtn.onclick = function(){
 				self.close();

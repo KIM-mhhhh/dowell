@@ -4,11 +4,13 @@
 
  	<!-- 매장 검색 -->
  	 <select id="searchMarket" resultType="MarketVO" parameterType="String">
- 		 SELECT m.prt_cd
-     		   ,m.prt_nm
-      		   ,d.dtl_cd_nm AS prt_ss_cd
-		FROM ma_prt_mt m
- 		JOIN (SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='PRT_SS_CD') d ON m.prt_ss_cd=d.dtl_cd
- 		WHERE m.PRT_DT_CD=2 AND (m.prt_cd LIKE '%' || #{keyword} || '%' OR m.prt_nm LIKE '%' || #{keyword} || '%')
+ 		SELECT m.prt_cd																						<!--거래처 관리 테이블의 거래처 코드  -->
+     		   ,m.prt_nm																						<!--거래처 관리 테이블의 거래처명  -->
+      		   ,d.dtl_cd_nm AS prt_ss_cd																		<!--코드테이블의 상세코드명을 고객코드로 가져옴  -->
+	   	FROM ma_prt_mt m																						<!--거래처 관리 테이블  -->
+ 		JOIN (SELECT dtl_cd, dtl_cd_nm FROM ma_code_dt WHERE code_cd='PRT_SS_CD') d ON m.prt_ss_cd=d.dtl_cd		<!--코드 테이블에서 코드가 '고객상태코드'인 것들만 가져와서 조인  -->
+ 		WHERE m.PRT_DT_CD=2 																					<!--본사가 아닌 매장인 것들만 조건으로 함  -->
+ 			  AND (m.prt_cd LIKE '%' || #{keyword} || '%' OR m.prt_nm LIKE '%' || #{keyword} || '%')			<!--검색 시 매장 코드드 혹은 매장명을 포함하고 있도록.  -->
+ 		ORDER BY prt_cd ASC
  	</select>	
 </mapper>

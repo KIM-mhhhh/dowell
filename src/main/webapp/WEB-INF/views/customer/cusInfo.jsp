@@ -45,7 +45,7 @@
 			$(":radio[name='cust_ss_cd'][value='90']").attr('disabled', false);
 			$(":radio[name='cust_ss_cd'][value='10']").attr('disabled', false);
 			$(":radio[name='cust_ss_cd'][value='80']").attr('disabled', true);
-		}  */
+		}   */
 		
 		//고객번호 검색 클릭시 고객검색 팝업
 		$('#searchCust').click(function(){
@@ -77,12 +77,24 @@
 							$('#mrrg_dt').val(param.customer.mrrg_dt);
 							$('#addr').val(param.customer.addr);
 							$('#addr_dtl').val(param.customer.addr_dtl);
+							$('#email').val(param.customer.email);
+							if($('#email').val() != '' ){
+								$('#email1').val(param.customer.email.substring(0,param.customer.email.indexOf('@')));
+								$('#email2').val(param.customer.email.substring(param.customer.email.indexOf('@')+1,param.customer.email.length));
+							}
 							$('#mbl_no').val(param.customer.mbl_no);
+							$('#mbl_no1').val();
+							$('#mbl_no2').val();
+							$('#mbl_no3').val();
+							
+							$('#jn_prt_cd').val(param.customer.jn_prt_cd);
+							$('#prt_nm').val(param.customer.prt_nm);
 							$('#fst_js_dt').val(param.customer.fst_js_dt);
 							$('#js_dt').val(param.customer.js_dt);
 							$('#cncl_cnts').val(param.customer.cncl_cnts);
 							$('#stp_dt').val(param.customer.stp_dt);
 							$('#cncl_dt').val(param.customer.cncl_dt); 
+							$('#poc_cd').val(param.customer.poc_cd).prop("selected",true);
 							$('input:radio[name =sex_cd]:input[value='+param.customer.sex_cd+']').prop("checked", true);
 							$('input:radio[name =cust_ss_cd]:input[value='+param.customer.cust_ss_cd+']').prop("checked", true);
 							$('input:radio[name =psmt_grc_cd]:input[value='+param.customer.psmt_grc_cd+']').prop("checked",true);
@@ -213,12 +225,11 @@
 				</li>
 				<li>
 					<label for="poc_cd">직업코드</label>
-					<select name="poc_cd">
+					<select name="poc_cd" id="poc_cd">
 							<option selected disabled>-선택-</option>
 						<c:forEach var="code" items="${codeList }">
 							<option value="${code.DTL_CD }">${code.DTL_CD_NM }</option>
 						</c:forEach>
-
 					</select>
 				</li>
 				<li>
@@ -229,8 +240,8 @@
 					<input type="button" value="확인" id="chMbl">
 				</li>
 				<li>
-					<label for="prt_cd">가입매장</label>
-					<input type="text" id="prt_cd" >
+					<label for="jn_prt_cd">가입매장</label>
+					<input type="text" id="jn_prt_cd" >
 					<input type="text" id="prt_nm" >
 				</li>
 				<li>

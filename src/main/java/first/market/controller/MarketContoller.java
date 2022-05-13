@@ -23,8 +23,7 @@ public class MarketContoller {
 	@Autowired
 	private MarketService marketService;
 
-	//거래처 팝업
-	
+	//거래처 팝업 띄우기
 	  @RequestMapping("/market/marketShow.do") 
 	  public ModelAndView showMarket() {
 	  
@@ -37,29 +36,18 @@ public class MarketContoller {
 	@RequestMapping("/market/marketResult.do")
 	@ResponseBody
 	public Map<String,Object> searchMarket(HttpServletRequest request) {
-		
-		/*
-		 * String keyword = request.getParameter("keyword");
-		 * 
-		 * Map<String,Object> map = new HashMap<String, Object>();
-		 * 
-		 * List<MarketVO> market = marketService.searchMarket(keyword);
-		 * 
-		 * int marketCount = market.size(); map.put("marketCount", marketCount);
-		 * map.put("market", market);
-		 */
+
 			Map<String,Object> map = new HashMap<String, Object>();
-			List<MarketVO> market;
+			
 		try {
 			String keyword = request.getParameter("keyword");
-			market = marketService.searchMarket(keyword);
-			int marketCount = market.size(); map.put("marketCount", marketCount);
+			List<MarketVO> market = marketService.searchMarket(keyword);			//검색어로 거래처 list 가져온다.
+			int marketCount = market.size(); 										//검색된 거래처의 갯수	
+			map.put("marketCount", marketCount);
 			map.put("market", market);
-		} catch (Exception e) {
+		} catch (Exception e) {	
 			map.put("error", "정보를 가져올 수 없습니다.");
 		}
-		
-		
 		return map;
 	}
 	

@@ -34,6 +34,7 @@
 				data:{mbl_no:$('#mbl_no').val()}, 	
 				url: '${pageContext.request.contextPath}/customer/checkMbl.do', 
 				dataType:'json',
+				contentType:'application/x-www-form-urlencoded; charset=UTF-8',
 				cache:false,
 				timeout:30000,
 				success:function(param){
@@ -46,8 +47,8 @@
 						alert('네트워크 오류 발생');
 					}
 				},
-				error:function(){
-					alert('네트워크 오류 발생');
+				error:function(request,status,error) {
+                    console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 				}
 			});			//ajax끝
 		});

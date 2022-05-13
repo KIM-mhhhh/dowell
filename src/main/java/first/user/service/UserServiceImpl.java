@@ -18,6 +18,7 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserMapper userMapper;
 
+	//로그인
 	@Override
 	public UserVO loginUser(String user_id) {
 		
@@ -26,8 +27,7 @@ public class UserServiceImpl implements UserService {
 		return user;
 	}
 
-
-
+	//매장코드로 고객조회 테이블 매장정보 불러오기
 	@Override
 	public MarketVO getMarket(String prt_cd) {
 		MarketVO market = userMapper.getMarket(prt_cd);
@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 
-
+	//매장코드로 고객조회 테이블 고객정보 불러오기
 	@Override
 	public List<CustomerVO> getCustomer(Map<String,Object> map) {
 		List<CustomerVO> customerList = userMapper.getCustomer(map);
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 
-
+	//회원상태 코드 종류 가져오기
 	@Override
 	public List<Map<String,Object>> getSScode() {
 		List<Map<String,Object>> codeList = userMapper.getSScode();
