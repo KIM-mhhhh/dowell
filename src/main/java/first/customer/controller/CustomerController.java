@@ -1,6 +1,7 @@
 package first.customer.controller;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,25 +29,26 @@ public class CustomerController {
 	@Autowired
 	private CustomerService customerService;
 	
-	//고객검색 팝업
+	//怨좉컼寃��깋 �뙘�뾽
 	@RequestMapping("/customer/searchCustomer.do")
 	public String searchCustomer() {
 		
 		return "/customer/cusSearch";
 	}
 	
-	//고객 이력 조회
+	//怨좉컼 �씠�젰 議고쉶
 	@RequestMapping("/customer/showRecord.do")
-	public ModelAndView checkRecord(HttpServletRequest request) {					//링크로 고객 번호넘겨주기
+	public ModelAndView checkRecord(HttpServletRequest request) {					//留곹겕濡� 怨좉컼 踰덊샇�꽆寃⑥＜湲�
 		
 		String cust_no = request.getParameter("cust_no");
 		System.out.println("cust_no:" + cust_no);
-		
-		List<RecordVO> recordList = customerService.getRecord(cust_no);				//고객번호로 고객의 이력 목록을 가져옴
-		String cust_nm = customerService.getCustInfo(cust_no).getCust_nm();			//고객번호로 고객명 가져온다.
-		System.out.println("고객명 : " + cust_nm);
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("cust_no", cust_no);
+		List<RecordVO> recordList = customerService.getRecord(cust_no);				//怨좉컼踰덊샇濡� 怨좉컼�쓽 �씠�젰 紐⑸줉�쓣 媛��졇�샂
+		String cust_nm = customerService.getCustInfo(map).getCust_nm();			//怨좉컼踰덊샇濡� 怨좉컼紐� 媛��졇�삩�떎.
+		System.out.println("怨좉컼紐� : " + cust_nm);
 
-		ModelAndView mv = new ModelAndView("/customer/cusRecord");					//고객 이력 페이지로 list와 정보들 보내줌.
+		ModelAndView mv = new ModelAndView("/customer/cusRecord");					//怨좉컼 �씠�젰 �럹�씠吏�濡� list�� �젙蹂대뱾 蹂대궡以�.
 		mv.addObject("cust_no", cust_no);
 		mv.addObject("cust_nm", cust_nm);
 		mv.addObject("recordList",recordList);
@@ -54,25 +56,25 @@ public class CustomerController {
 		return mv;
 	}
 	
-	//고객조회(검색)
+	//怨좉컼議고쉶(寃��깋)
 	@RequestMapping("/customer/customerResult.do")
 	@ResponseBody
-	public Map<String,Object> searchCustomer(HttpServletRequest request){						//고객조회팝업에서 검색어로 고객 조회
+	public Map<String,Object> searchCustomer(HttpServletRequest request){						//怨좉컼議고쉶�뙘�뾽�뿉�꽌 寃��깋�뼱濡� 怨좉컼 議고쉶
 		Map<String,Object> map = new HashMap<String, Object>();
 		
 		try {
 			String cust_nm = request.getParameter("cust_nm");
 			String mbl_no = request.getParameter("mbl_no");
 			
-			System.out.println("검색어 : " + cust_nm + "/" + mbl_no);
+			System.out.println("寃��깋�뼱 : " + cust_nm + "/" + mbl_no);
 			
 			Map<String,Object> ajaxMap = new HashMap<String,Object>();
 			ajaxMap.put("cust_nm", cust_nm);
 			ajaxMap.put("mbl_no", mbl_no);
-			List<CustomerVO> customer = customerService.searchCustomer(ajaxMap);				//검색어 조건에 맞는 고객의 list를 불러온다.
+			List<CustomerVO> customer = customerService.searchCustomer(ajaxMap);				//寃��깋�뼱 議곌굔�뿉 留욌뒗 怨좉컼�쓽 list瑜� 遺덈윭�삩�떎.
 			 
-			int customerCount = customer.size();												//검색어 조건에 맞는 고객의 수
-			System.out.println("고객조회 list의 수 : " + customerCount);
+			int customerCount = customer.size();												//寃��깋�뼱 議곌굔�뿉 留욌뒗 怨좉컼�쓽 �닔
+			System.out.println("怨좉컼議고쉶 list�쓽 �닔 : " + customerCount);
 			map.put("customerCount", customerCount);
 			map.put("customer", customer);
 			
@@ -85,10 +87,10 @@ public class CustomerController {
 		return map;
 	}
 	
-	//main고객 조회
+	//main怨좉컼 議고쉶
 	@RequestMapping("/customer/mainCustomer.do")
 	@ResponseBody
-	public Map<String,Object> getCustomerInfo(HttpServletRequest request){							//조건에 맞는 고객들 검색
+	public Map<String,Object> getCustomerInfo(HttpServletRequest request){							//議곌굔�뿉 留욌뒗 怨좉컼�뱾 寃��깋
 		
 		Map<String,Object> ajaxMap = new HashMap<String,Object>();
 		try {
@@ -102,7 +104,7 @@ public class CustomerController {
 			
 			System.out.println("from : " + from +"/ to:"+ to );
 
-			Map<String,Object> map = new HashMap<String,Object>();									//list를 가져오기 위한 요건들을 map에 담아준다.
+			Map<String,Object> map = new HashMap<String,Object>();									//list瑜� 媛��졇�삤湲� �쐞�븳 �슂嫄대뱾�쓣 map�뿉 �떞�븘以��떎.
 				map.put("prt_cd", prt_cd);
 				map.put("prt_nm", prt_nm); 
 				map.put("cust_no", cust_no); 
@@ -111,11 +113,11 @@ public class CustomerController {
 				map.put("fromDate", from); 
 				map.put("toDate", to);
 
-			List<CustomerVO> searchList = customerService.getMainCustomer(map);						//조건에 맞는 고객들 list
+			List<CustomerVO> searchList = customerService.getMainCustomer(map);						//議곌굔�뿉 留욌뒗 怨좉컼�뱾 list
 			int searchCount = searchList.size();				
-			System.out.println("main검색의 결과 수 : " + searchCount);
+			System.out.println("main寃��깋�쓽 寃곌낵 �닔 : " + searchCount);
 
-			ajaxMap.put("count", searchCount);														//map에 담아서 ajax의 json 형태로 보내준다
+			ajaxMap.put("count", searchCount);														//map�뿉 �떞�븘�꽌 ajax�쓽 json �삎�깭濡� 蹂대궡以��떎
 			ajaxMap.put("list", searchList);
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -125,22 +127,21 @@ public class CustomerController {
 	}
 	
 	
-	//2차
-	//신규 고객 등록 팝업
+	//2李�
+	//�떊洹� 怨좉컼 �벑濡� �뙘�뾽
 	@RequestMapping("/customer/cusRegist.do")
 	public ModelAndView CustomerRegister() {
 		
-		//폼 직업코드의 list 코드 테이블에서 가져온다.
+		//�뤌 吏곸뾽肄붾뱶�쓽 list 肄붾뱶 �뀒�씠釉붿뿉�꽌 媛��졇�삩�떎.
 		List<Map<String,Object>> codeList = customerService.getPocCode();
 
 		ModelAndView mav = new ModelAndView("/customer/cusRegister");
 		mav.addObject("codeList", codeList);
-
 		
 		return mav;
 	}
 	
-	  //휴대폰 번호 중복
+	  //�쑕���룿 踰덊샇 以묐났
 	  
 	  @PostMapping("/customer/checkMbl.do")
 	  @ResponseBody 
@@ -149,9 +150,9 @@ public class CustomerController {
 	  Map<String,String> ajaxMap = new HashMap<String, String>();
 	  String mbl_no = request.getParameter("mbl_no");
 	  
-	  System.out.println("폰번호:" +mbl_no);
+	  System.out.println("�룿踰덊샇:" +mbl_no);
 	  
-	  int mblCount = customerService.getMblCheck(mbl_no); //휴대폰 번호가 존재하는 경우 duplicated, 아니면 notDuplicated를 json으로 보내준다. 
+	  int mblCount = customerService.getMblCheck(mbl_no); //�쑕���룿 踰덊샇媛� 議댁옱�븯�뒗 寃쎌슦 duplicated, �븘�땲硫� notDuplicated瑜� json�쑝濡� 蹂대궡以��떎. 
 		  if(mblCount==0) {
 			  ajaxMap.put("result", "NotDuplicated"); 
 		  }else if(mblCount >0){
@@ -160,68 +161,120 @@ public class CustomerController {
 	  return ajaxMap;
 	  
 	  }
-	 
 
-	
-	/*
-	 * @PostMapping("/customer/checkMbl.do")
-	 * 
-	 * @ResponseBody public Map<String,String> checkMblNo(@RequestParam String
-	 * mbl_no){ Map<String,String> ajaxMap = new HashMap<String, String>();
-	 * 
-	 * System.out.println("폰번호:" +mbl_no);
-	 * 
-	 * int mblCount = customerService.getMblCheck(mbl_no); if(mblCount==0) {
-	 * ajaxMap.put("result", "NotDuplicated"); }else if(mblCount >0){
-	 * ajaxMap.put("result", "Duplicated"); } return ajaxMap; }
-	 */
-	
-	//신규 고객 등록 처리
+//	  @PostMapping("/customer/checkMbl.do") 
+//	  @ResponseBody public Map<String,String> checkMblNo(HttpServletRequest request, @RequestParam String mbl_no){
+//		  Map<String,String> ajaxMap = new HashMap<String, String>();
+//	  
+//		  System.out.println("�룿踰덊샇:" +mbl_no);
+//	  
+//	  int mblCount = customerService.getMblCheck(mbl_no); 
+//	  if(mblCount==0) {
+//		  ajaxMap.put("result", "NotDuplicated"); 
+//	  }else if(mblCount >0){
+//		  ajaxMap.put("result", "Duplicated"); 
+//	  } 
+//	  return ajaxMap; 
+//	  }
+
+	//�떊洹� 怨좉컼 �벑濡� 泥섎━
 	@RequestMapping("/customer/registerSubmit.do")
 	public String submitRegister(@ModelAttribute CustomerVO customerVO, Model model ) {
 		
-		customerService.custRegister(customerVO);								//고객등록
+		customerService.custRegister(customerVO);								//怨좉컼�벑濡�
 		model.addAttribute("customerVO", customerVO);
 		
 		return "/customer/register";
-	
 	}
-	
-	//고객정보조회 화면띄우기
+	//怨좉컼�젙蹂댁“�쉶 �솕硫대쓣�슦湲�
 	@RequestMapping("/customer/showCustomer.do")
 	public ModelAndView inquireCustomer(HttpServletRequest request) {				
 		
 		String cust_no = request.getParameter("cust_no");
 		System.out.println("cust_no:"+cust_no);
 		
-		//폼의 직업코드의 list
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("cust_no", cust_no);
+		
+		// 怨좉컼踰덊샇濡� �젙蹂� 媛��졇�삤湲�
+		CustomerVO customer = customerService.getCustInfo(map);
+		//�뤌�쓽 吏곸뾽肄붾뱶�쓽 list
 		List<Map<String,Object>> codeList = customerService.getPocCode();
+		 System.out.println("�꽦蹂� :" +customer.getSex_cd());
+		System.out.println(customer.getBrdy_dt());
+		System.out.println(customer.getcTot_sal_amt());
+		System.out.println(customer.getmTot_sal_amt());
 		
 		ModelAndView mav = new ModelAndView("/customer/cusInfo");
-		mav.addObject("cust_no", cust_no);
+		mav.addObject("customer", customer);
 		mav.addObject("codeList", codeList);
 		
 		return mav;
 	}
 	
 	
-	  //회원번호로 고객정보 가져오기
+	  //�쉶�썝踰덊샇濡� 怨좉컼�젙蹂� 媛��졇�삤湲�
 	  
 	  @RequestMapping("/customer/getCustInfo.do")
-	  
-	  @ResponseBody public Map<String,Object> getCustInfo(HttpServletRequest request){ //고객번호로 고객의 정보 불러옴.
+	  @ResponseBody 
+	  public Map<String,Object> getCustInfo(HttpServletRequest request){ //怨좉컼踰덊샇濡� 怨좉컼�쓽 �젙蹂� 遺덈윭�샂.
 	  
 	  String cust_no = request.getParameter("cust_no");
 	  System.out.println(cust_no);
 	  
-	  CustomerVO customer = customerService.getCustInfo(cust_no);
-	  System.out.println(customer.getSex_cd());
+	  Map<String,Object> map = new HashMap<String, Object>();
+		map.put("cust_no", cust_no);
+	  
+	  CustomerVO customer = customerService.getCustInfo(map);
+	  System.out.println("�꽦蹂� :" +customer.getSex_cd());
+	  System.out.println(customer.getcTot_sal_amt());
 	  
 	  Map<String,Object> ajaxMap = new HashMap<String, Object>();
 	  ajaxMap.put("customer", customer);
 	  
 	  return ajaxMap; 
 	  }
-	 
+	 //�쉶�썝�젙蹂� �닔�젙
+	  @RequestMapping("/customer/updateSubmit.do")
+	  public String updateCustomer(@ModelAttribute CustomerVO customerVO, Model model) {
+
+		 
+		  String chg = customerVO.getChg();
+//		  System.out.println("바뀜 " + chg);
+		  String[] changeCd = chg.split(",");
+		  String[] changeBf = customerVO.getBefore().split(",");
+		  String[] changeAf = customerVO.getAfter().split(",");
+		  System.out.println(changeCd[0] + "/"+changeBf[0]+"/"+changeAf[0]);
+		  System.out.println(changeCd.length);
+		  
+		  //recordVO�뿉 媛� �꽔湲�
+			
+		  List<RecordVO> rList = new ArrayList<RecordVO>(); 
+			  for(int i=0;i<changeCd.length;i++) { 
+				  RecordVO recordVO = new RecordVO();
+				  recordVO.setCust_no(customerVO.getCust_no());
+				  recordVO.setChg_cd(changeCd[i].toUpperCase());
+				  recordVO.setChg_bf_cnt(changeBf[i]);
+				  recordVO.setChg_aft_cnt(changeAf[i]);
+				  recordVO.setLst_upd_id(customerVO.getLst_upd_id());
+				  recordVO.setFst_user_id(customerVO.getFst_user_id());
+				  
+				  rList.add(recordVO); 
+				  } 
+			
+			  Map<String,Object> map = new HashMap<String, Object>();
+			  map.put("customerVO", customerVO);
+			  map.put("recordList", rList);
+			  
+		 
+		  
+		  System.out.println(customerVO.toString());
+		  
+		  customerService.custUpdate(map);
+		  
+		  model.addAttribute("customerVO", customerVO);
+		  
+		  return "/customer/result" ;
+	  }
 	
 }

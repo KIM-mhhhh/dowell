@@ -36,9 +36,12 @@ public class CustomerVO {					//������ ���̺�
 	private String prt_nm;				// 조인해서 매장명(거래처명) 가져오기
 	private String user_nm;				// 조인해서 등록자명 가져오기
 	private String sLst_upd_dt;			//수정일 string으로 가져오기.
-	private String cTot_sal_amt;		// 조인해서 고객의 총 구매금액 가져오기
-	private String mTot_sal_amt;		// 조인해서 당 월 총 구매금액
+	private int cTot_sal_amt;		// 조인해서 고객의 총 구매금액 가져오기
+	private int mTot_sal_amt;		// 조인해서 당 월 총 구매금액
 	private String lSal_dt;				// 조인해서 최종 구매일자
+	private String chg;					//변경항목
+	private String after;				//변경 후 항목들
+	private String before;				//변경 후 항목들
 	
 	public String getCust_no() {
 		return cust_no;
@@ -227,16 +230,17 @@ public class CustomerVO {					//������ ���̺�
 	public void setsLst_upd_dt(String sLst_upd_dt) {
 		this.sLst_upd_dt = sLst_upd_dt;
 	}
-	public String getcTot_sal_amt() {
+	
+	public int getcTot_sal_amt() {
 		return cTot_sal_amt;
 	}
-	public void setcTot_sal_amt(String cTot_sal_amt) {
+	public void setcTot_sal_amt(int cTot_sal_amt) {
 		this.cTot_sal_amt = cTot_sal_amt;
 	}
-	public String getmTot_sal_amt() {
+	public int getmTot_sal_amt() {
 		return mTot_sal_amt;
 	}
-	public void setmTot_sal_amt(String mTot_sal_amt) {
+	public void setmTot_sal_amt(int mTot_sal_amt) {
 		this.mTot_sal_amt = mTot_sal_amt;
 	}
 	public String getlSal_dt() {
@@ -244,6 +248,39 @@ public class CustomerVO {					//������ ���̺�
 	}
 	public void setlSal_dt(String lSal_dt) {
 		this.lSal_dt = lSal_dt;
+	}
+	
+	public String getChg() {
+		return chg;
+	}
+	public void setChg(String chg) {
+		this.chg = chg;
+	}
+
+	public String getAfter() {
+		return after;
+	}
+	public void setAfter(String after) {
+		this.after = after;
+	}
+	public String getBefore() {
+		return before;
+	}
+	public void setBefore(String before) {
+		this.before = before;
+	}
+	@Override
+	public String toString() {
+		return "CustomerVO [cust_no=" + cust_no + ", cust_nm=" + cust_nm + ", sex_cd=" + sex_cd + ", scal_yn=" + scal_yn
+				+ ", brdy_dt=" + brdy_dt + ", mrrg_dt=" + mrrg_dt + ", poc_cd=" + poc_cd + ", mbl_no=" + mbl_no
+				+ ", psmt_grc_cd=" + psmt_grc_cd + ", email=" + email + ", zip_cd=" + zip_cd + ", addr=" + addr
+				+ ", addr_dtl=" + addr_dtl + ", cust_ss_cd=" + cust_ss_cd + ", cncl_cnts=" + cncl_cnts + ", jn_prt_cd="
+				+ jn_prt_cd + ", email_rcv_yn=" + email_rcv_yn + ", sms_rcv_yn=" + sms_rcv_yn + ", tm_rcv_yn="
+				+ tm_rcv_yn + ", dm_rcv_yn=" + dm_rcv_yn + ", fst_js_dt=" + fst_js_dt + ", js_dt=" + js_dt + ", stp_dt="
+				+ stp_dt + ", cncl_dt=" + cncl_dt + ", fst_user_dt=" + fst_user_dt + ", fst_user_id=" + fst_user_id
+				+ ", lst_upd_dt=" + lst_upd_dt + ", lst_upd_id=" + lst_upd_id + ", prt_nm=" + prt_nm + ", user_nm="
+				+ user_nm + ", sLst_upd_dt=" + sLst_upd_dt + ", cTot_sal_amt=" + cTot_sal_amt + ", mTot_sal_amt="
+				+ mTot_sal_amt + ", lSal_dt=" + lSal_dt + "]";
 	}
 	
 	

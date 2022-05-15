@@ -29,13 +29,13 @@
 			window.open('${pageContext.request.contextPath}/customer/cusRegist.do','market','width=700,height=900');
 		});
 		//회원 수정 이력 팝업
-		$(document).on('click','.recBtn',function(){
+	 	$(document).on('click','.recBtn',function(){
 			var cust_no = $(this).parent().eq(0).find('span').text();
 			window.open('${pageContext.request.contextPath}/customer/showRecord.do?cust_no='+cust_no,'record','width=900,height=700');
-		});
+		}); 
 		//회원 상세정보 이동
 		$(document).on('click','.detBtn',function(){
-			 var cust_no = $(this).parent().parent().find('span').text(); 
+			 var cust_no = $(this).parent().parent().find('#cusNo>span').text(); 
 			location.href="${pageContext.request.contextPath}/customer/showCustomer.do?cust_no="+cust_no
 		});
 		
@@ -53,7 +53,7 @@
 			var prt_cd = $('input[name="prt_cd"]').val().trim();
 			var prt_nm = $('input[name="prt_nm"]').val().trim();
 			var cust_no = $('input[name="cust_no"]').val().trim();
-			var cust_nm = $('input[name="cust_nm"]').val().trim();
+			var cust_nm = $('input[name="sCust_nm"]').val().trim();
 			var cust_ss_cd =$('input[name="cust_ss_cd"]:checked').val();
 			var from = $('input[name="from"]').val().replace(/\-/g,'');
 			var to = $('input[name="to"]').val().replace(/\-/g,'');
@@ -77,7 +77,8 @@
 					}else if(count>0){																			//list 결과값이 있는 경우 table에 append해서 적용.
 						$(param.list).each(function(index,item) {
 							output += '<tr>';
-							output +='<td id="cusNo"><span>'+item.cust_no+'</span><input type="button" class="recBtn" value="변경이력"></td>';
+							output +="<td id='cusNo'><span>"+item.cust_no+"</span><input type='button' class='recBtn' value='변경이력'></td>";
+						//	output +="<td id='cusNo'><span id='cusNo"+index+"'>"+item.cust_no+"</span><input type='button' class='recBtn' value='변경이력' onclick='recordPopupOpen("+index+")'></td>";
 							output +='<td id="cusNm"><span>'+item.cust_nm+'</span><input type="button" class="detBtn" value="상세"></td>';
 							output += '<td><span>'+item.mbl_no+'</span></td>';
 							output += '<td>'+item.cust_ss_cd+'</td>';
@@ -176,8 +177,14 @@
 				}
             }
 
-		}) 
+		}) ;
 	});
+	//index 사용해서 아이디 줘서 대상 찾기. (나중에 해보기)
+	/* function recordPopupOpen(index){
+		var cust_no = $('#cusNo'+index).text();
+		window.open('${pageContext.request.contextPath}/customer/showRecord.do?cust_no='+cust_no,'record','width=900,height=700');
+	} */
+	
 </script>
 </head>
 <body>
@@ -222,7 +229,7 @@
 				<label for="cust_no">고객</label>
 				<input type="text" id="cust_no" name="cust_no">
 					<img id="searchCust" class="searchIcon" alt="고객조회" src="${pageContext.request.contextPath}/images/search.png">
-				<input type="text" id="cust_nm" name="cust_nm">
+				<input type="text" id="sCust_nm" name="sCust_nm">
 			</li>
 			<li>
 				<label>*고객상태</label>
@@ -238,7 +245,7 @@
 			</li>
 		</ul>
 		<div class="submitBtn">
-			<button id="submitCus" ><span class="material-icons">search</span></button>
+			<button id="submitCus" type="button" ><span class="material-icons">search</span></button>
 		</div>
 	</form>
 </div>

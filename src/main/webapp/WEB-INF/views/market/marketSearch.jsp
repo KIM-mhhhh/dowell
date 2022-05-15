@@ -41,6 +41,7 @@
 				return false;
 			}else{															//체크한 경우 본 페이지의 prt_cd와 prt_nm에 해당 값 넣고 닫음.
 				$(opener.document).find('#prt_cd').val(prt_cd);
+				$(opener.document).find('#jn_prt_cd').val(prt_cd);
 		 		 $(opener.document).find('#prt_nm').val(prt_nm);
 					self.close();
 			}
@@ -48,10 +49,11 @@
 		 
 		//더블클릭 시 본문에 반영하고 창 닫기
 		$(document).on('dblclick','.checkTr',function(){						//해당 행을 더블클릭하면 그 행의 값들을 변수에 할당하고 그 변수를 본 페이지에 적용.
-			var custNo = $(this).find('td').find('span').eq(0).text();
-			var custNm = $(this).find('td').find('span').eq(1).text();
-			$(opener.document).find('#prt_cd').val(custNo);
-	 		 $(opener.document).find('#prt_nm').val(custNm);
+			var prt_cd = $(this).find('td').find('span').eq(0).text();
+			var prt_nm = $(this).find('td').find('span').eq(1).text();
+			$(opener.document).find('#prt_cd').val(prt_cd);
+			$(opener.document).find('#jn_prt_cd').val(prt_cd);
+	 		 $(opener.document).find('#prt_nm').val(prt_nm);
 				self.close();
 		});
 		

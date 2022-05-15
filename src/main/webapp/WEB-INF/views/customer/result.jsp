@@ -8,7 +8,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<%-- 고객명:
+고객명:
 ${customerVO.cust_nm }
 /
 직업코드:
@@ -53,7 +53,16 @@ ${customerVO.sms_rcv_yn }
 dm여부:
 ${customerVO.dm_rcv_yn }
 /
-최초 등록자:
-${customerVO.fst_user_id} --%>
+수정자:
+${customerVO.lst_upd_id}
+/
+변경 : 
+${customerVO.chg}
+/
+전 : 
+${customerVO.before}
+/
+후:
+${customerVO.after}
 </body>
 </html>

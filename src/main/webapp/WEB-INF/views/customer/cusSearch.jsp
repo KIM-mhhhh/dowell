@@ -41,7 +41,8 @@
 				return false;
 			}else{																			//체크한 값을 본 페이지의 각 부분에 할당.
 				$(opener.document).find('#cust_no').val(cust_no);
-		 		 $(opener.document).find('#cust_nm').val(cust_nm);
+/* 		 		 $(opener.document).find('#cust_nm').val(cust_nm); */
+		 		$(opener.document).find('#sCust_nm').val(cust_nm);
 					self.close();
 			}
 			
@@ -52,7 +53,8 @@
 			var custNo = $(this).find('td').find('span').eq(0).text();
 			var custNm = $(this).find('td').find('span').eq(1).text();
 			$(opener.document).find('#cust_no').val(custNo);
-	 		 $(opener.document).find('#cust_nm').val(custNm);
+/* 	 		 $(opener.document).find('#cust_nm').val(custNm); */
+	 		$(opener.document).find('#sCust_nm').val(custNm);
 				self.close();
 		});
 

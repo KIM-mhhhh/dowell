@@ -24,9 +24,12 @@ public interface CustomerService {
 	public List<Map<String,Object>> getPocCode();
 	
 	//고객정보 가져오기
-	public CustomerVO getCustInfo(String cust_no);
+	public CustomerVO getCustInfo(Map<String,Object> map);
 	
 	//신규 고객 등록
 	public void custRegister(CustomerVO customerVO);
+	
+	//고객 정보 수정
+	public void custUpdate(Map<String,Object> map);
 
 }
