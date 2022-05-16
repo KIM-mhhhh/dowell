@@ -20,7 +20,6 @@ public class RecordVO {		//���̷� ���̺�
 	private String user_nm;
 	private String sLst_upd_dt; 
 	private String cust_nm;
-	private String[] changeCd;
 	
 	
 	public String getCust_no() {
@@ -101,19 +100,13 @@ public class RecordVO {		//���̷� ���̺�
 	public void setCust_nm(String cust_nm) {
 		this.cust_nm = cust_nm;
 	}
-	public String[] getChangeCd() {
-		return changeCd;
-	}
-	public void setChangeCd(String[] changeCd) {
-		this.changeCd = changeCd;
-	}
+
 	@Override
 	public String toString() {
 		return "RecordVO [cust_no=" + cust_no + ", chg_dt=" + chg_dt + ", chg_seq=" + chg_seq + ", chg_cd=" + chg_cd
 				+ ", chg_bf_cnt=" + chg_bf_cnt + ", chg_aft_cnt=" + chg_aft_cnt + ", fst_reg_dt=" + fst_reg_dt
 				+ ", fst_user_id=" + fst_user_id + ", lst_upd_dt=" + lst_upd_dt + ", lst_upd_id=" + lst_upd_id
-				+ ", user_nm=" + user_nm + ", sLst_upd_dt=" + sLst_upd_dt + ", cust_nm=" + cust_nm + ", changeCd="
-				+ Arrays.toString(changeCd) + "]";
+				+ ", user_nm=" + user_nm + ", sLst_upd_dt=" + sLst_upd_dt + ", cust_nm=" + cust_nm +"]";
 	}
 	
 	

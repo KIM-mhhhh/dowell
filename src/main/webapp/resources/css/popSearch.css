@@ -50,7 +50,7 @@
 }
 
 #infoBox{
-	width:80%;
+	width:90%;
 	height:270px;
 	background-color:white;
 	border : 3px double black;
@@ -62,15 +62,15 @@
 }
 
 #ynBox{
-	width:80%;
+	width:90%;
 	height:70px;
 	background-color:white;
 	border : 3px double black;
 	display:flex;							/* display는 서로 요소들 움직일 수 있게 */
 	justify-content:space-between;			/* 동일한 간격으로 서로 사이두고 끝에 붙게 */
 	align-items:center;						/* 위아래로 간격 두고 끝에 붙게 */
-	margin:0 auto;
-	padding:10px 10px 10px 10px;
+	margin:20px auto;
+	padding:10px 8px 10px 8px;
 }
 
 ul{
@@ -78,9 +78,10 @@ ul{
 }
 ul li{
 	display:inline-block;
+	margin : 5px;
 }
 label{
-	width:90px;
+	width:120px;
 	float:left;			/* 태그를 왼쪽으로 정렬 */
 }
 .searchIcon{

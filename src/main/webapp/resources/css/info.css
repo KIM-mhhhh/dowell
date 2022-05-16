@@ -7,35 +7,42 @@
 	text-align:right;
 }
 /* 푸터 */
-.footer { 
-	position: absolute; 
-	left: 0; 
-	bottom: 0; 
-	width: 100%; }
+
 
 /* 폼 */
 #searchForm{
 	width:80%;
 	height:50px;
 	margin:0 auto;
-	padding:10px 10px 10px 10px;
+	padding:10px 30px 10px 10px;
 	background-color:white;
 	border : 3px double black;
+	display:flex;							/* display는 서로 요소들 움직일 수 있게 */
+	justify-content:space-between;			/* 동일한 간격으로 서로 사이두고 끝에 붙게 */
+	align-items:center;						/* 위아래로 간격 두고 끝에 붙게 */
 }
 .infoBox{
-	width:75%;
+	width:93%;
+	height:200px;
 	margin:0 auto;
-	padding:10px 10px 10px 10px;
+	padding:10px 0 10px 0;
+	display:flex;
+	justify-content:space-between;			/* 동일한 간격으로 서로 사이두고 끝에 붙게 */
+	align-items:center;						/* 위아래로 간격 두고 끝에 붙게 */
 	border : 2px solid black;
 }
 .calBox{
-	width:75%;
+	width:90%;
 	margin:0 auto;
 	padding:10px 10px 10px 10px;
 	border : 2px solid black;
+	display:flex;							/* display는 서로 요소들 움직일 수 있게 */
+	justify-content:space-between;			/* 동일한 간격으로 서로 사이두고 끝에 붙게 */
+	align-items:center;	
+
 }
 .ynBox{
-	width:75%;
+	width:90%;
 	margin:0 auto;
 	padding:10px 10px 10px 10px;
 	border : 2px solid black;
@@ -59,10 +66,61 @@ ul li{
 	border : 1px solid grey;
 }
 
+#infoForm li{
+	margin : 0 10px 0 10px;
+
+}
 
 .side{
 	width:30%;
 	float:left;
 }
+.side ul li{
+	display:inline-block;
+}
 
+
+
+.header{
+	width:100%;
+}
+
+.footer { 
+	position : relative;
+ 	transform : translateY(-100%);
+	height:10px;
+	width: 100%;
+	z-index: -999;	
+	/* position: absolute;  */
+	left: 0; 
+	bottom: 0; 
+}
+
+.searchIcon{
+	width:18px;
+	height:18px;
+	padding : 2px 2px 2px 2px;
+	border : 1px solid grey;
+}
+h4{
+	padding-left:100px;
+}
+
+h4 img{
+	width:15px;
+	height:15px;
+}
+#wrapper{
+  height: auto;
+  padding-bottom: 10px;
+}
+
+#infoOne{
+	width:70%;
+	float :left;
+}
+#infoTwo{
+	width:30%;
+	float:right;
+}
 

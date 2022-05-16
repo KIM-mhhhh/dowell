@@ -1,6 +1,7 @@
 package first.customer.service;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -82,12 +83,17 @@ public class CustomerServiceImpl implements CustomerService {
 		try {
 			CustomerVO customerVO =(CustomerVO) map.get("customerVO");
 			 customerMapper.custUpdate(customerVO);
-			 
+			 Map<String,Object> cmap = new HashMap<String,Object>();
+			 cmap.put("cust_no", customerVO.getCust_no());
 			 List<RecordVO> recList = (List<RecordVO>)map.get("recordList");
+			 System.out.println(recList.size());
 			 for(int i=0;i<recList.size();i++) {
 				 RecordVO record = recList.get(i);
+				 int seq= customerMapper.getSeq(cmap);
+				 record.setChg_seq(seq);
 				 System.out.println(record.toString());
-				 customerMapper.recordRegist(record);
+				 System.out.println(seq);
+				 customerMapper.recordRegist(recList);
 			 }
 		} catch (RuntimeException e) { 
 			transactionManager.rollback(status); 

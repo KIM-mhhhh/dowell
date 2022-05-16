@@ -247,25 +247,31 @@
  			    , c.addr																		<!-- 고객관리 테이블의 주소 --> 
  			    , c.addr_dtl																	<!-- 고객관리 테이블의 상세주소 --> 
  			    , c.cust_ss_cd																	<!-- 고객관리 테이블의 고객상태코드 --> 
- 			    , c.fst_js_dt																	<!-- 고객관리 테이블의 최조가입일자  -->
- 			    , c.js_dt																		<!-- 고객관리 테이블의 가입일자 --> 
+ 			    , (substr(c.fst_js_dt,1,4) || '-' || substr(c.fst_js_dt,5,2) || '-' || substr(c.fst_js_dt,7,2)) AS fst_js_dt															<!-- 고객관리 테이블의 최조가입일자  -->
+ 			    , (substr(c.js_dt,1,4) || '-' || substr(c.js_dt,5,2) || '-' || substr(c.js_dt,7,2)) AS js_dt																		<!-- 고객관리 테이블의 가입일자 --> 
  			    , c.cncl_cnts																	<!-- 고객관리 테이블의 해지사유 내용 --> 
- 			    , c.stp_dt																		<!-- 고객관리 테이블의 중지일자 -->
- 			    , c.cncl_dt																		<!-- 고객관리 테이블의 해지일자 --> 
+ 			    , (substr(c.stp_dt,1,4) || '-' || substr(c.stp_dt,5,2) || '-' || substr(c.stp_dt,7,2)) AS stp_dt																		<!-- 고객관리 테이블의 중지일자 -->
+ 			    , (substr(c.cncl_dt,1,4) || '-' || substr(c.cncl_dt,5,2) || '-' || substr(c.cncl_dt,7,2)) AS cncl_dt																		<!-- 고객관리 테이블의 해지일자 --> 
  			    , c.email_rcv_yn																<!-- 고객관리 테이블의 이메일수신동의여부 --> 
  			    , c.sms_rcv_yn																	<!-- 고객관리 테이블의 sms수신동의여부 --> 
  			    , c.dm_rcv_yn 																	<!-- 고객관리 테이블의 dm수신동의여부 --> 
-		 		, (SELECT SUM(TOT_SAL_AMT) 														<!-- 고객의 총 구매금액. 총 구매한것에서 반품한 금액 제외함. -->		
-		 		  FROM CS_SAL01_MT 
-		 		  WHERE CUST_NO=#{cust_no}
-		 		 	 AND SAL_TP_CD='SAL'
+		 		, (SELECT SUM(TOT) 
+		 			FROM (SELECT (CASE SAL_TP_CD												<!-- 고객의 총 구매금액. 총 구매한것에서 반품한 금액 제외함. -->		
+      									WHEN 'RTN' THEN (-1 * TOT_SAL_AMT)
+       									WHEN 'SAL' THEN TOT_SAL_AMT
+   								 END)AS TOT
+							FROM CS_SAL01_MT
+							WHERE CUST_NO=#{cust_no})
 		 		  ) AS cTot_sal_amt
-		 		, (SELECT SUM(TOT_SAL_AMT) 														<!-- 고객의 총 구매금액. 총 구매한것에서 반품한 금액 제외함. -->		
-		 		  FROM CS_SAL01_MT 
-		 		  WHERE CUST_NO=#{cust_no}
-		 			  AND SAL_TP_CD='SAL'
-		 			  AND substr(sal_dt,1,6)=TO_CHAR(SYSDATE,'YYYYMM')
-		 		  ) AS mTot_sal_amt																				
+		 		, (SELECT SUM(SUMTOT)
+		 			FROM (SELECT (CASE SAL_TP_CD
+       									WHEN 'RTN' THEN (-1 * TOT_SAL_AMT)
+      									WHEN 'SAL' THEN TOT_SAL_AMT
+								  END)AS SUMTOT
+						  FROM CS_SAL01_MT
+						  WHERE CUST_NO=#{cust_no} 
+						  		AND substr(sal_dt,1,6)=TO_CHAR(SYSDATE,'YYYYMM') ) 
+				 ) AS mTot_sal_amt																				
 		FROM CS_CUST01_MT c																		<!-- 고객관리 테이블 -->
 			 JOIN MA_PRT_MT p 																	<!-- 매장관리 테이블과 매장코드와 가입매장코드가 같은 조건으로 조인 -->
 				ON c.jn_prt_cd=p.prt_cd												
@@ -355,30 +361,37 @@
  	</insert> 
 
 	<!-- 회원 정보 기록 -->
-   	<insert id="recordRegist" parameterType="RecordVO">
- 		      
-			INSERT INTO SD_CUST01_HT 
-					(CUST_NO
-					, CHG_DT
-					, CHG_SEQ
-					, CHG_CD
-					, CHG_BF_CNT
-					, CHG_AFT_CNT
-					, FST_REG_DT
-					, FST_USER_ID
-					, LST_UPD_DT
-					, LST_UPD_ID)
-			VALUES #{cust_no}
-					,TO_CHAR(SYSDATE,'yyyyMMdd')
-					,(SELECT NVL(MAX(CHG_SEQ),0)+1 FROM SD_CUST01_HT WHERE CUST_NO=#{cust_no} AND CHG_DT = SYSDATE)
-					,#{chg_cd}
-					,#{chg_bf_cnt}
-					,#{chg_aft_cnt}
-					,SYSDATE						
-					,#{lst_upd_id}					
-					,SYSDATE
-					,#{lst_upd_id}
-							
+   	<insert id="recordRegist" parameterType="java.util.List">
+				<foreach collection="list" item="item" index="index" separator="" open="INSERT ALL" close="SELECT * FROM DUAL"  >
+					  INTO SD_CUST01_HT 
+						(CUST_NO
+						, CHG_DT
+						, CHG_SEQ
+						, CHG_CD
+						, CHG_BF_CNT
+						, CHG_AFT_CNT
+						, FST_REG_DT
+						, FST_USER_ID
+						, LST_UPD_DT
+						, LST_UPD_ID)
+				VALUES 
+						(#{item.cust_no}
+						,TO_CHAR(SYSDATE,'yyyyMMdd')
+						,#{item.chg_seq} + #{index}
+						,#{item.chg_cd}
+						,#{item.chg_bf_cnt}
+						,#{item.chg_aft_cnt}
+						,SYSDATE						
+						,#{item.lst_upd_id}					
+						,SYSDATE
+						,#{item.lst_upd_id})
+		 </foreach>						
  	</insert>  
-	
+ 	
+ 	<!-- 증 가 수 -->
+	<select id="getSeq" resultType="integer" parameterType="map">
+		SELECT (NVL(MAX(CHG_SEQ),0)+1 ) as CHG_SEQ
+		FROM SD_CUST01_HT 
+		WHERE CUST_NO=#{cust_no} AND CHG_DT = SYSDATE
+	</select>
 </mapper>

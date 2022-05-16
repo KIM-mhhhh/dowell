@@ -26,6 +26,18 @@
 			if($('#mbl_no1').val().length==0 || $('#mbl_no2').val().length==0 || $('#mbl_no3').val().length==0){
 				alert('빈칸을 입력하세요.');
 				return false;
+			}
+			if($('#mbl_no1').val().length ==3 && $('#mbl_no3').val().length ==4 && ($('#mbl_no2').val().length !=3 || $('#mbl_no2').val().length !=4 ) ){
+				
+			}else{
+				alert('전화번호 형식에 맞지 않습니다.');
+				return false;
+			}
+			
+			if($('#mbl_no1').val() =='000' && ($('#mbl_no2').val() =='000' || $('#mbl_no2').val() =='0000') && $('#mbl_no3').val() =='0000'){
+			
+				alert('사용할 수 없는 핸드폰 번호 입니다.');
+				return false;
 			};
 			$('#mbl_no').val( $('#mbl_no1').val() + $('#mbl_no2').val() + $('#mbl_no3').val());			//핸드폰번호 값 할당
 
@@ -67,6 +79,17 @@
 			}
 			$('#email').val( $('#email1').val() +"@"+ $('#email2').val());				//email값 할당
 			
+			//직업코드 필수
+			if($('#poc_cd').val()==null){
+				alert('직업을 선택하세요.');
+				return false;
+			}
+			//우편물 수령 선택 필수
+			if($('#psmt_grc_cd').val()==''){
+				alert('우편물 수령 장소를 선택하세요.');
+				return false;
+			}
+			
 			//주소 하나 입력되어 있으면 둘 다 입력
 			if($('#addr').val().trim().length>0 && $('#addr_dtl').val().trim().length<=0 ){
 				alert('상세주소를 입력해 주세요.');
@@ -76,6 +99,7 @@
 				return false;
 			}
 			//휴대폰번호 확인 체크
+		
 			if(check==0){
 				alert('휴대폰 번호 중복 확인 해주세요.');
 				return false;
@@ -85,6 +109,11 @@
 				alert('날짜를 입력해 주세요');
 				return false;
 			}
+ 			//날짜 제한. 오늘 넘지 않게
+ 			if($('#birth').val()> new Date().toISOString().substring(0,10)){
+ 				alert('오늘 이전의 날짜만 선택 가능합니다.');
+ 				return false;
+ 			}
 			 $('#brdy_dt').val($('#birth').val().replace(/\-/g,''));
  			//결혼기념일 - 제거
 			if($('#merry').val() !=''){
@@ -110,11 +139,11 @@
 					<input type="hidden" name="fst_user_id" value="${id}">
 			<ul>
 				<li>
-					<label for="cust_nm">고객명</label>
+					<label for="cust_nm">*고객명</label>
 					<input type="text" id="cust_nm" name="cust_nm">
 				</li>
 				<li>
-					<label for="poc_cd">직업코드</label>
+					<label for="poc_cd">*직업코드</label>
 					<select name="poc_cd">
 						<option selected disabled>-선택-</option>
 						<c:forEach var="code" items="${codeList }">
@@ -123,7 +152,7 @@
 					</select>
 				</li>
 				<li>
-					<label for="brdy_dt">생년월일</label>
+					<label for="brdy_dt">*생년월일</label>
 					<input type="hidden" id="brdy_dt" name="brdy_dt">
 					<input type="date" id="birth" name="birth">
 				</li>
@@ -133,7 +162,7 @@
 					<input type="radio" name="sex_cd" value="M">남성
 				</li>
 				<li>
-					<label for="mbl_no">휴대폰번호</label>
+					<label for="mbl_no">*휴대폰번호</label>
 					<input type="hidden" name="mbl_no" id="mbl_no">
 					<input type="text" id="mbl_no1">
 					<input type="text" id="mbl_no2">
@@ -146,12 +175,12 @@
 					<input type="radio" name="scal_yn" value="1">음력
 				</li>
 				<li>
-					<label for="psmt_grc_cd">우편물수령</label>
+					<label for="psmt_grc_cd">*우편물수령</label>
 					<input type="radio" name="psmt_grc_cd" value="H" checked>자택
 					<input type="radio" name="psmt_grc_cd" value="O">직장
 				</li>
 				<li>
-					<label for="email">이메일</label>
+					<label for="email">*이메일</label>
 					<input type="hidden" name="email" id="email">
 					<input type="text" id="email1">
 					<span>@</span>
@@ -168,26 +197,26 @@
 					<input type="date" id="merry" name="merry">
 				</li>
 				<li>
-					<label>매장</label>
-					<input type="text" name="jn_prt_cd" id="prt_cd" value="${prt_cd}">
-					<input type="text" id="prt_nm" value="${prt_nm}">
+					<label>*매장</label>
+					<input type="text" name="jn_prt_cd" id="prt_cd" value="${prt_cd}" readonly>
+					<input type="text" id="prt_nm" value="${prt_nm}" readonly>
 				</li>
 			</ul>
 		</div>
 		<div id="ynBox">
 			<ul>
 				<li>
-					<label for="email_rcv_yn">이메일수신동의</label>
+					<label for="email_rcv_yn">*이메일수신동의</label>
 					<input type="radio" name="email_rcv_yn" value="Y">예
 					<input type="radio" name="email_rcv_yn" value="N" checked>아니오
 				</li>
 					<li>
-					<label for="sms_rcv_yn">SMS수신동의</label>
+					<label for="sms_rcv_yn">*SMS수신동의</label>
 					<input type="radio" name="sms_rcv_yn" value="Y">예
 					<input type="radio" name="sms_rcv_yn" value="N" checked>아니오
 				</li>
 					<li>
-					<label for="dm_rcv_yn">DM수신동의</label>
+					<label for="dm_rcv_yn">*DM수신동의</label>
 					<input type="radio" name="dm_rcv_yn" value="Y">예
 					<input type="radio" name="dm_rcv_yn" value="N" checked>아니오
 				</li>

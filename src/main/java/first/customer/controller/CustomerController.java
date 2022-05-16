@@ -2,6 +2,7 @@ package first.customer.controller;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -213,7 +214,7 @@ public class CustomerController {
 	}
 	
 	
-	  //�쉶�썝踰덊샇濡� 怨좉컼�젙蹂� 媛��졇�삤湲�
+	  //회원 정보 검색
 	  
 	  @RequestMapping("/customer/getCustInfo.do")
 	  @ResponseBody 
@@ -226,7 +227,7 @@ public class CustomerController {
 		map.put("cust_no", cust_no);
 	  
 	  CustomerVO customer = customerService.getCustInfo(map);
-	  System.out.println("�꽦蹂� :" +customer.getSex_cd());
+	  System.out.println("성별 :" +customer.getSex_cd());
 	  System.out.println(customer.getcTot_sal_amt());
 	  
 	  Map<String,Object> ajaxMap = new HashMap<String, Object>();
@@ -234,35 +235,55 @@ public class CustomerController {
 	  
 	  return ajaxMap; 
 	  }
-	 //�쉶�썝�젙蹂� �닔�젙
+	 //고객 정보 수정
 	  @RequestMapping("/customer/updateSubmit.do")
 	  public String updateCustomer(@ModelAttribute CustomerVO customerVO, Model model) {
 
 		 
 		  String chg = customerVO.getChg();
-//		  System.out.println("바뀜 " + chg);
+		  System.out.println(chg + "/" + customerVO.getBefore() + "/" + customerVO.getAfter());
+
 		  String[] changeCd = chg.split(",");
 		  String[] changeBf = customerVO.getBefore().split(",");
 		  String[] changeAf = customerVO.getAfter().split(",");
-		  System.out.println(changeCd[0] + "/"+changeBf[0]+"/"+changeAf[0]);
+		  ArrayList<String> cCdList = new ArrayList<String>(Arrays.asList(changeCd));
+		  ArrayList<String> cBfList = new ArrayList<String>(Arrays.asList(changeBf));
+		  ArrayList<String> cAfList = new ArrayList<String>(Arrays.asList(changeAf));
+
 		  System.out.println(changeCd.length);
 		  
-		  //recordVO�뿉 媛� �꽔湲�
+		  if(cCdList.size()-cBfList.size()>0) {
+			  for(int i=0;i<cCdList.size()-cBfList.size();i++) {
+				  cBfList.add("-");
+			  }
+		  }
+		  if(cCdList.size()-cAfList.size()>0) {
+			  for(int i=0;i<cCdList.size()-cAfList.size();i++) {
+				  cAfList.add("-");
+			  }
+		  }
+		  
+		  
+		  //recordVO에 값 할당
 			
 		  List<RecordVO> rList = new ArrayList<RecordVO>(); 
-			  for(int i=0;i<changeCd.length;i++) { 
+		  	for(int i=0;i<cCdList.size();i++) {
+		  		
 				  RecordVO recordVO = new RecordVO();
 				  recordVO.setCust_no(customerVO.getCust_no());
-				  recordVO.setChg_cd(changeCd[i].toUpperCase());
-				  recordVO.setChg_bf_cnt(changeBf[i]);
-				  recordVO.setChg_aft_cnt(changeAf[i]);
+				  recordVO.setChg_cd(cCdList.get(i).toUpperCase());
+				  recordVO.setChg_bf_cnt(cBfList.get(i));
+				  recordVO.setChg_aft_cnt(cAfList.get(i));
 				  recordVO.setLst_upd_id(customerVO.getLst_upd_id());
 				  recordVO.setFst_user_id(customerVO.getFst_user_id());
 				  
 				  rList.add(recordVO); 
 				  } 
 			
-			  Map<String,Object> map = new HashMap<String, Object>();
+			 
+		  	
+		  	
+		  	Map<String,Object> map = new HashMap<String, Object>();
 			  map.put("customerVO", customerVO);
 			  map.put("recordList", rList);
 			  
