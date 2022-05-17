@@ -8,13 +8,14 @@
 <title>신규고객등록</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/popSearch.css" type="text/css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/common.js"></script>
+
 <script type="text/javascript">
 	$(document).ready(function(){
 		var check = 0;			// 휴대폰번호 중복체크 확인. 0이면 확인 안하거나 중복. 1이면 확인. 중복 안됨. 
 		//창 종료
-		$('#closeForm').click(function(){
-			self.close();
-		});
+		$.closeForm($('#closeForm'));
+
 		//생년월일 미래일자 입력 불가
 		$('#birth').click(function(){
 			var today = new Date().toISOString().substring(0,10);
@@ -25,18 +26,26 @@
 		 $('#chMbl').click(function(){
 			if($('#mbl_no1').val().length==0 || $('#mbl_no2').val().length==0 || $('#mbl_no3').val().length==0){
 				alert('빈칸을 입력하세요.');
+				$('#mbl_no1').focus();
 				return false;
 			}
 			if($('#mbl_no1').val().length ==3 && $('#mbl_no3').val().length ==4 && ($('#mbl_no2').val().length !=3 || $('#mbl_no2').val().length !=4 ) ){
 				
 			}else{
 				alert('전화번호 형식에 맞지 않습니다.');
+				$('#mbl_no1').val('');
+				$('#mbl_no2').val('');
+				$('#mbl_no3').val('');
+				$('#mbl_no1').focus();
 				return false;
 			}
-			
 			if($('#mbl_no1').val() =='000' && ($('#mbl_no2').val() =='000' || $('#mbl_no2').val() =='0000') && $('#mbl_no3').val() =='0000'){
 			
 				alert('사용할 수 없는 핸드폰 번호 입니다.');
+				$('#mbl_no1').val('');
+				$('#mbl_no2').val('');
+				$('#mbl_no3').val('');
+				$('#mbl_no1').focus();
 				return false;
 			};
 			$('#mbl_no').val( $('#mbl_no1').val() + $('#mbl_no2').val() + $('#mbl_no3').val());			//핸드폰번호 값 할당
@@ -54,7 +63,11 @@
 						alert('사용가능한 번호입니다.');
 						check=1;
 					}else if(param.result=='Duplicated'){
-						alert('이미 가입된 번호입니다.');
+						$('#mbl_no1').val('');
+						$('#mbl_no2').val('');
+						$('#mbl_no3').val('');
+						$('#mbl_no1').focus();
+						alert('사용중인 번호입니다.');
 					}else{
 						alert('네트워크 오류 발생');
 					}
@@ -80,22 +93,19 @@
 			$('#email').val( $('#email1').val() +"@"+ $('#email2').val());				//email값 할당
 			
 			//직업코드 필수
-			if($('#poc_cd').val()==null){
+/* 			if(! $('#poc_cd').val()){
 				alert('직업을 선택하세요.');
 				return false;
-			}
-			//우편물 수령 선택 필수
-			if($('#psmt_grc_cd').val()==''){
-				alert('우편물 수령 장소를 선택하세요.');
-				return false;
-			}
-			
+			} */
+	
 			//주소 하나 입력되어 있으면 둘 다 입력
 			if($('#addr').val().trim().length>0 && $('#addr_dtl').val().trim().length<=0 ){
 				alert('상세주소를 입력해 주세요.');
+				$('#addr_dtl').focus();
 				return false;
 			}else if($('#addr').val().trim().length<=0 && $('#addr_dtl').val().trim().length>0 ){
 				alert('주소를 입력해 주세요.');
+				$('#addr').focus();
 				return false;
 			}
 			//휴대폰번호 확인 체크
@@ -106,7 +116,7 @@
 			}
  			//생년월일 값 체크, -제거
 			if($('#birth').val()==''){
-				alert('날짜를 입력해 주세요');
+				alert('생년월일을 입력해 주세요');
 				return false;
 			}
  			//날짜 제한. 오늘 넘지 않게

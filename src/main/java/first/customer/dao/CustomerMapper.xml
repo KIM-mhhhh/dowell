@@ -361,7 +361,7 @@
  	</insert> 
 
 	<!-- 회원 정보 기록 -->
-   	<insert id="recordRegist" parameterType="java.util.List">
+    	<update id="recordRegist" parameterType="java.util.Map">
 				<foreach collection="list" item="item" index="index" separator="" open="INSERT ALL" close="SELECT * FROM DUAL"  >
 					  INTO SD_CUST01_HT 
 						(CUST_NO
@@ -377,7 +377,7 @@
 				VALUES 
 						(#{item.cust_no}
 						,TO_CHAR(SYSDATE,'yyyyMMdd')
-						,#{item.chg_seq} + #{index}
+						,#{item.chg_seq}
 						,#{item.chg_cd}
 						,#{item.chg_bf_cnt}
 						,#{item.chg_aft_cnt}
@@ -386,12 +386,12 @@
 						,SYSDATE
 						,#{item.lst_upd_id})
 		 </foreach>						
- 	</insert>  
+ 	</update>  
  	
  	<!-- 증 가 수 -->
 	<select id="getSeq" resultType="integer" parameterType="map">
 		SELECT (NVL(MAX(CHG_SEQ),0)+1 ) as CHG_SEQ
 		FROM SD_CUST01_HT 
-		WHERE CUST_NO=#{cust_no} AND CHG_DT = SYSDATE
+		WHERE CUST_NO=#{cust_no} AND CHG_DT = TO_CHAR(SYSDATE,'yyyyMMdd')
 	</select>
 </mapper>

@@ -27,7 +27,7 @@ public interface CustomerMapper {
 	//고객 정보 수정
 	public void custUpdate(CustomerVO customerVO);
 	//고객 이력 넣기
-	public void recordRegist(List<RecordVO> rList);
+	public void recordRegist(Map<String,Object> map);
 	//증가 수
 	public int getSeq(Map<String,Object> map);
 }

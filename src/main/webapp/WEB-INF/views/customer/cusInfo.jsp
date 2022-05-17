@@ -37,15 +37,18 @@
 		}
 		//값 로드시 radio버튼 할당
 		$('#poc_cd').val(${customer.poc_cd }).prop("selected",true);
-		intoInfo("sex_cd",${customer.sex_cd });
-		/* $('input:radio[name =sex_cd]:input[value='+$('#hSex').val()+']').prop("checked", true);
+		//intoInfo("sex_cd",${customer.sex_cd });
+		 $('input:radio[name =sex_cd]:input[value='+$('#hSex').val()+']').prop("checked", true);
 	 	$('input:radio[name =cust_ss_cd]:input[value='+${customer.cust_ss_cd }+']').prop("checked", true);
 		$('input:radio[name =psmt_grc_cd]:input[value='+$('#hPsmt').val()+']').prop("checked",true);
 		$('input:radio[name =scal_yn]:input[value='+${customer.scal_yn }+']').prop("checked",true);
 		$('input:radio[name =email_rcv_yn]:input[value='+$('#hEyn').val()+']').prop("checked",true);
 		$('input:radio[name =sms_rcv_yn]:input[value='+$('#hSyn').val()+']').prop("checked",true);
-		$('input:radio[name =dm_rcv_yn]:input[value='+$('#hDyn').val()+']').prop("checked",true);  */
+		$('input:radio[name =dm_rcv_yn]:input[value='+$('#hDyn').val()+']').prop("checked",true);  
 				
+		//날짜 넣기
+		 $('#brdy_dt').val($('#birth').val());
+		
 		checkRadio();
 		//비교 위해 초기 form 객체
 		var Form = $('#infoForm').serializeArray();
@@ -176,7 +179,7 @@
 								
 															
 								Form = $('#infoForm').serializeArray();				//새로 불러온 정보 form객체로 묶는다.
-								checkRadio()
+								checkRadio();
 						},
 						error:function(error){
 							alert(error);
@@ -313,6 +316,7 @@
 			}
 			
 			 $('#brdy_dt').val($('#birth').val().replace(/\-/g,''));
+			 console.log($('#brdy_dt').val());
 			
  			//결혼기념일 - 제거
 			if($('#merry').val() !=''){

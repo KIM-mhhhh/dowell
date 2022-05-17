@@ -86,15 +86,25 @@ public class CustomerServiceImpl implements CustomerService {
 			 Map<String,Object> cmap = new HashMap<String,Object>();
 			 cmap.put("cust_no", customerVO.getCust_no());
 			 List<RecordVO> recList = (List<RecordVO>)map.get("recordList");
-			 System.out.println(recList.size());
+
+			 int seq= customerMapper.getSeq(cmap);
+			 System.out.println("리스트크기"+recList.size());
 			 for(int i=0;i<recList.size();i++) {
 				 RecordVO record = recList.get(i);
-				 int seq= customerMapper.getSeq(cmap);
-				 record.setChg_seq(seq);
+				 record.setChg_seq(seq+i);
+				 if(record.getChg_bf_cnt().equals("NULL")) {
+					 record.setChg_bf_cnt(null);
+				 }
+				 if(record.getChg_aft_cnt().equals("NULL")) {
+					 record.setChg_aft_cnt(null);
+				 }
 				 System.out.println(record.toString());
-				 System.out.println(seq);
-				 customerMapper.recordRegist(recList);
+				 System.out.println("시퀀스:"+record.getChg_seq());
+//				 customerMapper.recordRegist(recList);
 			 }
+			cmap.put("list", recList);
+			customerMapper.recordRegist(cmap);
+
 		} catch (RuntimeException e) { 
 			transactionManager.rollback(status); 
 			throw e; 

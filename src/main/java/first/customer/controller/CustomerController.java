@@ -250,19 +250,29 @@ public class CustomerController {
 		  ArrayList<String> cBfList = new ArrayList<String>(Arrays.asList(changeBf));
 		  ArrayList<String> cAfList = new ArrayList<String>(Arrays.asList(changeAf));
 
-		  System.out.println(changeCd.length);
-		  
+		  System.out.println(cCdList.size());
+		  System.out.println(cCdList.toString());
+
+		  System.out.println("before 길이 전:" + cBfList.size());
+		  System.out.println(cBfList.toString());
+		  //before이나 after에 빈 값이 있을 경우 NULL로 치환. 값을 넣어줘야 같이 for문 돌려서 record에 넣을 수가 있다.
 		  if(cCdList.size()-cBfList.size()>0) {
-			  for(int i=0;i<cCdList.size()-cBfList.size();i++) {
-				  cBfList.add("-");
+			  int size = cCdList.size()-cBfList.size();
+			  for(int i=0;i<size;i++) {
+				  cBfList.add("NULL");
 			  }
 		  }
+		  System.out.println("before 길이 후:" + cBfList.size());
+		  System.out.println(cBfList.toString());
+
+		  System.out.println(cAfList.toString());
 		  if(cCdList.size()-cAfList.size()>0) {
-			  for(int i=0;i<cCdList.size()-cAfList.size();i++) {
-				  cAfList.add("-");
+			  int size = cCdList.size()-cAfList.size();
+			  for(int i=0;i<size;i++) {
+				  cAfList.add("NULL");
 			  }
 		  }
-		  
+		  System.out.println(cAfList.toString());
 		  
 		  //recordVO에 값 할당
 			
@@ -277,10 +287,11 @@ public class CustomerController {
 				  recordVO.setLst_upd_id(customerVO.getLst_upd_id());
 				  recordVO.setFst_user_id(customerVO.getFst_user_id());
 				  
+				  System.out.println(recordVO.toString());
 				  rList.add(recordVO); 
 				  } 
 			
-			 
+		  	System.out.println("after 길이 후:" + cAfList.size());
 		  	
 		  	
 		  	Map<String,Object> map = new HashMap<String, Object>();
@@ -292,6 +303,7 @@ public class CustomerController {
 		  System.out.println(customerVO.toString());
 		  
 		  customerService.custUpdate(map);
+		  
 		  
 		  model.addAttribute("customerVO", customerVO);
 		  
