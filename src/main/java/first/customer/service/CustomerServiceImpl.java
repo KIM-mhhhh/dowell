@@ -92,6 +92,7 @@ public class CustomerServiceImpl implements CustomerService {
 			 for(int i=0;i<recList.size();i++) {
 				 RecordVO record = recList.get(i);
 				 record.setChg_seq(seq+i);
+				 record.setFst_user_id(customerVO.getFst_user_id());
 				 if(record.getChg_bf_cnt().equals("NULL")) {
 					 record.setChg_bf_cnt(null);
 				 }

@@ -21,11 +21,25 @@
 			var today = new Date().toISOString().substring(0,10);
 			$(this).attr('max',today);
 		});
+		//날짜 제한. 오늘 넘지 않게
+		$('#birth').change(function(){
+			  //날짜 제한. 오늘 넘지 않게
+ 			if($('#birth').val()> new Date().toISOString().substring(0,10)){
+  				alert('오늘 이전의 날짜만 선택 가능합니다.'); 
+ 				$('#birth').val('');
+ 				return false;
+ 			} 
+		});
+		//휴대폰 확인했다가 다시 입력창 손대면 확인 다시 하게
+		$('#mbl_no1,#mbl_no2,#mbl_no3 ').change(function(){
+			check = 0;
+		});
+		
 		
 		//휴대폰번호 중복 확인
 		 $('#chMbl').click(function(){
 			if($('#mbl_no1').val().length==0 || $('#mbl_no2').val().length==0 || $('#mbl_no3').val().length==0){
-				alert('빈칸을 입력하세요.');
+				alert('휴대폰 번호를 입력하세요.');
 				$('#mbl_no1').focus();
 				return false;
 			}
@@ -41,7 +55,7 @@
 			}
 			if($('#mbl_no1').val() =='000' && ($('#mbl_no2').val() =='000' || $('#mbl_no2').val() =='0000') && $('#mbl_no3').val() =='0000'){
 			
-				alert('사용할 수 없는 핸드폰 번호 입니다.');
+				alert('000-0000-0000 또는 000-000-0000은 \n사용할 수 없는 핸드폰 번호 입니다.');
 				$('#mbl_no1').val('');
 				$('#mbl_no2').val('');
 				$('#mbl_no3').val('');
@@ -60,7 +74,7 @@
 				timeout:30000,
 				success:function(param){
 					if(param.result=='NotDuplicated'){
-						alert('사용가능한 번호입니다.');
+						alert('사용가능한 핸드폰 번호입니다.');
 						check=1;
 					}else if(param.result=='Duplicated'){
 						$('#mbl_no1').val('');
@@ -93,10 +107,10 @@
 			$('#email').val( $('#email1').val() +"@"+ $('#email2').val());				//email값 할당
 			
 			//직업코드 필수
-/* 			if(! $('#poc_cd').val()){
+  			if(! $('#poc_cd').val()){
 				alert('직업을 선택하세요.');
 				return false;
-			} */
+			}  
 	
 			//주소 하나 입력되어 있으면 둘 다 입력
 			if($('#addr').val().trim().length>0 && $('#addr_dtl').val().trim().length<=0 ){
@@ -119,11 +133,7 @@
 				alert('생년월일을 입력해 주세요');
 				return false;
 			}
- 			//날짜 제한. 오늘 넘지 않게
- 			if($('#birth').val()> new Date().toISOString().substring(0,10)){
- 				alert('오늘 이전의 날짜만 선택 가능합니다.');
- 				return false;
- 			}
+ 			
 			 $('#brdy_dt').val($('#birth').val().replace(/\-/g,''));
  			//결혼기념일 - 제거
 			if($('#merry').val() !=''){
@@ -142,93 +152,126 @@
 </head>
 <body>
 <div>
+	<div class="hClass">
 	<h2>신규고객등록</h2>
 	<h4>고객기본정보</h4>
+	</div>
 	<form action="${pageContext.request.contextPath}/customer/registerSubmit.do" method="post" id="registerForm">
 		<div id="infoBox">
 					<input type="hidden" name="fst_user_id" value="${id}">
 			<ul>
-				<li>
+				<li class="formList">
 					<label for="cust_nm">*고객명</label>
+					<div class="ipdiv">
 					<input type="text" id="cust_nm" name="cust_nm">
+					</div>
 				</li>
-				<li>
+				<li  class="formList">
 					<label for="poc_cd">*직업코드</label>
-					<select name="poc_cd">
+					<div class="ipdiv">
+					<select name="poc_cd" id="poc_cd">
 						<option selected disabled>-선택-</option>
 						<c:forEach var="code" items="${codeList }">
 							<option value="${code.DTL_CD }">${code.DTL_CD_NM }</option>
 						</c:forEach>
 					</select>
+					</div>
 				</li>
-				<li>
+				<li  class="formList">
 					<label for="brdy_dt">*생년월일</label>
+					<div class="ipdiv">
 					<input type="hidden" id="brdy_dt" name="brdy_dt">
 					<input type="date" id="birth" name="birth">
+					</div>
 				</li>
-				<li>
+				<li  class="formList">
 					<label for="sex_cd">성별</label>
+					<div class="ipdiv">
 					<input type="radio" name="sex_cd" value="F" checked>여성
 					<input type="radio" name="sex_cd" value="M">남성
+					</div>
 				</li>
-				<li>
+				<li  class="formList">
 					<label for="mbl_no">*휴대폰번호</label>
+					<div class="ipdiv">
 					<input type="hidden" name="mbl_no" id="mbl_no">
 					<input type="text" id="mbl_no1">
 					<input type="text" id="mbl_no2">
 					<input type="text" id="mbl_no3">
 					<input type="button" value="확인" id="chMbl">
+					</div>
 				</li>
-				<li>
+				<li  class="formList">
 					<label for="scal_yn">생일</label>
+					<div class="ipdiv">
 					<input type="radio" name="scal_yn" value="0" checked>양력
 					<input type="radio" name="scal_yn" value="1">음력
+					</div>
 				</li>
-				<li>
+				<li  class="formList">
 					<label for="psmt_grc_cd">*우편물수령</label>
+					<div class="ipdiv">
 					<input type="radio" name="psmt_grc_cd" value="H" checked>자택
 					<input type="radio" name="psmt_grc_cd" value="O">직장
+					</div>
 				</li>
-				<li>
+				<li  class="formList">
 					<label for="email">*이메일</label>
+					<div class="ipdiv">
 					<input type="hidden" name="email" id="email">
 					<input type="text" id="email1">
-					<span>@</span>
+					<span id="emailSpan">@</span>
 					<input type="text" id="email2">
+					</div>
 				</li>
-				<li>
+				<li class="addrClass">
 					<label for="addr">주소</label>
+					<div class="addDiv">
 					<input type="text" id="addr" name="addr">
 					<input type="text" id="addr_dtl" name="addr_dtl">
+					</div>
 				</li>
-				<li>
+				<li  class="formList">
 					<label for="mrrg_dt">결혼기념일</label>
+					<div class="ipdiv">
 					<input type="hidden" id="mrrg_dt" name="mrrg_dt">
 					<input type="date" id="merry" name="merry">
+					</div>
 				</li>
-				<li>
+				<li  class="formList">
 					<label>*매장</label>
-					<input type="text" name="jn_prt_cd" id="prt_cd" value="${prt_cd}" readonly>
+					<div class="ipdiv">
+					<input type="text" name="jn_prt_cd" id="jn_prt_cd" value="${prt_cd}" readonly>
 					<input type="text" id="prt_nm" value="${prt_nm}" readonly>
+					</div>
 				</li>
 			</ul>
 		</div>
+		<div class="hClass">
+			<h4>수신동의(통합)</h4>
+		</div>
 		<div id="ynBox">
 			<ul>
-				<li>
+				<li class="formList">
 					<label for="email_rcv_yn">*이메일수신동의</label>
+					<div class="ipdiv">
 					<input type="radio" name="email_rcv_yn" value="Y">예
 					<input type="radio" name="email_rcv_yn" value="N" checked>아니오
+					</div>
 				</li>
-					<li>
+					<li class="formList">
 					<label for="sms_rcv_yn">*SMS수신동의</label>
+					<div class="ipdiv">
 					<input type="radio" name="sms_rcv_yn" value="Y">예
 					<input type="radio" name="sms_rcv_yn" value="N" checked>아니오
+					</div>
 				</li>
-					<li>
+					<li class="formList">
 					<label for="dm_rcv_yn">*DM수신동의</label>
+					<div class="ipdiv">
 					<input type="radio" name="dm_rcv_yn" value="Y">예
 					<input type="radio" name="dm_rcv_yn" value="N" checked>아니오
+					</div>
 				</li>
 			</ul>
 		</div>

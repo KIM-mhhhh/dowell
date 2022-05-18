@@ -10,14 +10,6 @@
 
 
 /* 폼 */
-/*  form{
-	width:90%;
-	height:40px;
-	margin:0 auto;
-	border:1px solid #000;
-	padding:10px 10px 10px 10px;
-	background-color:#f0f0f0;
-} */
 
 #marketForm{
 	width:80%;
@@ -49,6 +41,47 @@
 	padding:10px 10px 10px 10px;
 }
 
+#registerForm #jn_prt_cd, #prt_nm{
+	background-color: rgb(192, 192, 192);
+}
+
+.formList{
+	font-size: 14px;
+    width: 47%;
+    float:left;  
+    height: 40px;  
+}
+
+.formList>label{
+	width: 40%;
+    float:left; 
+}
+.ipdiv{
+	width:60%;
+	float:left;
+}
+
+.addDiv{
+	width: 80%;
+    float: right;
+    margin-right: 10px;
+}
+.addDiv>input{
+	margin : 0 3px 4px 0;
+}
+
+#email1, #email2 {
+	width:35%;
+	/* float:left; */
+} 
+
+#registerForm #addr, #registerForm #addr_dtl{
+	width: 40%;
+	float:left;
+} 
+.addrClass{
+	width:100%;
+}
 #infoBox{
 	width:90%;
 	height:270px;
@@ -61,9 +94,33 @@
 	padding:10px 10px 10px 10px;
 }
 
+ #mbl_no1, #mbl_no2, #mbl_no3{
+	width: 20%;
+	float:left;
+	margin-right:3px;
+	
+}
+#ynBox>ul{
+
+	margin-top:30px;
+}
+input#jn_prt_cd,input#prt_nm{
+	width: 42%;
+	float:left;
+	margin-right:3px;
+}
+/*
+input#addr,input#addr_dtl{
+	width: 150px;
+}
+
+input#merry{
+	margin-right: 118px;
+} */
+
 #ynBox{
 	width:90%;
-	height:70px;
+	height:60px;
 	background-color:white;
 	border : 3px double black;
 	display:flex;							/* display는 서로 요소들 움직일 수 있게 */
@@ -72,16 +129,26 @@
 	margin:20px auto;
 	padding:10px 8px 10px 8px;
 }
+#ynBox .formList{
+width:45%;
+float:left;
+}
 
 ul{
+
 	list-style:none;
 }
+#registerForm ul{
+	width:100%;
+	list-style:none;
+}
+
 ul li{
 	display:inline-block;
-	margin : 5px;
+	margin : 2px;
 }
 label{
-	width:120px;
+	width:100px;
 	float:left;			/* 태그를 왼쪽으로 정렬 */
 }
 .searchIcon{
@@ -154,14 +221,15 @@ th{
 	border-radius : 4%;
 }
 
-#closeForm{
+#closeForm, #regBtn{
 	background-color : white;
-	border : 1.5px solid black;
-	border-radius : 10%;
+	border : 2px solid black;
+	border-radius : 8%;
 	font-weight : bold;
-	margin-left : 10px;
+	margin-left : 5px;
+	width:80px;
+	height:30px;
 }
-
 .mkBtn{
 	display:inline-block;
 	float:right;
@@ -192,6 +260,10 @@ th{
 	height:500px; 
 	margin:40px auto 0 auto;
 }
+/* .hClass{
+	width:70%;
+	float:left;
+} */
 
 thead{
 	position: sticky ;
@@ -199,5 +271,6 @@ thead{
 }
 
 #btnBox{
-	text-align : center;
+	width:95%;
+	text-align : right;
 }

@@ -247,6 +247,7 @@
  			    , c.addr																		<!-- 고객관리 테이블의 주소 --> 
  			    , c.addr_dtl																	<!-- 고객관리 테이블의 상세주소 --> 
  			    , c.cust_ss_cd																	<!-- 고객관리 테이블의 고객상태코드 --> 
+ 			   	, c.fst_user_id																	<!-- 고객관리 테이블의 최초 등록자 --> 
  			    , (substr(c.fst_js_dt,1,4) || '-' || substr(c.fst_js_dt,5,2) || '-' || substr(c.fst_js_dt,7,2)) AS fst_js_dt															<!-- 고객관리 테이블의 최조가입일자  -->
  			    , (substr(c.js_dt,1,4) || '-' || substr(c.js_dt,5,2) || '-' || substr(c.js_dt,7,2)) AS js_dt																		<!-- 고객관리 테이블의 가입일자 --> 
  			    , c.cncl_cnts																	<!-- 고객관리 테이블의 해지사유 내용 --> 
@@ -382,7 +383,7 @@
 						,#{item.chg_bf_cnt}
 						,#{item.chg_aft_cnt}
 						,SYSDATE						
-						,#{item.lst_upd_id}					
+						,#{item.fst_user_id}					
 						,SYSDATE
 						,#{item.lst_upd_id})
 		 </foreach>						

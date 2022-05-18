@@ -13,7 +13,11 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		var check = 1;						//휴대폰 중복 체크
-		
+		var oName = $('#cust_nm').val();						//해지에서 되돌릴 때 넣을 원래 이름
+		var oMbl = $('#mbl_no').val();							//해지에서 되돌릴 때 넣을 원래 핸드폰 이름
+		var cState = ${customer.cust_ss_cd };					//상태체크 하기 위한 변수.
+
+
 		
 		//라디오버튼 체크
 		function intoInfo(name,value){
@@ -52,6 +56,7 @@
 		checkRadio();
 		//비교 위해 초기 form 객체
 		var Form = $('#infoForm').serializeArray();
+		
 		//오늘 날짜 구하는 함수
 		var getToday = function(){
 			var date = new Date();
@@ -67,8 +72,10 @@
 			    day = "0" + month;
 			}
 			var today = year + '-' + month + '-' + day;
+			
 			return today;
 		}
+		
 		$('#mbl_no1,#mbl_no2,#mbl_no3 ').change(function(){
 			check = 0;
 		});
@@ -143,6 +150,7 @@
 								$('#cust_nm').val(param.customer.cust_nm);
 							 	$('#sCust_nm').val(param.customer.cust_nm);
 	 							$('#birth').val(param.customer.brdy_dt);
+	 							$('#brdy_dt').val($('#birth').val());
 								$('#merry').val(param.customer.mrrg_dt);
 								$('#addr').val(param.customer.addr);
 								$('#addr_dtl').val(param.customer.addr_dtl);
@@ -177,7 +185,12 @@
 								$('input:radio[name =sms_rcv_yn]:input[value='+param.customer.sms_rcv_yn+']').prop("checked",true);
 								$('input:radio[name =dm_rcv_yn]:input[value='+param.customer.dm_rcv_yn+']').prop("checked",true);
 								
-															
+								//정상일 때 넣어줄 이름
+								oName =param.customer.cust_nm;
+								//정상일 때 넣어줄 번호
+								oMbl = param.customer.mbl_no;
+								//고객의 상태
+								cState =param.customer.cust_ss_cd;
 								Form = $('#infoForm').serializeArray();				//새로 불러온 정보 form객체로 묶는다.
 								checkRadio();
 						},
@@ -209,7 +222,7 @@
 						alert('사용가능한 번호입니다.');
 						check=1;
 					}else if(param.result=='Duplicated'){
-						alert('동일한 번호가 있습니다. / '+ mbl_no);
+						alert($('#mbl_no1').val() +"-"+ $('#mbl_no2').val() +"-"+ $('#mbl_no3').val() + '\n동일한 번호가 있습니다.');
 					}else{
 						alert('네트워크 오류 발생');
 					}
@@ -227,23 +240,53 @@
  			$('#mbl_no1').val('000');
  			$('#mbl_no2').val('0000');
  			$('#mbl_no3').val('0000');
- 			$('#cncl_dt').val(getToday());
+ 			$('#cn_dt').val(getToday());
  		});
 		//중지버튼
 		$(":radio[name='cust_ss_cd'][value='80']").click(function(){
- 			$('#stp_dt').val(getToday());
+			if(cState=='90'){
+				$('#cust_nm').val('');
+				$('#mbl_no1').val('');
+	 			$('#mbl_no2').val('');
+	 			$('#mbl_no3').val('');
+			} else{
+				$('#cust_nm').val(oName);
+	 			if(oMbl.length==11){
+	 				$('#mbl_no1').val(oMbl.substring(0,3));
+	 				$('#mbl_no2').val(oMbl.substring(3,7));
+	 				$('#mbl_no3').val(oMbl.substring(7,12));
+	 			}else if(oMbl.length==10){
+	 				$('#mbl_no1').val(oMbl.substring(0,3));
+	 				$('#mbl_no2').val(oMbl.substring(3,6));
+	 				$('#mbl_no3').val(oMbl.substring(6,11));
+	 			} 
+			}
+ 			$('#stop_dt').val(getToday());
  		});
  		//정상버튼
  		$(":radio[name='cust_ss_cd'][value='10']").click(function(){
  			$('#cncl_cnts').attr("readonly",true);
- 			$('#cust_nm').val('');
+			if(cState=='90'){
+				$('#cust_nm').val('');
+				$('#mbl_no1').val('');
+	 			$('#mbl_no2').val('');
+	 			$('#mbl_no3').val('');
+			} else{
+				$('#cust_nm').val(oName);
+	 			if(oMbl.length==11){
+	 				$('#mbl_no1').val(oMbl.substring(0,3));
+	 				$('#mbl_no2').val(oMbl.substring(3,7));
+	 				$('#mbl_no3').val(oMbl.substring(7,12));
+	 			}else if(oMbl.length==10){
+	 				$('#mbl_no1').val(oMbl.substring(0,3));
+	 				$('#mbl_no2').val(oMbl.substring(3,6));
+	 				$('#mbl_no3').val(oMbl.substring(6,11));
+	 			} 
+			}
  			$('#cncl_cnts').val('');
- 			$('#mbl_no1').val('');
- 			$('#mbl_no2').val('');
- 			$('#mbl_no3').val('');
- 			$('#cncl_dt').val('');
- 			$('#stp_dt').val('');
- 			$('#js_dt').val(getToday());
+ 			$('#cn_dt').val('');
+ 			$('#stop_dt').val('');
+ 			$('#jdt').val(getToday());
  		});
 		
 		//저장버튼 클릭 시 휴대폰번호 변경버튼 안눌렀으면 버튼확인하라고, 필수항목 검사. 창 띄우고 yes면 저장.
@@ -281,10 +324,18 @@
 			}
 			//휴대폰번호 확인 체크
 			
- 			/* if(check==0){
-				alert('휴대폰 번호 중복 확인 해주세요.');
-				return false;
-			}  */
+ 			if(check==0){
+ 				if(($('#mbl_no1').val() + $('#mbl_no2').val() + $('#mbl_no3').val()) == oMbl){
+ 					check = 1;
+ 				}else{
+ 					alert('휴대폰 번호 중복 확인 해주세요.');
+ 					return false;
+ 				}
+ 				
+ 				
+ 				
+
+			}  
 			$('#mbl_no').val( $('#mbl_no1').val() + $('#mbl_no2').val() + $('#mbl_no3').val());	
 			
  			//생년월일 값 체크, -제거
@@ -293,10 +344,12 @@
 				return false;
 			}else {
 				$('#brdy_dt').val($('#birth').val());
+//				alert(('#brdy_dt').val());
 			}
  			//날짜 제한. 오늘 넘지 않게
  			if($('#birth').val()> new Date().toISOString().substring(0,10)){
  				alert('오늘 이전의 날짜만 선택 가능합니다.');
+ 				$('#birth').val('');
  				return false;
  			}
 			 
@@ -317,6 +370,7 @@
 			
 			 $('#brdy_dt').val($('#birth').val().replace(/\-/g,''));
 			 console.log($('#brdy_dt').val());
+//			 console.log($('#birth').val($('#birth').val().replace(/\-/g,'')));
 			
  			//결혼기념일 - 제거
 			if($('#merry').val() !=''){
@@ -329,27 +383,16 @@
 
 			var yn = confirm("고객정보를 수정하시겠습니까?");
 			if(yn==false){
+				$('#chg').val('');
+				$('#before').val('');
+				$('#after').val('');
 				return false;
 			}
 		});	
 		
-		//test
-	 	/* $('#checkBtn').click(function(){
-			var newForm = $('#infoForm').serializeArray();	 
-		 var chg = isEquivalent(newForm,Form);
-			console.log(chg);
-			
-			if(chg != ''){
-				var chgStr = chg.name.join();
-				var chgbefore = chg.before.join();
-				var chgafter = chg.after.join();
-				$('#chg').val(chgStr);
-				alert(chgStr);
-			}
-
-		});   */
 		
 	});		//document 끝
+	
 	//바뀐 항목 뽑아내기
 	function isEquivalent(after,before){
 		console.log(after);
@@ -377,7 +420,7 @@
 		 }
 		return chgOb;
 		}
-		}		//isEquivalent 끝
+	}		//isEquivalent 끝
 </script>
 </head>
 <body>
@@ -389,7 +432,7 @@
 <h4>고객정보조회<img alt="새로고침" src="${pageContext.request.contextPath}/images/reload.png" onclick="window.location.reload()"></h4>
 <div class="searchBox">
 <form method="post" id="searchForm">
-	<div>
+	<div class="searchInput">
 	<label for="">고객</label>
 	<input type="text" id="cust_no" value="${customer.cust_no }" >
 	<img id="searchCust" class="searchIcon" alt="고객조회" src="${pageContext.request.contextPath}/images/search.png">
@@ -411,35 +454,36 @@
 				<input type="hidden" id="after" name="after" >
 				<input type="hidden" id="cust_no" name="cust_no" value="${customer.cust_no}">
 				<input type="hidden" id="lst_upd_id" name="lst_upd_id" value="${id }">
+				<input type="hidden" name="fst_user_id" value="${customer.fst_user_id}">
 				
-			<div class="infoOne">
+		
 				<ul>
-					<li>
+					<li class="formList">
 						<label for="cust_nm">*고객명</label>
 						<input type="text" id="cust_nm" name="cust_nm" value="${customer.cust_nm }">
 					</li>
-					<li>
+					<li class="formList">
 						<label for="brdy_dt">*생년월일</label>
 						<input type="hidden" id="brdy_dt" name="brdy_dt">
-						<input type="date" id="birth" name="birth" value="${customer.brdy_dt }">
+						<input type="date" id="birth" value="${customer.brdy_dt }">
 					</li>
-					<li>
+					<li class="formList">
 						<label for="sex_cd">성별</label>
 						<input type="hidden" id="hSex" value="${customer.sex_cd }">
 						<input type="radio" name="sex_cd" value='F' checked>여성
 						<input type="radio" name="sex_cd" value='M'>남성
 					</li>
-					<li>
+					<li class="formList">
 						<label for="scal_yn">*생일</label>
 						<input type="radio" name="scal_yn" value="0" checked>양력
 						<input type="radio" name="scal_yn" value="1">음력
 					</li>
-					<li>
+					<li class="formList">
 						<label for="mrrg_dt">결혼기념일</label>
 						<input type="hidden" id="mrrg_dt" name="mrrg_dt">
-						<input type="date" id="merry" name="merry" value="${customer.mrrg_dt }">
+						<input type="date" id="merry" value="${customer.mrrg_dt }">
 					</li>
-					<li>
+					<li class="formList">
 						<label for="poc_cd">*직업코드</label>
 						<select name="poc_cd" id="poc_cd">
 								<option selected disabled>-선택-</option>
@@ -448,87 +492,85 @@
 							</c:forEach>
 						</select>
 					</li>
-					<li>
+					<li class="subList">
 						<label for="mbl_no">*휴대폰번호</label>
 						<input type="hidden" id="mbl_no" name="mbl_no" value="${customer.mbl_no }">
 						<input type="text" id="mbl_no1">
 						<input type="text" id="mbl_no2">
 						<input type="text" id="mbl_no3">
-						<input type="button" value="확인" id="chMbl">
+						<input type="button" value="변경" id="chMbl">
 					</li>
-					<li>
+					<li class="formList">
 						<label for="jn_prt_cd">*가입매장</label>
 						<input type="text" id="jn_prt_cd" name="jn_prt_cd" value="${customer.jn_prt_cd }" >
 						<img id="searchMarket" class="searchIcon" alt="매장조회" src="${pageContext.request.contextPath}/images/search.png">
 						<input type="text" id="prt_nm" value="${customer.prt_nm }" >
 					</li>
-				</ul>
-				</div>
-				<div class="infoTwo">
-				<ul>
-				<li>
+				<li class="formList">
 					<label for="psmt_grc_cd">*우편물수령</label>
 					<input type="hidden" id="hPsmt" value="${customer.psmt_grc_cd }">
 					<input type="radio" name="psmt_grc_cd" value="H" checked>자택
 					<input type="radio" name="psmt_grc_cd" value="O">직장
 				</li>
-				<li>
+				<li class="formList">
 					<label for="email">*이메일</label>
 					<input type="hidden" id="email" name="email" value="${customer.email }"> 
 					<input type="text" id="email1">
 					<span>@</span>
 					<input type="text" id="email2">
 				</li>
-				<li>
+				<li class="addrClass">
 					<label for="addr">주소</label>
+					<div class="addDiv">
 					<input type="text" id="addr" name="addr" value="${customer.addr }">
 					<input type="text" id="addr_dtl" name="addr_dtl" value="${customer.addr_dtl }" >
+					</div>
 				</li>
-				<li>
+				<li class="formList">
 					<label>*고객상태</label>
 					<input type="radio" name="cust_ss_cd" value="10" checked> 정상
 					<input type="radio" name="cust_ss_cd" value="80"> 중지
 					<input type="radio" name="cust_ss_cd" value="90"> 해지
 				</li>
-				<li>
+				<li class="formList">
 					<label for="fst_js_dt">최초가입일자</label>
 					<input type="hidden" id="fst_js_dt" name="fst_js_dt">
-					<input type="text" id="f_js_dt" readonly name="f_js_dt" value="${customer.fst_js_dt }">
+					<input type="text" id="f_js_dt" readonly value="${customer.fst_js_dt }">
 				</li>
-				<li>
+				<li class="formList">
 					<label for="js_dt">가입일자</label>
 					<input type="hidden" id="js_dt" name="js_dt">
-					<input type="text" id="jdt" readonly name="jdt" value="${customer.js_dt }">
+					<input type="text" id="jdt" readonly value="${customer.js_dt }">
 				</li>
-				<li>
+				<li class="formList">
 					<label for="cncl_cnts">해지사유</label>
 					<input type="text" id="cncl_cnts" readonly name="cncl_cnts" value="${customer.cncl_cnts }">
 				</li>
-				<li>
+				<li class="formList">
 					<label for="stp_dt">중지일자</label>
 					<input type="hidden" id="stp_dt" name="stp_dt">
-					<input type="text" id="stop_dt" readonly name="stop_dt" value="${customer.stp_dt }">
+					<input type="text" id="stop_dt" readonly value="${customer.stp_dt }">
 				</li>
-				<li>
+				<li class="formList">
 					<label for="cncl_dt">해지일자</label>
 					<input type="hidden" id="cncl_dt" name="cncl_dt">
-					<input type="text" id="cn_dt" readonly name="cn_dt" value="${customer.cncl_dt }">
+					<input type="text" id="cn_dt" readonly value="${customer.cncl_dt }">			<!-- 날짜 가져올 때 --넣어서 가져옴. 그러니 가져갈 떄 - 빼줘야해서 hidden넣어줫음. -->
 				</li>
 			</ul>
-			</div>
+			
 		</div>
 		<h4>구매</h4>
 		<div class="calBox">
 			<ul>
-				<li>
+				<li class="formList">
 					<label for="cTot_sal_amt">총구매금액</label>
 					<input type="text" id="cTot_sal_amt" readonly value="${customer.cTot_sal_amt}">
 				</li>
-				<li>
+				<li class="formList">
 					<label for="mTot_sal_amt">당월구매금액</label>
 					<input type="text" id="mTot_sal_amt" readonly value="${customer.mTot_sal_amt }">
 				</li>
-				<li>
+				<li class="formList">
 					<label for="lSal_dt">최종구매일</label>
 					<input type="text" id="lSal_dt" readonly value="${customer.lSal_dt}">
 				</li>
@@ -537,19 +579,19 @@
 		<h4>수신동의(통합)</h4>
 		<div class="ynBox">
 			<ul>
-				<li>
+				<li class="formList">
 					<label for="email_rcv_yn">*이메일수신동의</label>
 					<input type="hidden" id="hEyn" value="${customer.email_rcv_yn }">
 					<input type="radio" name="email_rcv_yn" value="Y" checked>예
 					<input type="radio" name="email_rcv_yn" value="N">아니오
 				</li>
-				<li>
+				<li class="formList">
 					<label for="sms_rcv_yn">*SMS수신동의</label>
 					<input type="hidden" id="hSyn" value="${customer.sms_rcv_yn }">
 					<input type="radio" name="sms_rcv_yn" value="Y" checked>예
 					<input type="radio" name="sms_rcv_yn" value="N">아니오
 				</li>
-				<li>
+				<li class="formList">
 					<label for="dm_rcv_yn">*DM수신동의</label>
 					<input type="hidden" id="hDyn" value="${customer.dm_rcv_yn }">
 					<input type="radio" name="dm_rcv_yn" value="Y" checked>예

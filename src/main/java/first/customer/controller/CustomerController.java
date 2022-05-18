@@ -218,7 +218,7 @@ public class CustomerController {
 	  
 	  @RequestMapping("/customer/getCustInfo.do")
 	  @ResponseBody 
-	  public Map<String,Object> getCustInfo(HttpServletRequest request){ //怨좉컼踰덊샇濡� 怨좉컼�쓽 �젙蹂� 遺덈윭�샂.
+	  public Map<String,Object> getCustInfo(HttpServletRequest request){ 
 	  
 	  String cust_no = request.getParameter("cust_no");
 	  System.out.println(cust_no);
@@ -229,6 +229,7 @@ public class CustomerController {
 	  CustomerVO customer = customerService.getCustInfo(map);
 	  System.out.println("성별 :" +customer.getSex_cd());
 	  System.out.println(customer.getcTot_sal_amt());
+	  System.out.println("최초 등록자 :" + customer.getFst_user_id());
 	  
 	  Map<String,Object> ajaxMap = new HashMap<String, Object>();
 	  ajaxMap.put("customer", customer);
@@ -238,6 +239,9 @@ public class CustomerController {
 	 //고객 정보 수정
 	  @RequestMapping("/customer/updateSubmit.do")
 	  public String updateCustomer(@ModelAttribute CustomerVO customerVO, Model model) {
+		  
+		  System.out.println("첫 등록자 : " + customerVO.getFst_user_id());
+		  System.out.println("첫 등록일 :"+customerVO.getFst_js_dt());
 
 		 
 		  String chg = customerVO.getChg();

@@ -10,20 +10,20 @@
 
 
 /* 폼 */
-#searchForm{
-	width:80%;
+ #searchForm{
+	width:90%;
 	height:50px;
 	margin:0 auto;
 	padding:10px 30px 10px 10px;
-	background-color:white;
+	background-color:#e3e3e3;
 	border : 3px double black;
 	display:flex;							/* display는 서로 요소들 움직일 수 있게 */
 	justify-content:space-between;			/* 동일한 간격으로 서로 사이두고 끝에 붙게 */
 	align-items:center;						/* 위아래로 간격 두고 끝에 붙게 */
-}
+} 
 .infoBox{
-	width:93%;
-	height:200px;
+	width:90%;
+	height:300px;
 	margin:0 auto;
 	padding:10px 0 10px 0;
 	display:flex;
@@ -34,7 +34,7 @@
 .calBox{
 	width:90%;
 	margin:0 auto;
-	padding:10px 10px 10px 10px;
+
 	border : 2px solid black;
 	display:flex;							/* display는 서로 요소들 움직일 수 있게 */
 	justify-content:space-between;			/* 동일한 간격으로 서로 사이두고 끝에 붙게 */
@@ -50,27 +50,129 @@
 	justify-content:space-between;			/* 동일한 간격으로 서로 사이두고 끝에 붙게 */
 	align-items:center;						/* 위아래로 간격 두고 끝에 붙게 */
 }
+
+.formList{
+	width: 30%;
+    float: left;
+    margin : 0 10px 0 10px;
+     height: 40px; 
+     display: flex;							/*영역 안에서 움직이게 할 수 있음  */
+    align-items: center;					/*해당 것을 가운데로 오게 하겠다.  */
+}
+.subList{
+	width:61.5%;
+	float:left;
+	height: 40px; 
+	margin : 0 10px 0 10px;
+    height: 40px; 
+    display: flex;							/*영역 안에서 움직이게 할 수 있음  */
+    align-items: center;					/*해당 것을 가운데로 오게 하겠다.  */
+}
+
+.addrClass{
+	width:100%;
+	margin : 0 10px 0 10px;
+	float:left;
+	height: 40px;	
+	display: flex;						/*영역 안에서 움직이게 할 수 있음  */
+    align-items: center;					/*해당 것을 가운데로 오게 하겠다.  */
+}
+
+.searchInput{
+	
+	width:40%;	
+	float:left;
+	height: 40px;	
+	display: flex;						/*영역 안에서 움직이게 할 수 있음  */
+    align-items: center;					/*해당 것을 가운데로 오게 하겠다.  */	
+} 
+.searchInput>label{
+	width: 12%;
+    float:left; 
+}
+
+ #mbl_no1, #mbl_no2, #mbl_no3{
+	width: 6%;
+	float:left;
+	margin-right:3px;
+	
+}
+#email1, #email2 {
+	width:20%;
+	/* float:left; */
+} 
+
+input#jn_prt_cd{
+	width: 25%;
+	float:left;
+	
+}
+#searchMarket{
+	width:15px;
+	height:15px;
+	float:left;
+	margin-right:3px;
+}
+input#prt_nm{
+	width: 25%;
+	float:left;
+}
+
+
+
+#infoForm #addr, #infoForm #addr_dtl{
+	width: 20%;
+	float:left;
+} 
+
+#submitBtn{
+	width:60px;
+	height:60px;
+	background-color : #bdbdbd;
+}
+
 .btn{
 	text-align:center;
 }
 ul{
 	list-style:none;
+	    width: 100%;
 }
 ul li{
 	display:inline-block;
 }
 .searchIcon{
-	width:18px;
-	height:18px;
+	width:15px;
+	height:15px;
 	padding : 2px 2px 2px 2px;
 	border : 1px solid grey;
+	margin-right : 2px;
 }
 
-#infoForm li{
-	margin : 0 10px 0 10px;
 
+.formList>label{
+	width: 30%;
+    float:left; 
 }
 
+.subList>label{
+	width: 14.5%;
+    float:left; 
+}
+
+.addrClass>label{
+	width: 9%;
+    float:left; 
+}
+
+.addDiv{
+	width: 65%;
+    float: left;
+    margin-right: 10px;
+}
+ .addDiv>input{
+	margin-right : 3px;
+} 
 .side{
 	width:30%;
 	float:left;
@@ -96,12 +198,6 @@ ul li{
 	bottom: 0; 
 }
 
-.searchIcon{
-	width:18px;
-	height:18px;
-	padding : 2px 2px 2px 2px;
-	border : 1px solid grey;
-}
 h4{
 	padding-left:100px;
 }
@@ -115,12 +211,20 @@ h4 img{
   padding-bottom: 10px;
 }
 
-#infoOne{
-	width:70%;
-	float :left;
+.btn{
+	width:95%;
+	text-align : right;
 }
-#infoTwo{
-	width:30%;
-	float:right;
+
+#closeBtn, #confBtn{
+	background-color : white;
+	border : 2px solid black;
+	border-radius : 8%;
+	font-weight : bold;
+	margin-left : 5px;
+	margin-top : 10px;
+	width:80px;
+	height:30px;
 }
+
 
