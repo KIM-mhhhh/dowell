@@ -16,6 +16,14 @@
 		//창 종료
 		$.closeForm($('#closeForm'));
 
+		//이름 두글자 이상 입력
+		$('#cust_nm').change(function(){
+			if($(this).val().trim().length<2){
+				alert('이름은 두글자 이상 입력해 주세요.');
+				$(this).focus();
+			}
+		});
+		
 		//생년월일 미래일자 입력 불가
 		$('#birth').click(function(){
 			var today = new Date().toISOString().substring(0,10);
@@ -96,7 +104,7 @@
 		$('#regBtn').click(function(){
 			//고객명 2자 이상 체크
 			if($('#cust_nm').val().trim().length<2){
-				alert('고객명을 2자 이상 입력해 주세요.');
+				alert('고객명을 입력해 주세요.');
 				return false;
 			}
 			//필수항목

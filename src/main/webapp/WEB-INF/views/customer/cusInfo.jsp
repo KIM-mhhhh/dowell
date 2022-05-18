@@ -12,7 +12,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
-		var check = 1;						//휴대폰 중복 체크
+		var check = 0;						//휴대폰 중복 체크
 		var oName = $('#cust_nm').val();						//해지에서 되돌릴 때 넣을 원래 이름
 		var oMbl = $('#mbl_no').val();							//해지에서 되돌릴 때 넣을 원래 핸드폰 이름
 		var cState = ${customer.cust_ss_cd };					//상태체크 하기 위한 변수.
@@ -20,9 +20,9 @@
 
 		
 		//라디오버튼 체크
-		function intoInfo(name,value){
+/* 		function intoInfo(name,value){
 			$('input:radio[name ='+name+']:input[value='+value+']').prop("checked", true);
-		}
+		} */
 		
 		//값 로드 시 핸드폰 번호 할당.
 	 	if($('#mbl_no').val().length==11){
@@ -128,7 +128,7 @@
 				console.log(Form);
 				console.log(newForm);
 				 if(JSON.stringify(Form) !== JSON.stringify(newForm)){								//변경된 내용 있을 경우
-					 var yn = confirm("변경된 내용이 있습니다. 그래도 계속 하시겠습니까?");
+					 var yn = confirm("수정된 내역이 있습니다. 변경내역이 사라지는데 그래도 계속 하시겠습니까?");
 						if(yn==false){																//아니오 면 검색이 안됨.
 							return false;
 						}
@@ -209,6 +209,26 @@
 				alert('빈칸을 입력하세요.');
 				return false;
 			}
+			
+			if($('#mbl_no1').val().length ==3 && $('#mbl_no3').val().length ==4 && ($('#mbl_no2').val().length !=3 || $('#mbl_no2').val().length !=4 ) ){
+				
+			}else{
+				alert('전화번호 형식에 맞지 않습니다.');
+				$('#mbl_no1').val('');
+				$('#mbl_no2').val('');
+				$('#mbl_no3').val('');
+				$('#mbl_no1').focus();
+				return false;
+			}
+			if($('#mbl_no1').val() =='000' && ($('#mbl_no2').val() =='000' || $('#mbl_no2').val() =='0000') && $('#mbl_no3').val() =='0000'){
+			
+				alert('000-0000-0000 또는 000-000-0000은 \n사용할 수 없는 핸드폰 번호 입니다.');
+				$('#mbl_no1').val('');
+				$('#mbl_no2').val('');
+				$('#mbl_no3').val('');
+				$('#mbl_no1').focus();
+				return false;
+			};
 			var mbl_no = $('#mbl_no1').val() + $('#mbl_no2').val() + $('#mbl_no3').val();
 			$.ajax({
 				type:'post',
@@ -223,6 +243,15 @@
 						check=1;
 					}else if(param.result=='Duplicated'){
 						alert($('#mbl_no1').val() +"-"+ $('#mbl_no2').val() +"-"+ $('#mbl_no3').val() + '\n동일한 번호가 있습니다.');
+					 	if(oMbl.length==11){
+							$('#mbl_no1').val(oMbl.substring(0,3));
+							$('#mbl_no2').val(oMbl.substring(3,7));
+							$('#mbl_no3').val(oMbl.substring(7,12));
+						}else if(oMbl.length==10){
+							$('#mbl_no1').val(oMbl.substring(0,3));
+							$('#mbl_no2').val(oMbl.substring(3,6));
+							$('#mbl_no3').val(oMbl.substring(6,11));
+						} 
 					}else{
 						alert('네트워크 오류 발생');
 					}
@@ -262,16 +291,19 @@
 	 			} 
 			}
  			$('#stop_dt').val(getToday());
+ 			$('#cncl_cnts').attr("readonly",true);
+ 			$('#cn_dt').val('');
+ 			
  		});
  		//정상버튼
  		$(":radio[name='cust_ss_cd'][value='10']").click(function(){
  			$('#cncl_cnts').attr("readonly",true);
 			if(cState=='90'){
-				$('#cust_nm').val('');
+				$('#cust_nm').val('').focus();
 				$('#mbl_no1').val('');
 	 			$('#mbl_no2').val('');
 	 			$('#mbl_no3').val('');
-			} else{
+			}else{
 				$('#cust_nm').val(oName);
 	 			if(oMbl.length==11){
 	 				$('#mbl_no1').val(oMbl.substring(0,3));
@@ -379,7 +411,7 @@
  			$('#fst_js_dt').val($('#f_js_dt').val().replace(/\-/g,''));
  			$('#js_dt').val($('#jdt').val().replace(/\-/g,''));
  			$('#stp_dt').val($('#stop_dt').val().replace(/\-/g,''));
- 			$('#stp_dt').val($('#cn_dt').val().replace(/\-/g,''));
+ 			$('#cncl_dt').val($('#cn_dt').val().replace(/\-/g,''));
 
 			var yn = confirm("고객정보를 수정하시겠습니까?");
 			if(yn==false){

@@ -167,7 +167,7 @@ public class CustomerController {
 //	  @ResponseBody public Map<String,String> checkMblNo(HttpServletRequest request, @RequestParam String mbl_no){
 //		  Map<String,String> ajaxMap = new HashMap<String, String>();
 //	  
-//		  System.out.println("�룿踰덊샇:" +mbl_no);
+//		  System.out.println("폰번호:" +mbl_no);
 //	  
 //	  int mblCount = customerService.getMblCheck(mbl_no); 
 //	  if(mblCount==0) {
@@ -201,10 +201,11 @@ public class CustomerController {
 		CustomerVO customer = customerService.getCustInfo(map);
 		//�뤌�쓽 吏곸뾽肄붾뱶�쓽 list
 		List<Map<String,Object>> codeList = customerService.getPocCode();
-		 System.out.println("�꽦蹂� :" +customer.getSex_cd());
+		 System.out.println("성별 :" +customer.getSex_cd());
 		System.out.println(customer.getBrdy_dt());
 		System.out.println(customer.getcTot_sal_amt());
 		System.out.println(customer.getmTot_sal_amt());
+		  System.out.println("결혼기념일:" + customer.getMrrg_dt());
 		
 		ModelAndView mav = new ModelAndView("/customer/cusInfo");
 		mav.addObject("customer", customer);
@@ -230,6 +231,7 @@ public class CustomerController {
 	  System.out.println("성별 :" +customer.getSex_cd());
 	  System.out.println(customer.getcTot_sal_amt());
 	  System.out.println("최초 등록자 :" + customer.getFst_user_id());
+
 	  
 	  Map<String,Object> ajaxMap = new HashMap<String, Object>();
 	  ajaxMap.put("customer", customer);
