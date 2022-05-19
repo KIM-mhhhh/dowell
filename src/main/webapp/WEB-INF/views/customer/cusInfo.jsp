@@ -17,7 +17,7 @@
 		var oMbl = $('#mbl_no').val();							//해지에서 되돌릴 때 넣을 원래 핸드폰 이름
 		var cState = ${customer.cust_ss_cd };					//상태체크 하기 위한 변수.
 
-
+		
 		
 		//라디오버튼 체크
 /* 		function intoInfo(name,value){
@@ -51,14 +51,15 @@
 		$('input:radio[name =dm_rcv_yn]:input[value='+$('#hDyn').val()+']').prop("checked",true);  
 				
 		//날짜 넣기
-		 $('#brdy_dt').val($('#birth').val());
+		 $('#brdy_dt').val($('#birth').val().replace(/\-/g,''));
+		 $('#mrrg_dt').val($('#merry').val().replace(/\-/g,''));
 		
 		checkRadio();
 		//비교 위해 초기 form 객체
 		var Form = $('#infoForm').serializeArray();
 		
 		//오늘 날짜 구하는 함수
-		var getToday = function(){
+/* 		var getToday = function(){
 			var date = new Date();
 
 			var year = date.getFullYear();
@@ -74,7 +75,7 @@
 			var today = year + '-' + month + '-' + day;
 			
 			return today;
-		}
+		} */
 		
 		$('#mbl_no1,#mbl_no2,#mbl_no3 ').change(function(){
 			check = 0;
@@ -150,8 +151,9 @@
 								$('#cust_nm').val(param.customer.cust_nm);
 							 	$('#sCust_nm').val(param.customer.cust_nm);
 	 							$('#birth').val(param.customer.brdy_dt);
-	 							$('#brdy_dt').val($('#birth').val());
+	 							$('#brdy_dt').val($('#birth').val().replace(/\-/g,''));
 								$('#merry').val(param.customer.mrrg_dt);
+								$('#mrrg_dt').val($('#merry').val().replace(/\-/g,''));
 								$('#addr').val(param.customer.addr);
 								$('#addr_dtl').val(param.customer.addr_dtl);
 								$('#email').val(param.customer.email);
@@ -176,6 +178,10 @@
 								$('#cncl_cnts').val(param.customer.cncl_cnts);
 								$('#stp_dt').val(param.customer.stp_dt);
 								$('#cncl_dt').val(param.customer.cncl_dt); 
+								$('#cTot_sal_amt').val(param.customer.cTot_sal_amt);
+								$('#mTot_sal_amt').val(param.customer.mTot_sal_amt);
+								$('#lSal_dt').val(param.customer.lSal_dt);
+								
 								$('#poc_cd').val(param.customer.poc_cd).prop("selected",true);
 								$('input:radio[name =sex_cd]:input[value='+param.customer.sex_cd+']').prop("checked", true);
 								$('input:radio[name =cust_ss_cd]:input[value='+param.customer.cust_ss_cd+']').prop("checked", true);
@@ -203,6 +209,16 @@
 			event.preventDefault();
 		});	//고객조회 function 끝
 
+		//날짜 바뀌면 넣어주기
+		$('#birth').change(function(){
+			 $('#brdy_dt').val($('#birth').val().replace(/\-/g,''));
+			alert( $('#brdy_dt').val());
+		});
+		$('#merry').change(function(){
+			$('#mrrg_dt').val($('#merry').val().replace(/\-/g,''));
+			alert( $('#mrrg_dt').val());
+		});
+		
 		//휴대폰번호 중복 확인
 		 $('#chMbl').click(function(){
 			if($('#mbl_no1').val().length==0 || $('#mbl_no2').val().length==0 || $('#mbl_no3').val().length==0){
@@ -269,7 +285,7 @@
  			$('#mbl_no1').val('000');
  			$('#mbl_no2').val('0000');
  			$('#mbl_no3').val('0000');
- 			$('#cn_dt').val(getToday());
+// 			$('#cn_dt').val(getToday());
  		});
 		//중지버튼
 		$(":radio[name='cust_ss_cd'][value='80']").click(function(){
@@ -290,7 +306,7 @@
 	 				$('#mbl_no3').val(oMbl.substring(6,11));
 	 			} 
 			}
- 			$('#stop_dt').val(getToday());
+ //			$('#stop_dt').val(getToday());
  			$('#cncl_cnts').attr("readonly",true);
  			$('#cn_dt').val('');
  			
@@ -318,7 +334,7 @@
  			$('#cncl_cnts').val('');
  			$('#cn_dt').val('');
  			$('#stop_dt').val('');
- 			$('#jdt').val(getToday());
+// 			$('#jdt').val(getToday());
  		});
 		
 		//저장버튼 클릭 시 휴대폰번호 변경버튼 안눌렀으면 버튼확인하라고, 필수항목 검사. 창 띄우고 yes면 저장.
@@ -374,10 +390,11 @@
 			if($('#birth').val()==''){
 				alert('날짜를 입력해 주세요');
 				return false;
-			}else {
-				$('#brdy_dt').val($('#birth').val());
-//				alert(('#brdy_dt').val());
 			}
+/* 			else {
+				$('#brdy_dt').val($('#birth').val());
+				alert(('#brdy_dt').val());
+			} */
  			//날짜 제한. 오늘 넘지 않게
  			if($('#birth').val()> new Date().toISOString().substring(0,10)){
  				alert('오늘 이전의 날짜만 선택 가능합니다.');
@@ -400,15 +417,14 @@
 				$('#after').val(chgafter);
 			}
 			
-			 $('#brdy_dt').val($('#birth').val().replace(/\-/g,''));
-			 console.log($('#brdy_dt').val());
-//			 console.log($('#birth').val($('#birth').val().replace(/\-/g,'')));
+/* 	 		 $('#brdy_dt').val($('#birth').val().replace(/\-/g,'')); 
+			 console.log($('#brdy_dt').val()); */
+
 			
  			//결혼기념일 - 제거
-			if($('#merry').val() !=''){
+/* 			if($('#merry').val() !=''){
 				$('#mrrg_dt').val($('#merry').val().replace(/\-/g,''));
-			}
- 			$('#fst_js_dt').val($('#f_js_dt').val().replace(/\-/g,''));
+			} */
  			$('#js_dt').val($('#jdt').val().replace(/\-/g,''));
  			$('#stp_dt').val($('#stop_dt').val().replace(/\-/g,''));
  			$('#cncl_dt').val($('#cn_dt').val().replace(/\-/g,''));
@@ -566,8 +582,7 @@
 				</li>
 				<li class="formList">
 					<label for="fst_js_dt">최초가입일자</label>
-					<input type="hidden" id="fst_js_dt" name="fst_js_dt">
-					<input type="text" id="f_js_dt" readonly value="${customer.fst_js_dt }">
+					<input type="text" id="fst_js_dt" readonly value="${customer.fst_js_dt }">
 				</li>
 				<li class="formList">
 					<label for="js_dt">가입일자</label>

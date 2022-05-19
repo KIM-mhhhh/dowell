@@ -36,8 +36,8 @@ public class CustomerVO {					//������ ���̺�
 	private String prt_nm;				// 조인해서 매장명(거래처명) 가져오기
 	private String user_nm;				// 조인해서 등록자명 가져오기
 	private String sLst_upd_dt;			//수정일 string으로 가져오기.
-	private int cTot_sal_amt;		// 조인해서 고객의 총 구매금액 가져오기
-	private int mTot_sal_amt;		// 조인해서 당 월 총 구매금액
+	private String cTot_sal_amt;		// 조인해서 고객의 총 구매금액 가져오기
+	private String mTot_sal_amt;		// 조인해서 당 월 총 구매금액
 	private String lSal_dt;				// 조인해서 최종 구매일자
 	private String chg;					//변경항목
 	private String after;				//변경 후 항목들
@@ -231,16 +231,18 @@ public class CustomerVO {					//������ ���̺�
 		this.sLst_upd_dt = sLst_upd_dt;
 	}
 	
-	public int getcTot_sal_amt() {
+	
+
+	public String getcTot_sal_amt() {
 		return cTot_sal_amt;
 	}
-	public void setcTot_sal_amt(int cTot_sal_amt) {
+	public void setcTot_sal_amt(String cTot_sal_amt) {
 		this.cTot_sal_amt = cTot_sal_amt;
 	}
-	public int getmTot_sal_amt() {
+	public String getmTot_sal_amt() {
 		return mTot_sal_amt;
 	}
-	public void setmTot_sal_amt(int mTot_sal_amt) {
+	public void setmTot_sal_amt(String mTot_sal_amt) {
 		this.mTot_sal_amt = mTot_sal_amt;
 	}
 	public String getlSal_dt() {
@@ -280,8 +282,11 @@ public class CustomerVO {					//������ ���̺�
 				+ stp_dt + ", cncl_dt=" + cncl_dt + ", fst_user_dt=" + fst_user_dt + ", fst_user_id=" + fst_user_id
 				+ ", lst_upd_dt=" + lst_upd_dt + ", lst_upd_id=" + lst_upd_id + ", prt_nm=" + prt_nm + ", user_nm="
 				+ user_nm + ", sLst_upd_dt=" + sLst_upd_dt + ", cTot_sal_amt=" + cTot_sal_amt + ", mTot_sal_amt="
-				+ mTot_sal_amt + ", lSal_dt=" + lSal_dt + "]";
+				+ mTot_sal_amt + ", lSal_dt=" + lSal_dt + ", chg=" + chg + ", after=" + after + ", before=" + before
+				+ "]";
 	}
+	
+	
 	
 	
 	

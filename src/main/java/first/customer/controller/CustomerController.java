@@ -187,7 +187,7 @@ public class CustomerController {
 		
 		return "/customer/register";
 	}
-	//怨좉컼�젙蹂댁“�쉶 �솕硫대쓣�슦湲�
+	//회원 정보 가져오기
 	@RequestMapping("/customer/showCustomer.do")
 	public ModelAndView inquireCustomer(HttpServletRequest request) {				
 		
@@ -202,9 +202,9 @@ public class CustomerController {
 		//�뤌�쓽 吏곸뾽肄붾뱶�쓽 list
 		List<Map<String,Object>> codeList = customerService.getPocCode();
 		 System.out.println("성별 :" +customer.getSex_cd());
-		System.out.println(customer.getBrdy_dt());
-		System.out.println(customer.getcTot_sal_amt());
-		System.out.println(customer.getmTot_sal_amt());
+		 System.out.println(customer.getBrdy_dt());
+		 System.out.println("총 구매금액 : " + customer.getcTot_sal_amt());
+		 System.out.println("월 구매금액 :" + customer.getmTot_sal_amt());
 		  System.out.println("결혼기념일:" + customer.getMrrg_dt());
 		
 		ModelAndView mav = new ModelAndView("/customer/cusInfo");
@@ -229,7 +229,7 @@ public class CustomerController {
 	  
 	  CustomerVO customer = customerService.getCustInfo(map);
 	  System.out.println("성별 :" +customer.getSex_cd());
-	  System.out.println(customer.getcTot_sal_amt());
+	  System.out.println("총 구매금액 : " + customer.getcTot_sal_amt());
 	  System.out.println("최초 등록자 :" + customer.getFst_user_id());
 
 	  
@@ -238,6 +238,7 @@ public class CustomerController {
 	  
 	  return ajaxMap; 
 	  }
+	  
 	 //고객 정보 수정
 	  @RequestMapping("/customer/updateSubmit.do")
 	  public String updateCustomer(@ModelAttribute CustomerVO customerVO, Model model) {

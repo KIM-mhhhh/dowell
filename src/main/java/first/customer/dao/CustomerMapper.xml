@@ -230,7 +230,56 @@
  	</select>
  	
  	 <!-- 고객 정보 불러오기 -->
- 	 	<select id="getCustInfo" resultType="CustomerVO" parameterType="map">
+<!--  	 	<select id="getCustInfo" resultType="CustomerVO" parameterType="map">
+ 		SELECT 	  c.cust_no 
+				, c.cust_nm																		고객관리 테이블의 고객명 
+				, (SELECT max(sal_dt) from cs_sal01_mt WHERE cust_no=#{cust_no})AS lSal_dt
+ 			    , (substr(c.brdy_dt,1,4) || '-' || substr(c.brdy_dt,5,2) || '-' || substr(c.brdy_dt,7,2)) AS brdy_dt																	고객관리 테이블의 생일 
+ 			    , c.sex_cd																		고객관리 테이블의 성별코드 
+ 			    , c.scal_yn																		고객관리 테이블의 양음력구분 
+ 			    , (substr(c.mrrg_dt,1,4) || '-' || substr(c.mrrg_dt,5,2) || '-' || substr(c.mrrg_dt,7,2)) AS mrrg_dt																	결혼기념일 
+ 			    , c.poc_cd																		직업코드
+ 			    , c.mbl_no																		휴대폰번호
+ 			    , p.prt_cd AS jn_prt_cd															매장관리 테이블의 매장코드를 가입매장코드로 가져옴
+ 			    , p.prt_nm																		매장관리 테이블의 매장명 
+ 			    , c.psmt_grc_cd																	고객관리 테이블의 우편물 수령코드 
+ 			    , c.email																		고객관리 테이블의 이메일 
+ 			    , c.addr																		고객관리 테이블의 주소 
+ 			    , c.addr_dtl																	고객관리 테이블의 상세주소 
+ 			    , c.cust_ss_cd																	고객관리 테이블의 고객상태코드 
+ 			   	, c.fst_user_id																	고객관리 테이블의 최초 등록자 
+ 			    , (substr(c.fst_js_dt,1,4) || '-' || substr(c.fst_js_dt,5,2) || '-' || substr(c.fst_js_dt,7,2)) AS fst_js_dt															고객관리 테이블의 최조가입일자 
+ 			    , (substr(c.js_dt,1,4) || '-' || substr(c.js_dt,5,2) || '-' || substr(c.js_dt,7,2)) AS js_dt																		고객관리 테이블의 가입일자 
+ 			    , c.cncl_cnts																	고객관리 테이블의 해지사유 내용 
+ 			    , (substr(c.stp_dt,1,4) || '-' || substr(c.stp_dt,5,2) || '-' || substr(c.stp_dt,7,2)) AS stp_dt																		고객관리 테이블의 중지일자
+ 			    , (substr(c.cncl_dt,1,4) || '-' || substr(c.cncl_dt,5,2) || '-' || substr(c.cncl_dt,7,2)) AS cncl_dt																		고객관리 테이블의 해지일자 
+ 			    , c.email_rcv_yn																고객관리 테이블의 이메일수신동의여부 
+ 			    , c.sms_rcv_yn																	고객관리 테이블의 sms수신동의여부 
+ 			    , c.dm_rcv_yn 																	고객관리 테이블의 dm수신동의여부 
+		 		, (SELECT SUM(TOT)
+		 			FROM (SELECT (CASE SAL_TP_CD												고객의 총 구매금액. 총 구매한것에서 반품한 금액 제외함.		
+      									WHEN 'RTN' THEN (-1 * TOT_SAL_AMT)
+       									WHEN 'SAL' THEN TOT_SAL_AMT
+   								 END)AS TOT
+							FROM CS_SAL01_MT
+							WHERE CUST_NO=#{cust_no})
+		 		  ) AS cTot_sal_amt
+		 		, (SELECT SUM(SUMTOT)
+		 			FROM (SELECT (CASE SAL_TP_CD
+       									WHEN 'RTN' THEN (-1 * TOT_SAL_AMT)
+      									WHEN 'SAL' THEN TOT_SAL_AMT
+								  END)AS SUMTOT
+						  FROM CS_SAL01_MT
+						  WHERE CUST_NO=#{cust_no} 
+						  		AND substr(sal_dt,1,6)=TO_CHAR(SYSDATE,'YYYYMM') ) 
+				 ) AS mTot_sal_amt																				
+		FROM CS_CUST01_MT c																		고객관리 테이블
+			 JOIN MA_PRT_MT p 																	매장관리 테이블과 매장코드와 가입매장코드가 같은 조건으로 조인
+				ON c.jn_prt_cd=p.prt_cd												
+		WHERE c.cust_no=#{cust_no}														회원번호가 파라미터와 일치할 조건.
+ 	</select>  -->
+ 	
+ 	 	 	<select id="getCustInfo" resultType="CustomerVO" parameterType="map">
  		SELECT 	  c.cust_no 
 				, c.cust_nm																		<!-- 고객관리 테이블의 고객명  -->
 				, (SELECT max(sal_dt) from cs_sal01_mt WHERE cust_no=#{cust_no})AS lSal_dt
@@ -256,7 +305,7 @@
  			    , c.email_rcv_yn																<!-- 고객관리 테이블의 이메일수신동의여부 --> 
  			    , c.sms_rcv_yn																	<!-- 고객관리 테이블의 sms수신동의여부 --> 
  			    , c.dm_rcv_yn 																	<!-- 고객관리 테이블의 dm수신동의여부 --> 
-		 		, (SELECT SUM(TOT) 
+		 		, (SELECT NVL(TO_CHAR(SUM(TOT) , 'fm999,999,999,999'),0)
 		 			FROM (SELECT (CASE SAL_TP_CD												<!-- 고객의 총 구매금액. 총 구매한것에서 반품한 금액 제외함. -->		
       									WHEN 'RTN' THEN (-1 * TOT_SAL_AMT)
        									WHEN 'SAL' THEN TOT_SAL_AMT
@@ -264,7 +313,7 @@
 							FROM CS_SAL01_MT
 							WHERE CUST_NO=#{cust_no})
 		 		  ) AS cTot_sal_amt
-		 		, (SELECT SUM(SUMTOT)
+		 		, (SELECT NVL(TO_CHAR(SUM(SUMTOT) , 'fm999,999,999,999'),0)
 		 			FROM (SELECT (CASE SAL_TP_CD
        									WHEN 'RTN' THEN (-1 * TOT_SAL_AMT)
       									WHEN 'SAL' THEN TOT_SAL_AMT
@@ -306,6 +355,33 @@
 			lst_upd_id=#{lst_upd_id}
  		WHERE cust_no=#{cust_no}
  	</update>
+ 	
+<!--  	 <update id="custUpdate" parameterType="CustomerVO">
+ 		UPDATE CS_CUST01_MT 
+ 		SET cust_nm=#{cust_nm},
+ 			brdy_dt=#{brdy_dt},
+ 			sex_cd=#{sex_cd},
+ 			scal_yn=#{scal_yn},
+ 			mrrg_dt=#{mrrg_dt},
+ 			poc_cd=#{poc_cd},
+ 			mbl_no=#{mbl_no},
+ 			psmt_grc_cd=#{psmt_grc_cd},
+ 			email=#{email},
+ 			addr=#{addr},
+ 			addr_dtl=#{addr_dtl},
+ 			cust_ss_cd=#{cust_ss_cd},
+ 			jn_prt_cd=#{jn_prt_cd},
+ 			js_dt=#{js_dt},
+ 			stp_dt=#{stp_dt},
+ 			cncl_dt=#{cncl_dt},
+ 			cncl_cnts=#{cncl_cnts},
+ 			email_rcv_yn=#{email_rcv_yn},
+ 			sms_rcv_yn=#{sms_rcv_yn},
+ 			dm_rcv_yn=#{dm_rcv_yn},
+ 			lst_upd_dt=SYSDATE, 									
+			lst_upd_id=#{lst_upd_id}
+ 		WHERE cust_no=#{cust_no}
+ 	</update>  -->
  	
  	<!-- 신규 회원 등록 -->
   	<insert id="custRegister" parameterType="CustomerVO">
