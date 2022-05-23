@@ -37,6 +37,8 @@ public class UserController {
 
 		String id = request.getParameter("id");
 		String password = request.getParameter("password");
+		
+		System.out.println("id : " + id + "/password:" + password);
 
 		boolean check = false;
 		UserVO user = userService.loginUser(id);

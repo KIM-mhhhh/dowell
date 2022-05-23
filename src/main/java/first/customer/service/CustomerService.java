@@ -23,6 +23,9 @@ public interface CustomerService {
 	//직업코드 가져오기
 	public List<Map<String,Object>> getPocCode();
 	
+	//우편수령코드 가져오기
+	public List<Map<String,Object>> getPsmtCode();
+	
 	//고객정보 가져오기
 	public CustomerVO getCustInfo(Map<String,Object> map);
 	

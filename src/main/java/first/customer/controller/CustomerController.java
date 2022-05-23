@@ -23,12 +23,17 @@ import first.customer.service.CustomerService;
 import first.customer.vo.CustomerVO;
 
 import first.record.vo.RecordVO;
+import first.user.service.UserService;
 
 @Controller
 public class CustomerController {
 	
 	@Autowired
 	private CustomerService customerService;
+	
+	@Autowired
+	private UserService userService;
+	
 	
 	//怨좉컼寃��깋 �뙘�뾽
 	@RequestMapping("/customer/searchCustomer.do")
@@ -88,7 +93,7 @@ public class CustomerController {
 		return map;
 	}
 	
-	//main怨좉컼 議고쉶
+	//main고객검색
 	@RequestMapping("/customer/mainCustomer.do")
 	@ResponseBody
 	public Map<String,Object> getCustomerInfo(HttpServletRequest request){							//議곌굔�뿉 留욌뒗 怨좉컼�뱾 寃��깋
@@ -128,21 +133,23 @@ public class CustomerController {
 	}
 	
 	
-	//2李�
-	//�떊洹� 怨좉컼 �벑濡� �뙘�뾽
+	//2차
+	//회원등록 창
 	@RequestMapping("/customer/cusRegist.do")
 	public ModelAndView CustomerRegister() {
 		
-		//�뤌 吏곸뾽肄붾뱶�쓽 list 肄붾뱶 �뀒�씠釉붿뿉�꽌 媛��졇�삩�떎.
-		List<Map<String,Object>> codeList = customerService.getPocCode();
-
 		ModelAndView mav = new ModelAndView("/customer/cusRegister");
+		//
+		List<Map<String,Object>> codeList = customerService.getPocCode();
+		List<Map<String,Object>> psmtcodeList = customerService.getPsmtCode();
+
+		mav.addObject("psmtcodeList", psmtcodeList);
 		mav.addObject("codeList", codeList);
 		
 		return mav;
 	}
 	
-	  //�쑕���룿 踰덊샇 以묐났
+	  //핸드폰번호 중복 확인
 	  
 	  @PostMapping("/customer/checkMbl.do")
 	  @ResponseBody 
@@ -151,7 +158,7 @@ public class CustomerController {
 	  Map<String,String> ajaxMap = new HashMap<String, String>();
 	  String mbl_no = request.getParameter("mbl_no");
 	  
-	  System.out.println("�룿踰덊샇:" +mbl_no);
+	  System.out.println("폰번호:" +mbl_no);
 	  
 	  int mblCount = customerService.getMblCheck(mbl_no); //�쑕���룿 踰덊샇媛� 議댁옱�븯�뒗 寃쎌슦 duplicated, �븘�땲硫� notDuplicated瑜� json�쑝濡� 蹂대궡以��떎. 
 		  if(mblCount==0) {
@@ -163,53 +170,63 @@ public class CustomerController {
 	  
 	  }
 
-//	  @PostMapping("/customer/checkMbl.do") 
-//	  @ResponseBody public Map<String,String> checkMblNo(HttpServletRequest request, @RequestParam String mbl_no){
-//		  Map<String,String> ajaxMap = new HashMap<String, String>();
-//	  
-//		  System.out.println("폰번호:" +mbl_no);
-//	  
-//	  int mblCount = customerService.getMblCheck(mbl_no); 
-//	  if(mblCount==0) {
-//		  ajaxMap.put("result", "NotDuplicated"); 
-//	  }else if(mblCount >0){
-//		  ajaxMap.put("result", "Duplicated"); 
-//	  } 
-//	  return ajaxMap; 
-//	  }
 
-	//�떊洹� 怨좉컼 �벑濡� 泥섎━
+	//고객 등록 처리
 	@RequestMapping("/customer/registerSubmit.do")
 	public String submitRegister(@ModelAttribute CustomerVO customerVO, Model model ) {
 		
-		customerService.custRegister(customerVO);								//怨좉컼�벑濡�
+		customerService.custRegister(customerVO);								//
 		model.addAttribute("customerVO", customerVO);
 		
 		return "/customer/register";
 	}
+
+	
 	//회원 정보 가져오기
 	@RequestMapping("/customer/showCustomer.do")
-	public ModelAndView inquireCustomer(HttpServletRequest request) {				
+	public ModelAndView inquireCustomer(HttpServletRequest request) {
+		
+		ModelAndView mav = new ModelAndView("/customer/cusInfo");
+		
 		
 		String cust_no = request.getParameter("cust_no");
 		System.out.println("cust_no:"+cust_no);
 		
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("cust_no", cust_no);
+		if(cust_no==null) {
+			CustomerVO customer = new CustomerVO();									//빈페이지에 기본 정보들 업로드.
+			customer.setCust_ss_cd("10");
+			customer.setScal_yn("0");
+			customer.setSex_cd("F");
+			customer.setPsmt_grc_cd("H");
+			customer.setEmail_rcv_yn("Y");
+			customer.setDm_rcv_yn("Y");
+			customer.setSms_rcv_yn("Y");
+			customer.setPoc_cd("0");
+			customer.setEmail("@");
+			mav.addObject("customer", customer);
+		}else {
+			Map<String,Object> map = new HashMap<String, Object>();
+			map.put("cust_no", cust_no);
+			
+			// 怨좉컼踰덊샇濡� �젙蹂� 媛��졇�삤湲�
+			CustomerVO customer = customerService.getCustInfo(map);
+			//�뤌�쓽 吏곸뾽肄붾뱶�쓽 list
+			
+			 System.out.println("성별 :" +customer.getSex_cd());
+			 System.out.println(customer.getBrdy_dt());
+			 System.out.println("총 구매금액 : " + customer.getcTot_sal_amt());
+			 System.out.println("월 구매금액 :" + customer.getmTot_sal_amt());
+			  System.out.println("결혼기념일:" + customer.getMrrg_dt());
+			  mav.addObject("customer", customer);
+			
+		}
 		
-		// 怨좉컼踰덊샇濡� �젙蹂� 媛��졇�삤湲�
-		CustomerVO customer = customerService.getCustInfo(map);
-		//�뤌�쓽 吏곸뾽肄붾뱶�쓽 list
 		List<Map<String,Object>> codeList = customerService.getPocCode();
-		 System.out.println("성별 :" +customer.getSex_cd());
-		 System.out.println(customer.getBrdy_dt());
-		 System.out.println("총 구매금액 : " + customer.getcTot_sal_amt());
-		 System.out.println("월 구매금액 :" + customer.getmTot_sal_amt());
-		  System.out.println("결혼기념일:" + customer.getMrrg_dt());
-		
-		ModelAndView mav = new ModelAndView("/customer/cusInfo");
-		mav.addObject("customer", customer);
+		List<Map<String,Object>> sscodeList = userService.getSScode();
+		List<Map<String,Object>> psmtcodeList = customerService.getPsmtCode();
 		mav.addObject("codeList", codeList);
+		mav.addObject("sscodeList", sscodeList);
+		mav.addObject("psmtcodeList", psmtcodeList);
 		
 		return mav;
 	}
@@ -249,7 +266,9 @@ public class CustomerController {
 		 
 		  String chg = customerVO.getChg();
 		  System.out.println(chg + "/" + customerVO.getBefore() + "/" + customerVO.getAfter());
-
+		  
+		  
+		  //변경사항 가져오가
 		  String[] changeCd = chg.split(",");
 		  String[] changeBf = customerVO.getBefore().split(",");
 		  String[] changeAf = customerVO.getAfter().split(",");
@@ -309,12 +328,13 @@ public class CustomerController {
 		  
 		  System.out.println(customerVO.toString());
 		  
+		  
 		  customerService.custUpdate(map);
 		  
 		  
-		  model.addAttribute("customerVO", customerVO);
+		  model.addAttribute("cust_no", customerVO.getCust_no());
 		  
-		  return "/customer/result" ;
+		  return "redirect:/customer/showCustomer.do" ;
 	  }
 	
 }

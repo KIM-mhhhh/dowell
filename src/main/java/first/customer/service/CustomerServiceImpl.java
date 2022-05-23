@@ -82,11 +82,18 @@ public class CustomerServiceImpl implements CustomerService {
 		TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition()); 
 		try {
 			CustomerVO customerVO =(CustomerVO) map.get("customerVO");
-			 customerMapper.custUpdate(customerVO);
+			 
 			 Map<String,Object> cmap = new HashMap<String,Object>();
 			 cmap.put("cust_no", customerVO.getCust_no());
 			 List<RecordVO> recList = (List<RecordVO>)map.get("recordList");
-
+			 //비교 위해 원래의 고객 상태코드 가져와서 map에 넣기
+			 String oSscd = customerMapper.getCustInfo(cmap).getCust_ss_cd();
+			 cmap.put("oSscd", oSscd);
+			 cmap.put("customer", customerVO);
+			 System.out.println(oSscd);
+			 //수정
+			 customerMapper.custUpdate(cmap);
+			 //수정 이력
 			 int seq= customerMapper.getSeq(cmap);
 			 System.out.println("리스트크기"+recList.size());
 			 for(int i=0;i<recList.size();i++) {
@@ -113,14 +120,12 @@ public class CustomerServiceImpl implements CustomerService {
 		transactionManager.commit(status);
 
 		
-		
-		
-		
-		
-		 
-		 
-		 
-		
+	}
+
+	@Override
+	public List<Map<String, Object>> getPsmtCode() {
+		List<Map<String,Object>> psmtList = customerMapper.getPsmtCode();
+		return psmtList;
 	}
 
 }

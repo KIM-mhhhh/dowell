@@ -7,7 +7,7 @@
 <title>footer</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/side.css" type="text/css">
 </head>
-<body>
+<body class="sideBody">
     <div class="left-side-bar">
 
 		 <div class="status-ico">

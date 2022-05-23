@@ -20,12 +20,14 @@ public interface CustomerMapper {
 	public int getMblCheck(String mbl_no);
 	//직업코드 가져오기
 	public List<Map<String,Object>> getPocCode();
+	//우편수령코드 가져오기
+	public List<Map<String,Object>> getPsmtCode();
 	//고객정보 가져오기
 	public CustomerVO getCustInfo(Map<String,Object> map);
 	//신규 고객 등록
 	public void custRegister(CustomerVO customerVO);
 	//고객 정보 수정
-	public void custUpdate(CustomerVO customerVO);
+	public void custUpdate(Map<String,Object> map);
 	//고객 이력 넣기
 	public void recordRegist(Map<String,Object> map);
 	//증가 수

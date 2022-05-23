@@ -13,6 +13,9 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		var check = 0;			// 휴대폰번호 중복체크 확인. 0이면 확인 안하거나 중복. 1이면 확인. 중복 안됨. 
+		
+		$('input:radio[name =psmt_grc_cd]:input[value=H]').prop("checked",true);
+		
 		//창 종료
 		$.closeForm($('#closeForm'));
 
@@ -219,8 +222,9 @@
 				<li  class="formList">
 					<label for="psmt_grc_cd">*우편물수령</label>
 					<div class="ipdiv">
-					<input type="radio" name="psmt_grc_cd" value="H" checked>자택
-					<input type="radio" name="psmt_grc_cd" value="O">직장
+					<c:forEach var="code" items="${psmtcodeList }">
+					<input type="radio" name="psmt_grc_cd" value="${code.DTL_CD }"> ${code.DTL_CD_NM }
+				</c:forEach>
 					</div>
 				</li>
 				<li  class="formList">

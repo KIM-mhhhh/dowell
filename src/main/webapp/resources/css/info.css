@@ -173,13 +173,13 @@ ul li{
  .addDiv>input{
 	margin-right : 3px;
 } 
-.side{
+/* .side{
 	width:30%;
 	float:left;
 }
 .side ul li{
 	display:inline-block;
-}
+} */
 
 
 
@@ -226,7 +226,7 @@ h4 img{
 	width:80px;
 	height:30px;
 }
-input#jn_prt_cd,input#fst_js_dt,input#jdt,input#stop_dt,input#cn_dt,input#cTot_sal_amt,input#mTot_sal_amt,input#lSal_dt{
+input#jn_prt_cd,input#fst_js_dt,input#js_dt,input#stp_dt,input#cncl_dt,input#cTot_sal_amt,input#mTot_sal_amt,input#lSal_dt{
 	background-color: #e6e6e6;
 }
 

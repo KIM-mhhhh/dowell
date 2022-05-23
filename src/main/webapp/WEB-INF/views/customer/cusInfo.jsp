@@ -12,11 +12,12 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
+		
+		
 		var check = 0;						//휴대폰 중복 체크
 		var oName = $('#cust_nm').val();						//해지에서 되돌릴 때 넣을 원래 이름
 		var oMbl = $('#mbl_no').val();							//해지에서 되돌릴 때 넣을 원래 핸드폰 이름
 		var cState = ${customer.cust_ss_cd };					//상태체크 하기 위한 변수.
-
 		
 		
 		//라디오버튼 체크
@@ -52,11 +53,22 @@
 				
 		//날짜 넣기
 		 $('#brdy_dt').val($('#birth').val().replace(/\-/g,''));
-		 $('#mrrg_dt').val($('#merry').val().replace(/\-/g,''));
+		 $('#mrrg_dt').val($('#marry').val().replace(/\-/g,''));
 		
 		checkRadio();
 		//비교 위해 초기 form 객체
 		var Form = $('#infoForm').serializeArray();
+		
+		//본사인 경우 비활성화
+		if(${prt_dt_cd} =='1'){
+
+			$('#poc_cd').attr('disabled', true);
+			$('#cust_ss_cd').attr('disabled', true);
+			$('#infoForm input').prop('disabled', true);
+			
+		}
+		
+		
 		
 		//오늘 날짜 구하는 함수
 /* 		var getToday = function(){
@@ -100,10 +112,13 @@
 				$(":radio[name='cust_ss_cd'][value='10']").attr('disabled', false);
 				$(":radio[name='cust_ss_cd'][value='80']").attr('disabled', true);
 			} 
+
 		}
+		
+		
 	 
  		$('#closeBtn').click(function(){
- 			location.href="${pageContext.request.contextPath}/customer/cusList.jsp";
+ 			location.href="${pageContext.request.contextPath}/loginSubmit.do?id="+${id}+"&&password="+${password};
  		});
 		
 		//고객번호 검색 클릭시 고객검색 팝업
@@ -152,8 +167,8 @@
 							 	$('#sCust_nm').val(param.customer.cust_nm);
 	 							$('#birth').val(param.customer.brdy_dt);
 	 							$('#brdy_dt').val($('#birth').val().replace(/\-/g,''));
-								$('#merry').val(param.customer.mrrg_dt);
-								$('#mrrg_dt').val($('#merry').val().replace(/\-/g,''));
+								$('#marry').val(param.customer.mrrg_dt);
+								$('#mrrg_dt').val($('#marry').val().replace(/\-/g,''));
 								$('#addr').val(param.customer.addr);
 								$('#addr_dtl').val(param.customer.addr_dtl);
 								$('#email').val(param.customer.email);
@@ -212,11 +227,9 @@
 		//날짜 바뀌면 넣어주기
 		$('#birth').change(function(){
 			 $('#brdy_dt').val($('#birth').val().replace(/\-/g,''));
-			alert( $('#brdy_dt').val());
 		});
-		$('#merry').change(function(){
-			$('#mrrg_dt').val($('#merry').val().replace(/\-/g,''));
-			alert( $('#mrrg_dt').val());
+		$('#marry').change(function(){
+			$('#mrrg_dt').val($('#marry').val().replace(/\-/g,''));
 		});
 		
 		//휴대폰번호 중복 확인
@@ -237,13 +250,21 @@
 				return false;
 			}
 			if($('#mbl_no1').val() =='000' && ($('#mbl_no2').val() =='000' || $('#mbl_no2').val() =='0000') && $('#mbl_no3').val() =='0000'){
-			
-				alert('000-0000-0000 또는 000-000-0000은 \n사용할 수 없는 핸드폰 번호 입니다.');
-				$('#mbl_no1').val('');
-				$('#mbl_no2').val('');
-				$('#mbl_no3').val('');
-				$('#mbl_no1').focus();
-				return false;
+				
+				if($(":radio[name='cust_ss_cd'][value='90']").is(':checked')){
+					alert('해지고객입니다.');
+					check = 1;
+					return false;
+					
+				}else{
+					alert('000-0000-0000 또는 000-000-0000은 \n사용할 수 없는 핸드폰 번호 입니다.');
+					$('#mbl_no1').val('');
+					$('#mbl_no2').val('');
+					$('#mbl_no3').val('');
+					$('#mbl_no1').focus();
+					return false;
+				}
+
 			};
 			var mbl_no = $('#mbl_no1').val() + $('#mbl_no2').val() + $('#mbl_no3').val();
 			$.ajax({
@@ -308,7 +329,7 @@
 			}
  //			$('#stop_dt').val(getToday());
  			$('#cncl_cnts').attr("readonly",true);
- 			$('#cn_dt').val('');
+// 			$('#cn_dt').val('');
  			
  		});
  		//정상버튼
@@ -332,8 +353,8 @@
 	 			} 
 			}
  			$('#cncl_cnts').val('');
- 			$('#cn_dt').val('');
- 			$('#stop_dt').val('');
+// 			$('#cn_dt').val('');
+// 			$('#stop_dt').val('');
 // 			$('#jdt').val(getToday());
  		});
 		
@@ -391,10 +412,7 @@
 				alert('날짜를 입력해 주세요');
 				return false;
 			}
-/* 			else {
-				$('#brdy_dt').val($('#birth').val());
-				alert(('#brdy_dt').val());
-			} */
+
  			//날짜 제한. 오늘 넘지 않게
  			if($('#birth').val()> new Date().toISOString().substring(0,10)){
  				alert('오늘 이전의 날짜만 선택 가능합니다.');
@@ -417,18 +435,12 @@
 				$('#after').val(chgafter);
 			}
 			
-/* 	 		 $('#brdy_dt').val($('#birth').val().replace(/\-/g,'')); 
-			 console.log($('#brdy_dt').val()); */
 
-			
- 			//결혼기념일 - 제거
-/* 			if($('#merry').val() !=''){
-				$('#mrrg_dt').val($('#merry').val().replace(/\-/g,''));
-			} */
- 			$('#js_dt').val($('#jdt').val().replace(/\-/g,''));
+	
+ 		/* 	$('#js_dt').val($('#jdt').val().replace(/\-/g,''));
  			$('#stp_dt').val($('#stop_dt').val().replace(/\-/g,''));
  			$('#cncl_dt').val($('#cn_dt').val().replace(/\-/g,''));
-
+ */
 			var yn = confirm("고객정보를 수정하시겠습니까?");
 			if(yn==false){
 				$('#chg').val('');
@@ -476,7 +488,9 @@
 	<jsp:include page="/WEB-INF/views/common/header.jsp"/>
 </div>
 <div id='wrapper'>
-
+<div class="side">
+	<jsp:include page="/WEB-INF/views/common/side.jsp"/>
+</div>
 <h4>고객정보조회<img alt="새로고침" src="${pageContext.request.contextPath}/images/reload.png" onclick="window.location.reload()"></h4>
 <div class="searchBox">
 <form method="post" id="searchForm">
@@ -518,8 +532,8 @@
 					<li class="formList">
 						<label for="sex_cd">성별</label>
 						<input type="hidden" id="hSex" value="${customer.sex_cd }">
-						<input type="radio" name="sex_cd" value='F' checked>여성
-						<input type="radio" name="sex_cd" value='M'>남성
+						<input type="radio" name="sex_cd" value="F" checked>여성
+						<input type="radio" name="sex_cd" value="M">남성
 					</li>
 					<li class="formList">
 						<label for="scal_yn">*생일</label>
@@ -529,12 +543,12 @@
 					<li class="formList">
 						<label for="mrrg_dt">결혼기념일</label>
 						<input type="hidden" id="mrrg_dt" name="mrrg_dt">
-						<input type="date" id="merry" value="${customer.mrrg_dt }">
+						<input type="date" id="marry" value="${customer.mrrg_dt }">
 					</li>
 					<li class="formList">
 						<label for="poc_cd">*직업코드</label>
 						<select name="poc_cd" id="poc_cd">
-								<option selected disabled>-선택-</option>
+								<option selected disabled value="0">-선택-</option>
 							<c:forEach var="code" items="${codeList }">
 								<option value="${code.DTL_CD }">${code.DTL_CD_NM }</option>
 							</c:forEach>
@@ -557,8 +571,9 @@
 				<li class="formList">
 					<label for="psmt_grc_cd">*우편물수령</label>
 					<input type="hidden" id="hPsmt" value="${customer.psmt_grc_cd }">
-					<input type="radio" name="psmt_grc_cd" value="H" checked>자택
-					<input type="radio" name="psmt_grc_cd" value="O">직장
+				<c:forEach var="code" items="${psmtcodeList }">
+					<input type="radio" name="psmt_grc_cd" value="${code.DTL_CD }"> ${code.DTL_CD_NM }
+				</c:forEach>
 				</li>
 				<li class="formList">
 					<label for="email">*이메일</label>
@@ -576,9 +591,9 @@
 				</li>
 				<li class="formList">
 					<label>*고객상태</label>
-					<input type="radio" name="cust_ss_cd" value="10" checked> 정상
-					<input type="radio" name="cust_ss_cd" value="80"> 중지
-					<input type="radio" name="cust_ss_cd" value="90"> 해지
+				<c:forEach var="code" items="${sscodeList }">
+					<input type="radio" id="cust_ss_cd" name="cust_ss_cd" value="${code.DTL_CD }"> ${code.DTL_CD_NM }
+				</c:forEach>
 				</li>
 				<li class="formList">
 					<label for="fst_js_dt">최초가입일자</label>
@@ -586,8 +601,7 @@
 				</li>
 				<li class="formList">
 					<label for="js_dt">가입일자</label>
-					<input type="hidden" id="js_dt" name="js_dt">
-					<input type="text" id="jdt" readonly value="${customer.js_dt }">
+					<input type="text" id="js_dt" readonly value="${customer.js_dt }">
 				</li>
 				<li class="formList">
 					<label for="cncl_cnts">해지사유</label>
@@ -595,13 +609,11 @@
 				</li>
 				<li class="formList">
 					<label for="stp_dt">중지일자</label>
-					<input type="hidden" id="stp_dt" name="stp_dt">
-					<input type="text" id="stop_dt" readonly value="${customer.stp_dt }">
+					<input type="text" id="stp_dt" readonly value="${customer.stp_dt }">
 				</li>
 				<li class="formList">
 					<label for="cncl_dt">해지일자</label>
-					<input type="hidden" id="cncl_dt" name="cncl_dt">
-					<input type="text" id="cn_dt" readonly value="${customer.cncl_dt }">			<!-- 날짜 가져올 때 --넣어서 가져옴. 그러니 가져갈 떄 - 빼줘야해서 hidden넣어줫음. -->
+					<input type="text" id="cncl_dt" readonly value="${customer.cncl_dt }">			<!-- 날짜 가져올 때 --넣어서 가져옴. 그러니 가져갈 떄 - 빼줘야해서 hidden넣어줫음. -->
 				</li>
 			</ul>
 			
