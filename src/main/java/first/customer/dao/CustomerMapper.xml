@@ -388,7 +388,7 @@
   					cncl_dt=TO_CHAR(SYSDATE,'yyyyMMdd'),
   				</if>
   			</if>
- 			cncl_cnts=#{customer.cncl_cnts},
+ 			cncl_cnts=#{customer.cncl_cnts, jdbcType=VARCHAR},
  			email_rcv_yn=#{customer.email_rcv_yn},
  			sms_rcv_yn=#{customer.sms_rcv_yn},
  			dm_rcv_yn=#{customer.dm_rcv_yn},

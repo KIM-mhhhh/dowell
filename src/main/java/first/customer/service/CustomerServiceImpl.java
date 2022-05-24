@@ -92,7 +92,9 @@ public class CustomerServiceImpl implements CustomerService {
 			 cmap.put("customer", customerVO);
 			 System.out.println(oSscd);
 			 //수정
+			 System.out.println("해지사유:"+customerVO.getCncl_cnts());
 			 customerMapper.custUpdate(cmap);
+			 System.out.println("수정 완료");
 			 //수정 이력
 			 int seq= customerMapper.getSeq(cmap);
 			 System.out.println("리스트크기"+recList.size());
@@ -101,10 +103,10 @@ public class CustomerServiceImpl implements CustomerService {
 				 record.setChg_seq(seq+i);
 				 record.setFst_user_id(customerVO.getFst_user_id());
 				 if(record.getChg_bf_cnt().equals("NULL")) {
-					 record.setChg_bf_cnt(null);
+					 record.setChg_bf_cnt("");
 				 }
 				 if(record.getChg_aft_cnt().equals("NULL")) {
-					 record.setChg_aft_cnt(null);
+					 record.setChg_aft_cnt("");
 				 }
 				 System.out.println(record.toString());
 				 System.out.println("시퀀스:"+record.getChg_seq());
@@ -112,6 +114,7 @@ public class CustomerServiceImpl implements CustomerService {
 			 }
 			cmap.put("list", recList);
 			customerMapper.recordRegist(cmap);
+			System.out.println("이력 입력 완료");
 
 		} catch (RuntimeException e) { 
 			transactionManager.rollback(status); 

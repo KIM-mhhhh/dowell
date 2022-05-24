@@ -40,7 +40,8 @@
 				alert('값을 선택하세요');
 				return false;
 			}else{																			//체크한 값을 본 페이지의 각 부분에 할당.
-				$(opener.document).find('#cust_no').val(cust_no);
+//				$(opener.document).find('#cust_no').val(cust_no);
+				$(opener.document).find('#sCust_no').val(cust_no);
 /* 		 		 $(opener.document).find('#cust_nm').val(cust_nm); */
 		 		$(opener.document).find('#sCust_nm').val(cust_nm);
 					self.close();
@@ -52,7 +53,7 @@
 		$(document).on('dblclick','.checkTr',function(){										//행 더블클릭 시  더블클릭한 행의 값 변수에 할당하고 본문에 적용
 			var custNo = $(this).find('td').find('span').eq(0).text();
 			var custNm = $(this).find('td').find('span').eq(1).text();
-			$(opener.document).find('#cust_no').val(custNo);
+			$(opener.document).find('#sCust_no').val(custNo);
 /* 	 		 $(opener.document).find('#cust_nm').val(custNm); */
 	 		$(opener.document).find('#sCust_nm').val(custNm);
 				self.close();

@@ -52,7 +52,7 @@
 			var output ="";
 			var prt_cd = $('input[name="prt_cd"]').val().trim();
 			var prt_nm = $('input[name="prt_nm"]').val().trim();
-			var cust_no = $('input[name="cust_no"]').val().trim();
+			var cust_no = $('input[name="sCust_no"]').val().trim();
 			var cust_nm = $('input[name="sCust_nm"]').val().trim();
 			var cust_ss_cd =$('input[name="cust_ss_cd"]:checked').val();
 			var from = $('input[name="from"]').val().replace(/\-/g,'');
@@ -227,7 +227,7 @@
 			</li>
 			<li>
 				<label for="cust_no">고객</label>
-				<input type="text" id="cust_no" name="cust_no">
+				<input type="text" id="sCust_no" name="sCust_no">
 					<img id="searchCust" class="searchIcon" alt="고객조회" src="${pageContext.request.contextPath}/images/search.png">
 				<input type="text" id="sCust_nm" name="sCust_nm">
 			</li>

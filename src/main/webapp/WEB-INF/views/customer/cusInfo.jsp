@@ -19,12 +19,7 @@
 		var oMbl = $('#mbl_no').val();							//해지에서 되돌릴 때 넣을 원래 핸드폰 이름
 		var cState = ${customer.cust_ss_cd };					//상태체크 하기 위한 변수.
 		
-		
-		//라디오버튼 체크
-/* 		function intoInfo(name,value){
-			$('input:radio[name ='+name+']:input[value='+value+']').prop("checked", true);
-		} */
-		
+
 		//값 로드 시 핸드폰 번호 할당.
 	 	if($('#mbl_no').val().length==11){
 			$('#mbl_no1').val($('#mbl_no').val().substring(0,3));
@@ -54,22 +49,19 @@
 		//날짜 넣기
 		 $('#brdy_dt').val($('#birth').val().replace(/\-/g,''));
 		 $('#mrrg_dt').val($('#marry').val().replace(/\-/g,''));
-		
+		//라디오 체크
 		checkRadio();
 		//비교 위해 초기 form 객체
 		var Form = $('#infoForm').serializeArray();
-		
+
 		//본사인 경우 비활성화
 		if(${prt_dt_cd} =='1'){
 
 			$('#poc_cd').attr('disabled', true);
 			$('#cust_ss_cd').attr('disabled', true);
 			$('#infoForm input').prop('disabled', true);
-			
 		}
-		
-		
-		
+			
 		//오늘 날짜 구하는 함수
 /* 		var getToday = function(){
 			var date = new Date();
@@ -88,7 +80,7 @@
 			
 			return today;
 		} */
-		
+		//핸드폰 번호가 바뀌는 경우 다시 중복확인 하도록.
 		$('#mbl_no1,#mbl_no2,#mbl_no3 ').change(function(){
 			check = 0;
 		});
@@ -116,7 +108,7 @@
 		}
 		
 		
-	 
+	 //취소버튼 클릭시 main화면으로
  		$('#closeBtn').click(function(){
  			location.href="${pageContext.request.contextPath}/loginSubmit.do?id="+${id}+"&&password="+${password};
  		});
@@ -132,7 +124,7 @@
 		
 		//고객조회 검색시 정보 가져와서 반영
 		$('#submitBtn').click(function(event){
-			if($('#cust_no').val().length<=0){									
+			if($('#sCust_no').val().length<=0){									
 				alert('고객번호를 입력하세요.');
 				return false;
 			}else {
@@ -156,13 +148,14 @@
 				 $('#infoForm')[0].reset();
 					$.ajax({
 						type:'post',
-						data:{cust_no:$('#cust_no').val()}, 	
+						data:{cust_no:$('#sCust_no').val()}, 	
 						url:'${pageContext.request.contextPath}/customer/getCustInfo.do', 
 						dataType:'json',
 						cache:false,
 						timeout:30000,
 						success:function(param){
 							 	//각 input에 값 할당.
+							 	$('#cust_no').val(param.customer.cust_no);
 								$('#cust_nm').val(param.customer.cust_nm);
 							 	$('#sCust_nm').val(param.customer.cust_nm);
 	 							$('#birth').val(param.customer.brdy_dt);
@@ -250,20 +243,14 @@
 				return false;
 			}
 			if($('#mbl_no1').val() =='000' && ($('#mbl_no2').val() =='000' || $('#mbl_no2').val() =='0000') && $('#mbl_no3').val() =='0000'){
-				
-				if($(":radio[name='cust_ss_cd'][value='90']").is(':checked')){
-					alert('해지고객입니다.');
-					check = 1;
-					return false;
-					
-				}else{
+		
 					alert('000-0000-0000 또는 000-000-0000은 \n사용할 수 없는 핸드폰 번호 입니다.');
 					$('#mbl_no1').val('');
 					$('#mbl_no2').val('');
 					$('#mbl_no3').val('');
 					$('#mbl_no1').focus();
+					
 					return false;
-				}
 
 			};
 			var mbl_no = $('#mbl_no1').val() + $('#mbl_no2').val() + $('#mbl_no3').val();
@@ -306,6 +293,8 @@
  			$('#mbl_no1').val('000');
  			$('#mbl_no2').val('0000');
  			$('#mbl_no3').val('0000');
+ 			check = 1;
+ 			$('#chMbl').attr("disabled",true);
 // 			$('#cn_dt').val(getToday());
  		});
 		//중지버튼
@@ -353,14 +342,62 @@
 	 			} 
 			}
  			$('#cncl_cnts').val('');
+ 			$('#chMbl').attr("disabled",false);
 // 			$('#cn_dt').val('');
 // 			$('#stop_dt').val('');
 // 			$('#jdt').val(getToday());
  		});
+ 		
+ 		//캘린더 정규식
+ 	 	function checkValidDate(value) {										//캘린더 정규식. 날짜 가져와서 적용.
+			var result = true;
+			try {
+			    var date = value.split("-");
+			    var y = parseInt(date[0], 10),
+			        m = parseInt(date[1], 10),
+			        d = parseInt(date[2], 10);
+			    
+	   			var dateRegex = /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
+	   				 result = dateRegex.test(d+'-'+m+'-'+y);
+				} catch (err) {
+					result = false;
+				}    
+			    return result;
+		};
+				
+ 		//생년월일 미래일자 입력 불가
+		$('#birth').click(function(){
+			var today = new Date().toISOString().substring(0,10);
+			$(this).attr('max',today);
+		});
+		//날짜 제한. 오늘 넘지 않게
+		$('#birth').change(function(){
+			  //날짜 제한. 오늘 넘지 않게
+ 			if($('#birth').val()> new Date().toISOString().substring(0,10)){
+  				alert('오늘 이전의 날짜만 선택 가능합니다.'); 
+ 				$('#birth').val('');
+ 				
+ 			}else{															//정규식 체크
+				if(checkValidDate($('#birth').val())){
+					
+				}else{													//정규식에 맞지 않는 경우
+						/* alert('유효하지 않음'); */
+						$('#birth').val('').focus();
+				}
+			}  
+		});
 		
+		//결혼기념일 유효성 검사
+		$('#marry').blur(function(){
+			if(checkValidDate($('#marry').val())){	
+			}else{													//정규식에 맞지 않는 경우	
+					$('#marry').val('').focus();
+			}
+		});
+  
 		//저장버튼 클릭 시 휴대폰번호 변경버튼 안눌렀으면 버튼확인하라고, 필수항목 검사. 창 띄우고 yes면 저장.
 		$('#confBtn').click(function(){
-			//고객명 2자 이상 체크
+			//고객명 2자 이상 체크(빈칸체크)
 			if($('#cust_nm').val().trim().length<2){
 				alert('고객명을 2자 이상 입력해 주세요.');
 				return false;
@@ -377,7 +414,6 @@
 				alert('우편물 수령 장소를 선택하세요.');
 				return false;
 			}
-			
 			//주소 하나 입력되어 있으면 둘 다 입력
 			if($('#addr').val().trim().length>0 && $('#addr_dtl').val().trim().length<=0 ){
 				alert('상세주소를 입력해 주세요.');
@@ -392,7 +428,6 @@
 				return false;
 			}
 			//휴대폰번호 확인 체크
-			
  			if(check==0){
  				if(($('#mbl_no1').val() + $('#mbl_no2').val() + $('#mbl_no3').val()) == oMbl){
  					check = 1;
@@ -400,8 +435,6 @@
  					alert('휴대폰 번호 중복 확인 해주세요.');
  					return false;
  				}
- 				
- 				
  				
 
 			}  
@@ -461,19 +494,19 @@
 		var chName = new Array();
 		var chBefore = new Array();
 		var chAfter = new Array();
-		if(after.length != before.length){
+		if(after.length != before.length){											
 			return false;
 		}else{
-		 for(var i in after){
-			 
+		 for(var i in after){											//초기 고객정보와 수정 후의 고객정보를 비교해서 바뀐 항목과 전 후 데이터를 뽑아낸다.
 			  if(after[i].value !== before[i].value){
 				  console.log(after[i].name);
-				  chName.push(after[i].name);
+				  
+				  chName.push(after[i].name);							//뽑아낸 데이터들을 배열에 넣어준다.
 				  chAfter.push(after[i].value);
 				  chBefore.push(before[i].value);
 			  }
 		}
-		 var chgOb = {
+		 var chgOb = {													//각 배열들을 객체에 담아 return
 			name : chName,
 			before : chBefore,
 			after : chAfter
@@ -496,7 +529,7 @@
 <form method="post" id="searchForm">
 	<div class="searchInput">
 	<label for="">고객</label>
-	<input type="text" id="cust_no" value="${customer.cust_no }" >
+	<input type="text" id="sCust_no" value="${customer.cust_no }" >
 	<img id="searchCust" class="searchIcon" alt="고객조회" src="${pageContext.request.contextPath}/images/search.png">
 	<input type="text"  id="sCust_nm" value="${customer.cust_nm }">
 	</div>

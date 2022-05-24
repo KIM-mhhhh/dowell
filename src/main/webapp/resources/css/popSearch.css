@@ -221,7 +221,7 @@ th{
 	border-radius : 4%;
 }
 
-#closeForm, #regBtn{
+#closeForm, #regBtn,#resultBtn{
 	background-color : white;
 	border : 2px solid black;
 	border-radius : 8%;
@@ -234,13 +234,7 @@ th{
 	display:inline-block;
 	float:right;
 }
-#resultBtn{
-	background-color : white;
-	border : 1.5px solid black;
-	border-radius : 10%;
-	font-weight : bold;
-	margin-left : 10px;
-}
+
 
 .marketList{
 	width:80%; 

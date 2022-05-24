@@ -27,21 +27,57 @@
 			}
 		});
 		
+		//캘린더 정규식
+ 	 	function checkValidDate(value) {										//캘린더 정규식. 날짜 가져와서 적용.
+			var result = true;
+			try {
+			    var date = value.split("-");
+			    var y = parseInt(date[0], 10),
+			        m = parseInt(date[1], 10),
+			        d = parseInt(date[2], 10);
+			    
+	   			var dateRegex = /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
+	   				 result = dateRegex.test(d+'-'+m+'-'+y);
+				} catch (err) {
+					result = false;
+				}    
+			    return result;
+		};
+		
 		//생년월일 미래일자 입력 불가
 		$('#birth').click(function(){
 			var today = new Date().toISOString().substring(0,10);
 			$(this).attr('max',today);
 		});
-		//날짜 제한. 오늘 넘지 않게
+		//생년월일 날짜 제한. 오늘 넘지 않게
 		$('#birth').change(function(){
 			  //날짜 제한. 오늘 넘지 않게
  			if($('#birth').val()> new Date().toISOString().substring(0,10)){
   				alert('오늘 이전의 날짜만 선택 가능합니다.'); 
  				$('#birth').val('');
- 				return false;
- 			} 
+
+ 			}else{															//정규식 체크
+					if(checkValidDate($('#birth').val())){
+										
+					}else{													//정규식에 맞지 않는 경우
+							alert('유효하지 않음');
+							$('#birth').val('').focus();
+					}
+			} 
 		});
-		//휴대폰 확인했다가 다시 입력창 손대면 확인 다시 하게
+		
+		//결혼기념일 유효성 검사
+		$('#marry').change(function(){
+			if(checkValidDate($('#marry').val())){
+				
+			}else{													//정규식에 맞지 않는 경우
+					alert('유효하지 않음');
+					$('#marry').val('').focus();
+			}
+		});
+  
+		
+		//휴대폰 확인했다가 다시 입력창 손대면 확인 다시
 		$('#mbl_no1,#mbl_no2,#mbl_no3 ').change(function(){
 			check = 0;
 		});
@@ -106,7 +142,7 @@
 		//제출 시 체크 (고객명 2자 이상, 필수항목, 휴대폰 번호 중복, 주소 하나입력하면 둘다 입력되어야함.)
 		$('#regBtn').click(function(){
 			//고객명 2자 이상 체크
-			if($('#cust_nm').val().trim().length<2){
+			if($('#cust_nm').val().trim().length<=2){
 				alert('고객명을 입력해 주세요.');
 				return false;
 			}
@@ -147,8 +183,8 @@
  			
 			 $('#brdy_dt').val($('#birth').val().replace(/\-/g,''));
  			//결혼기념일 - 제거
-			if($('#merry').val() !=''){
-				$('#mrrg_dt').val($('#merry').val().replace(/\-/g,''));
+			if($('#marry').val() !=''){
+				$('#mrrg_dt').val($('#marry').val().replace(/\-/g,''));
 			}
 			 
 			//컨펌 창 띄우기
@@ -247,7 +283,7 @@
 					<label for="mrrg_dt">결혼기념일</label>
 					<div class="ipdiv">
 					<input type="hidden" id="mrrg_dt" name="mrrg_dt">
-					<input type="date" id="merry" name="merry">
+					<input type="date" id="marry" name="marry">
 					</div>
 				</li>
 				<li  class="formList">
