@@ -35,26 +35,26 @@ public class CustomerController {
 	private UserService userService;
 	
 	
-	//怨좉컼寃��깋 �뙘�뾽
+	//고객검색 팝업 열기
 	@RequestMapping("/customer/searchCustomer.do")
 	public String searchCustomer() {
 		
 		return "/customer/cusSearch";
 	}
 	
-	//怨좉컼 �씠�젰 議고쉶
+	//고객이력 열기
 	@RequestMapping("/customer/showRecord.do")
-	public ModelAndView checkRecord(HttpServletRequest request) {					//留곹겕濡� 怨좉컼 踰덊샇�꽆寃⑥＜湲�
+	public ModelAndView checkRecord(HttpServletRequest request) {					//고객번호를 받아온다.
 		
 		String cust_no = request.getParameter("cust_no");
 		System.out.println("cust_no:" + cust_no);
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("cust_no", cust_no);
-		List<RecordVO> recordList = customerService.getRecord(cust_no);				//怨좉컼踰덊샇濡� 怨좉컼�쓽 �씠�젰 紐⑸줉�쓣 媛��졇�샂
-		String cust_nm = customerService.getCustInfo(map).getCust_nm();			//怨좉컼踰덊샇濡� 怨좉컼紐� 媛��졇�삩�떎.
-		System.out.println("怨좉컼紐� : " + cust_nm);
+		List<RecordVO> recordList = customerService.getRecord(cust_no);				//고객번호로 해당 이력 목록을 list로 받아온다.
+		String cust_nm = customerService.getCustInfo(map).getCust_nm();			//띄울 고객명 고객정보에서 가져오기
+		System.out.println("고객이름 : " + cust_nm);
 
-		ModelAndView mv = new ModelAndView("/customer/cusRecord");					//怨좉컼 �씠�젰 �럹�씠吏�濡� list�� �젙蹂대뱾 蹂대궡以�.
+		ModelAndView mv = new ModelAndView("/customer/cusRecord");					//이력 창에 정보 보내주기
 		mv.addObject("cust_no", cust_no);
 		mv.addObject("cust_nm", cust_nm);
 		mv.addObject("recordList",recordList);
@@ -62,25 +62,25 @@ public class CustomerController {
 		return mv;
 	}
 	
-	//怨좉컼議고쉶(寃��깋)
+	//고객검색결과
 	@RequestMapping("/customer/customerResult.do")
 	@ResponseBody
-	public Map<String,Object> searchCustomer(HttpServletRequest request){						//怨좉컼議고쉶�뙘�뾽�뿉�꽌 寃��깋�뼱濡� 怨좉컼 議고쉶
+	public Map<String,Object> searchCustomer(HttpServletRequest request){						//고객검색 팝업의 결과
 		Map<String,Object> map = new HashMap<String, Object>();
 		
 		try {
 			String cust_nm = request.getParameter("cust_nm");
 			String mbl_no = request.getParameter("mbl_no");
 			
-			System.out.println("寃��깋�뼱 : " + cust_nm + "/" + mbl_no);
+			System.out.println("넘어온값 : " + cust_nm + "/" + mbl_no);
 			
 			Map<String,Object> ajaxMap = new HashMap<String,Object>();
 			ajaxMap.put("cust_nm", cust_nm);
 			ajaxMap.put("mbl_no", mbl_no);
-			List<CustomerVO> customer = customerService.searchCustomer(ajaxMap);				//寃��깋�뼱 議곌굔�뿉 留욌뒗 怨좉컼�쓽 list瑜� 遺덈윭�삩�떎.
+			List<CustomerVO> customer = customerService.searchCustomer(ajaxMap);				//ajax로 키워드를 보내주고 그에 맞는 고객의 list를 가져온다.
 			 
-			int customerCount = customer.size();												//寃��깋�뼱 議곌굔�뿉 留욌뒗 怨좉컼�쓽 �닔
-			System.out.println("怨좉컼議고쉶 list�쓽 �닔 : " + customerCount);
+			int customerCount = customer.size();												//가져온 고객의 수
+			System.out.println("고객 수 : " + customerCount);
 			map.put("customerCount", customerCount);
 			map.put("customer", customer);
 			
@@ -96,7 +96,7 @@ public class CustomerController {
 	//main고객검색
 	@RequestMapping("/customer/mainCustomer.do")
 	@ResponseBody
-	public Map<String,Object> getCustomerInfo(HttpServletRequest request){							//議곌굔�뿉 留욌뒗 怨좉컼�뱾 寃��깋
+	public Map<String,Object> getCustomerInfo(HttpServletRequest request){						//검색 키워드들을 가져온다.
 		
 		Map<String,Object> ajaxMap = new HashMap<String,Object>();
 		try {
@@ -110,7 +110,7 @@ public class CustomerController {
 			
 			System.out.println("from : " + from +"/ to:"+ to );
 
-			Map<String,Object> map = new HashMap<String,Object>();									//list瑜� 媛��졇�삤湲� �쐞�븳 �슂嫄대뱾�쓣 map�뿉 �떞�븘以��떎.
+			Map<String,Object> map = new HashMap<String,Object>();									//가져온 키워드들 map에 넣어서 list에 보내준다.
 				map.put("prt_cd", prt_cd);
 				map.put("prt_nm", prt_nm); 
 				map.put("cust_no", cust_no); 
@@ -119,11 +119,11 @@ public class CustomerController {
 				map.put("fromDate", from); 
 				map.put("toDate", to);
 
-			List<CustomerVO> searchList = customerService.getMainCustomer(map);						//議곌굔�뿉 留욌뒗 怨좉컼�뱾 list
+			List<CustomerVO> searchList = customerService.getMainCustomer(map);						//map을 보내줘서 main검색 결과 list를 가져온다.
 			int searchCount = searchList.size();				
-			System.out.println("main寃��깋�쓽 寃곌낵 �닔 : " + searchCount);
+			System.out.println("main검색결과수 : " + searchCount);
 
-			ajaxMap.put("count", searchCount);														//map�뿉 �떞�븘�꽌 ajax�쓽 json �삎�깭濡� 蹂대궡以��떎
+			ajaxMap.put("count", searchCount);														//ajax로 보내주기 위해 map으로 묶어서 보내준다.
 			ajaxMap.put("list", searchList);
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -160,7 +160,7 @@ public class CustomerController {
 	  
 	  System.out.println("폰번호:" +mbl_no);
 	  
-	  int mblCount = customerService.getMblCheck(mbl_no); //�쑕���룿 踰덊샇媛� 議댁옱�븯�뒗 寃쎌슦 duplicated, �븘�땲硫� notDuplicated瑜� json�쑝濡� 蹂대궡以��떎. 
+	  int mblCount = customerService.getMblCheck(mbl_no); 						//폰번호를 보내서 같은게 있는지 그 수를 가져와서 if문으로 각 경우를 나눠서 map으로보낸다.
 		  if(mblCount==0) {
 			  ajaxMap.put("result", "NotDuplicated"); 
 		  }else if(mblCount >0){
@@ -175,7 +175,7 @@ public class CustomerController {
 	@RequestMapping("/customer/registerSubmit.do")
 	public String submitRegister(@ModelAttribute CustomerVO customerVO, Model model ) {
 		
-		customerService.custRegister(customerVO);								//
+		customerService.custRegister(customerVO);								// 담아온 고객정보를 보내서 등록시킨다.
 		model.addAttribute("customerVO", customerVO);
 		
 		return "/customer/register";
@@ -192,7 +192,7 @@ public class CustomerController {
 		String cust_no = request.getParameter("cust_no");
 		System.out.println("cust_no:"+cust_no);
 		
-		if(cust_no==null) {
+		if(cust_no==null) {															//side로 들어가는 경우 페이지만 로드된다.
 			CustomerVO customer = new CustomerVO();									//빈페이지에 기본 정보들 업로드.
 			customer.setCust_ss_cd("10");
 			customer.setScal_yn("0");
@@ -208,9 +208,8 @@ public class CustomerController {
 			Map<String,Object> map = new HashMap<String, Object>();
 			map.put("cust_no", cust_no);
 			
-			// 怨좉컼踰덊샇濡� �젙蹂� 媛��졇�삤湲�
+			//각 고객의 요소로 들어가는 경우에는 고객의 정보를 띄워줘야 하므로 map으로 가져온다.
 			CustomerVO customer = customerService.getCustInfo(map);
-			//�뤌�쓽 吏곸뾽肄붾뱶�쓽 list
 			
 			 System.out.println("성별 :" +customer.getSex_cd());
 			 System.out.println(customer.getBrdy_dt());
@@ -224,9 +223,9 @@ public class CustomerController {
 		List<Map<String,Object>> codeList = customerService.getPocCode();
 		List<Map<String,Object>> sscodeList = userService.getSScode();
 		List<Map<String,Object>> psmtcodeList = customerService.getPsmtCode();
-		mav.addObject("codeList", codeList);
-		mav.addObject("sscodeList", sscodeList);
-		mav.addObject("psmtcodeList", psmtcodeList);
+		mav.addObject("codeList", codeList);									//직업코드 목록
+		mav.addObject("sscodeList", sscodeList);								//회원상태코드 목록
+		mav.addObject("psmtcodeList", psmtcodeList);							//우편수령코드 목록
 		
 		return mav;
 	}
@@ -238,7 +237,7 @@ public class CustomerController {
 	  @ResponseBody 
 	  public Map<String,Object> getCustInfo(HttpServletRequest request){ 
 	  
-	  String cust_no = request.getParameter("cust_no");
+	  String cust_no = request.getParameter("cust_no");										//ajax로 회원번호를 보내고 그걸로 고객의 정보를 받아온다.
 	  System.out.println(cust_no);
 	  
 	  Map<String,Object> map = new HashMap<String, Object>();

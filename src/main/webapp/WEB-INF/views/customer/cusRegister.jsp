@@ -142,7 +142,7 @@
 		//제출 시 체크 (고객명 2자 이상, 필수항목, 휴대폰 번호 중복, 주소 하나입력하면 둘다 입력되어야함.)
 		$('#regBtn').click(function(){
 			//고객명 2자 이상 체크
-			if($('#cust_nm').val().trim().length<=2){
+			if($('#cust_nm').val().trim().length<2){
 				alert('고객명을 입력해 주세요.');
 				return false;
 			}
@@ -172,7 +172,7 @@
 			//휴대폰번호 확인 체크
 		
 			if(check==0){
-				alert('휴대폰 번호 중복 확인 해주세요.');
+				alert('휴대폰 번호를 확인 해주세요.');
 				return false;
 			}
  			//생년월일 값 체크, -제거

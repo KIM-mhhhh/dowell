@@ -12,14 +12,20 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
-		
-		
+
 		var check = 0;						//휴대폰 중복 체크
 		var oName = $('#cust_nm').val();						//해지에서 되돌릴 때 넣을 원래 이름
 		var oMbl = $('#mbl_no').val();							//해지에서 되돌릴 때 넣을 원래 핸드폰 이름
 		var cState = ${customer.cust_ss_cd };					//상태체크 하기 위한 변수.
 		
-
+		//이름 두글자 이상 입력
+		$('#cust_nm').change(function(){
+			if($(this).val().trim().length<2){
+				alert('이름은 두글자 이상 입력해 주세요.');
+				$(this).focus();
+			}
+		});
+		
 		//값 로드 시 핸드폰 번호 할당.
 	 	if($('#mbl_no').val().length==11){
 			$('#mbl_no1').val($('#mbl_no').val().substring(0,3));
@@ -46,7 +52,7 @@
 		$('input:radio[name =sms_rcv_yn]:input[value='+$('#hSyn').val()+']').prop("checked",true);
 		$('input:radio[name =dm_rcv_yn]:input[value='+$('#hDyn').val()+']').prop("checked",true);  
 				
-		//날짜 넣기
+		//날짜에 - 빼고 넣기
 		 $('#brdy_dt').val($('#birth').val().replace(/\-/g,''));
 		 $('#mrrg_dt').val($('#marry').val().replace(/\-/g,''));
 		//라디오 체크
@@ -99,7 +105,8 @@
 				$(":radio[name='cust_ss_cd'][value='10']").attr('disabled', false);
 			}
 	 		//해지면 정상만 가능하게
-			if($(":radio[name='cust_ss_cd'][value='90']").is(':checked')){		
+			if($(":radio[name='cust_ss_cd'][value='90']").is(':checked')){	
+				$('#cncl_cnts').attr("readonly",false);
 				$(":radio[name='cust_ss_cd'][value='90']").attr('disabled', false);
 				$(":radio[name='cust_ss_cd'][value='10']").attr('disabled', false);
 				$(":radio[name='cust_ss_cd'][value='80']").attr('disabled', true);

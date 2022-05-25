@@ -138,32 +138,7 @@
 				}    
 			    return result;
 		};  
-	/* 	function checkValidDate(value) {
-			var result = true;	
-				
-			
-			    switch(m){
-			    case 1: case 3: case 5: case 7: case 8: case 10: case 12:
-			    	if(value>31){
-			    		alert('31일까지 입니다');
-			    		result = false;
-			    	}
-			    	break;
-			    case 4: case 6: case 11:
-			    	if(d>30){
-			    		alert('30일까지 입니다');
-			    		result = false;
-			    	}
-			    	break;
-				default : 
-					if(d>28){
-						alert('28일까지 입니다');
-			    		result = false;
-					}
-			    }
-
-			    return result;
-		};   */
+	
 		
 		$('#from').keydown(function(key){
 			if (key.keyCode == 13) {		//엔터키를 누르면
@@ -178,7 +153,41 @@
             }
 
 		}) ;
-	});
+		
+		//매장명으로 엔터쳐서 넣기
+/* 		$('#prt_nm').keydown(function(key){
+			if (key.keyCode == 13) {											//엔터키를 누르면
+				if($(this).val().trim().length>0){								//빈칸이 아니면 검색해서 매장 가져온다.
+					
+					alert($(this).val());
+					 $.ajax({
+						type:'post',
+						data:{prt_nm:$('#prt_nm').val()}, 	
+						url: '${pageContext.request.contextPath}/market/enterMarket.do', 
+						dataType:'json',
+						contentType:'application/x-www-form-urlencoded; charset=UTF-8',
+						cache:false,
+						timeout:30000,
+						success:function(param){
+							
+						},
+						error:function(request,status,error) {
+		                    console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+						}
+					});			//ajax끝 
+				}else{
+					alert('매장명을 입력하세요.');
+				}
+		
+            }
+
+		}) ; */
+		
+	});							//document 끝
+	
+
+	
+	
 	//index 사용해서 아이디 줘서 대상 찾기. (나중에 해보기)
 	/* function recordPopupOpen(index){
 		var cust_no = $('#cusNo'+index).text();
