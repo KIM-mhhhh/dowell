@@ -2,7 +2,6 @@ package first.market.dao;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Select;
 
 import first.market.vo.MarketVO;
 

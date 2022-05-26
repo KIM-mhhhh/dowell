@@ -239,7 +239,7 @@
 				return false;
 			}
 			
-			if($('#mbl_no1').val().length ==3 && $('#mbl_no3').val().length ==4 && ($('#mbl_no2').val().length !=3 || $('#mbl_no2').val().length !=4 ) ){
+			if($('#mbl_no1').val().length ==3 && $('#mbl_no3').val().length ==4 && ($('#mbl_no2').val().length ==3 || $('#mbl_no2').val().length ==4 ) ){
 				
 			}else{
 				alert('전화번호 형식에 맞지 않습니다.');
@@ -449,7 +449,7 @@
 			
  			//생년월일 값 체크, -제거
 			if($('#birth').val()==''){
-				alert('날짜를 입력해 주세요');
+				alert('생년월일을 입력해 주세요');
 				return false;
 			}
 
@@ -474,7 +474,10 @@
 				$('#before').val(chgbefore);
 				$('#after').val(chgafter);
 			}
-			
+			if($('#chg').val().length<=0){
+				alert('변경사항이 없습니다.');
+				return false;
+			}
 
 	
  		/* 	$('#js_dt').val($('#jdt').val().replace(/\-/g,''));
@@ -528,9 +531,7 @@
 	<jsp:include page="/WEB-INF/views/common/header.jsp"/>
 </div>
 <div id='wrapper'>
-<div class="side">
-	<jsp:include page="/WEB-INF/views/common/side.jsp"/>
-</div>
+
 <h4>고객정보조회<img alt="새로고침" src="${pageContext.request.contextPath}/images/reload.png" onclick="window.location.reload()"></h4>
 <div class="searchBox">
 <form method="post" id="searchForm">

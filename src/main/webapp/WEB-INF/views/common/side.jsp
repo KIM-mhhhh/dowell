@@ -31,7 +31,7 @@
             <li>
                 <a href="#">판매관리</a>
                 <ul class="smallSide">
-                    <li><a href="#">고객판매조회</a></li>
+                    <li><a href="${pageContext.request.contextPath}/sale/showSaleForm.do">고객판매조회</a></li>
                     <li><a href="#">판매실적</a></li>
                 </ul>
             </li>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="first.sale.dao.SaleMapper">
+
+ 	<!-- 재고 조회 -->
+	<select id="getStockList" resultType="ProductVO" parameterType="map">
+		SELECT m.PRD_CD
+			   ,m.PRD_NM
+			   ,i.IVCO_QTY
+			   ,m.PRD_CSMR_UPR
+		FROM sd_ivco01_mt i
+		LEFT OUTER JOIN ma_prd01_mt m ON m.PRD_CD=i.prd_cd
+		LEFT OUTER JOIN ma_prt_mt p ON p.prt_cd=i.prt_cd
+		WHERE m.PRD_TP_CD='10' 
+			 AND (i.prt_cd LIKE '%' || #{prt_keyword} || '%' OR p.prt_nm LIKE '%' || #{prt_keyword} || '%')
+			 <if test="prd_keyword != ''">																											<!--회원명 x / 휴대폰번호 o면 휴대폰번호 조건만 적용  -->	
+  			 AND (i.prd_cd LIKE '%' || #{prd_keyword} || '%' OR m.prd_nm LIKE '%' || #{prd_keyword} || '%')
+  			</if>
+	</select>
+</mapper>

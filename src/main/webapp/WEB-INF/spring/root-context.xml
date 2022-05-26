@@ -45,7 +45,7 @@
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
 		<property name="mapperLocations" value="first.**.dao/*Mapper.xml"></property>
-		<property name="typeAliasesPackage" value="first.user.vo,first.customer.vo,first.market.vo,first.record.vo"/>
+		<property name="typeAliasesPackage" value="first.user.vo,first.customer.vo,first.market.vo,first.record.vo,first.sale.vo"/>
 	</bean>
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="first.**.dao"/>

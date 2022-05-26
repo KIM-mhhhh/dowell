@@ -90,7 +90,7 @@
 				$('#mbl_no1').focus();
 				return false;
 			}
-			if($('#mbl_no1').val().length ==3 && $('#mbl_no3').val().length ==4 && ($('#mbl_no2').val().length !=3 || $('#mbl_no2').val().length !=4 ) ){
+			if($('#mbl_no1').val().length ==3 && $('#mbl_no3').val().length ==4 && ($('#mbl_no2').val().length ==3 || $('#mbl_no2').val().length ==4 ) ){
 				
 			}else{
 				alert('전화번호 형식에 맞지 않습니다.');
