@@ -13,16 +13,20 @@
 		$('#closeBtn').click(function(){
 			self.close();
 		});
+		//리스트 기본 값 초기화
+		function init(){
+			$('#listTbody').empty();
+		}
 		
 		//검색해서 재고 가져오기
-		$('#searchBtn').click(function(){
+		$('#searchBtn').click(function(event){
 			if($('#prt_keyword').val().trim().length<=0){
 				alert('매장을 입력하세요.');
 				return false;
 			}else{
 				var prt_keyword = $('#prt_keyword').val();
 				var prd_keyword = $('#prd_keyword').val();
-				
+				var output ="";
 				$.ajax({
 					type:'post',
 					data:{prt_keyword:prt_keyword,prd_keyword:prd_keyword},
@@ -31,22 +35,38 @@
 					cache:false,
 					timeout:30000,
 					success:function(param){
-						if(param.stockList.size<=0){
-							
-						}else if(param.stockList.size>0){
-							
+						if(param.count<=0){
+							output+="<tr><td colspan='5'>검색 결과가 존재하지 않습니다.</td></tr>";
+						}else if(param.count>0){
+							$(param.stockList).each(function(index,item) {
+								output += '<tr class="checkTr">';
+								output +='<td><input type="checkbox" id="checkBox'+index+'"></td>';
+	 							output +='<td>'+item.prd_cd+'</td>';
+								output +='<td>'+item.prd_nm+'</td>';
+								output += '<td id="stock'+index+'">'+item.ivco_qty+'</td>'; 
+								output += '<td>'+item.prd_csmr_upr+'</td>';
+								output += '</tr>';
+/* 
+								if($('#stock'+index).val()=='0'){
+									$('#checkBox'+index).prop('disabled',true);
+								} */
+							}); 
 						}else{
 							alert('네트워크 오류 발생');
 						}
+						init();
+						$('#listTbody').append(output);
 					},
 					error:function(){
 						alert('네트워크 오류 발생');
 					}
 				});		//ajax끝
-			}
-			
-			
-		});
+				//submit이벤트 삭제
+				event.preventDefault();
+			}	
+		});				//재고 검색 이벤트 끝
+		
+		
 	});
 </script>
 </head>
@@ -65,7 +85,7 @@
 			</li>
 		</ul>
 		<div>
-			<input type="button" id="searchBtn">
+			<button id="searchBtn">검색</button>
 		</div>
 	</form>
 </div>
@@ -81,7 +101,7 @@
 				<th>소비자가</th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody id="listTbody">
 			
 		</tbody>
 	</table>

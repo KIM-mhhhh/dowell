@@ -20,10 +20,12 @@
 <body>
 <h3>판매상세조회</h3>
 <div id="infoBox">
-
+	<span>매장 :  / 고객번호 : </span>
+	<span><Br>판매수량 :  / 판매금액 :  / 현금 :  / 카드 : </span>
 </div>
-<div id="salList">
-	<Table>
+<div id="salDetList">
+	<Table id="salDetTable">
+		<thead>
 		<tr>
 			<th>번호</th>
 			<th>상품코드</th>
@@ -31,9 +33,12 @@
 			<th>판매수량</th>
 			<th>판매금액</th>
 		</tr>
+		</thead>
+		<tbody>
 		<tr>
-			<td></td>
+			
 		</tr>
+		</tbody>
 	</Table>
 </div>
 

@@ -51,6 +51,11 @@ th, td {
     height:20px;
 }
 
+#btnDiv{
+	margin:10px 75px;
+	text-align:right;
+}
+
 /* 매장재고조회 팝업 */
 #stockList{
 	width:90%; 
@@ -71,4 +76,51 @@ th, td {
 	text-align : center;
 }
 
+/* 고객판매관리 */
+#saleList{
+	width:100%; 
+	overflow:auto;
+	height:350px; 
+	margin:20px auto 0 auto;
+}
 
+#saleTable{
+	width:90%; 
+	border:"0" ;
+	cellspacing:"0" ;
+	ellpadding:"0";
+	border-top: 1px solid #444444;
+	border-collapse: collapse;
+	margin:0 auto;
+	margin-bottom : 20px;
+	text-align : center;
+}
+
+/* 판매상세조회 */
+#salDetList{
+	width:100%; 
+	overflow:auto;
+	height:350px; 
+	margin:20px auto 0 auto;
+}
+
+#salDetTable{
+	width:90%; 
+	border:"0" ;
+	cellspacing:"0" ;
+	ellpadding:"0";
+	border-top: 1px solid #444444;
+	border-collapse: collapse;
+	margin:0 auto;
+	margin-bottom : 20px;
+	text-align : center;
+}
+
+#infoBox{
+	margin:0 auto;
+	width:90%;
+	height:60px;
+	background-color:white;
+	border : 3px double black;
+
+}

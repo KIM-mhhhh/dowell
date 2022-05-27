@@ -40,9 +40,9 @@
 				alert('값을 선택하세요');
 				return false;
 			}else{																			//체크한 값을 본 페이지의 각 부분에 할당.
-//				$(opener.document).find('#cust_no').val(cust_no);
+
 				$(opener.document).find('#sCust_no').val(cust_no);
-/* 		 		 $(opener.document).find('#cust_nm').val(cust_nm); */
+
 		 		$(opener.document).find('#sCust_nm').val(cust_nm);
 					self.close();
 			}

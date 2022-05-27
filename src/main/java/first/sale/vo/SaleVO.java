@@ -16,10 +16,12 @@ public class SaleVO {
 	private int crd_stlm_amt;
 	private int pnt_stlm_amt;
 	private String cust_no;
+	private String cust_nm;
 	private String crd_no;
 	private String vld_ym;
 	private String crd_co_cd;
 	private Date fst_reg_dt;
+	private String sFst_reg_dt;							//등록일 char로 가져오기
 	private String fst_user_id;
 	private Date lst_upd_dt;
 	private String lst_upd_id;							//CS_SAL01_DT
@@ -141,15 +143,32 @@ public class SaleVO {
 	public void setLst_upd_id(String lst_upd_id) {
 		this.lst_upd_id = lst_upd_id;
 	}
+	public String getCust_nm() {
+		return cust_nm;
+	}
+	public void setCust_nm(String cust_nm) {
+		this.cust_nm = cust_nm;
+	}
+	
+	
+	
+	public String getsFst_reg_dt() {
+		return sFst_reg_dt;
+	}
+	public void setsFst_reg_dt(String sFst_reg_dt) {
+		this.sFst_reg_dt = sFst_reg_dt;
+	}
 	@Override
 	public String toString() {
 		return "SaleVO [prt_cd=" + prt_cd + ", sal_dt=" + sal_dt + ", sal_no=" + sal_no + ", sal_tp_cd=" + sal_tp_cd
 				+ ", tot_sal_qty=" + tot_sal_qty + ", tot_sal_amt=" + tot_sal_amt + ", tot_vos_amt=" + tot_vos_amt
 				+ ", tot_vat_amt=" + tot_vat_amt + ", csh_stlm_amt=" + csh_stlm_amt + ", crd_stlm_amt=" + crd_stlm_amt
-				+ ", pnt_stlm_amt=" + pnt_stlm_amt + ", cust_no=" + cust_no + ", crd_no=" + crd_no + ", vld_ym="
-				+ vld_ym + ", crd_co_cd=" + crd_co_cd + ", fst_reg_dt=" + fst_reg_dt + ", fst_user_id=" + fst_user_id
-				+ ", lst_upd_dt=" + lst_upd_dt + ", lst_upd_id=" + lst_upd_id + "]";
+				+ ", pnt_stlm_amt=" + pnt_stlm_amt + ", cust_no=" + cust_no + ", cust_nm=" + cust_nm + ", crd_no="
+				+ crd_no + ", vld_ym=" + vld_ym + ", crd_co_cd=" + crd_co_cd + ", fst_reg_dt=" + fst_reg_dt
+				+ ", fst_user_id=" + fst_user_id + ", lst_upd_dt=" + lst_upd_dt + ", lst_upd_id=" + lst_upd_id + "]";
 	}
+	
+	
 	
 	
 	

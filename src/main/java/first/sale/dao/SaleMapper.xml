@@ -17,4 +17,27 @@
   			 AND (i.prd_cd LIKE '%' || #{prd_keyword} || '%' OR m.prd_nm LIKE '%' || #{prd_keyword} || '%')
   			</if>
 	</select>
+	
+	<!-- 고객판매관리 검색 -->
+	<select id="getSaleList" resultType="SaleVO" parameterType="map">
+		SELECT s.SAL_DT
+			   ,s.CUST_NO
+			   ,c.CUST_NM
+			   ,s.SAL_TP_CD
+			   ,s.SAL_NO
+			   ,s.TOT_SAL_QTY
+			   ,s.TOT_SAL_AMT
+			   ,s.CSH_STLM_AMT
+			   ,s.CRD_STLM_AMT
+			   ,s.PNT_STLM_AMT
+			   ,s.FST_USER_ID
+			   ,TO_CHAR(s.FST_REG_DT,'yyyy-MM-dd') AS sFst_reg_dt	
+		FROM CS_SAL01_MT s
+		LEFT OUTER JOIN CS_CUST01_MT c ON s.cust_no=c.cust_no
+		WHERE s.PRT_CD=#{prt_cd}
+			AND s.SAL_DT BETWEEN #{from} AND #{to}
+			<if test="cust_no != null and cust_no !=''">																									<!--회원명 x / 휴대폰번호 o면 휴대폰번호 조건만 적용  -->	
+  			 AND s.CUST_NO=#{cust_no}
+  			</if>
+	</select>
 </mapper>
