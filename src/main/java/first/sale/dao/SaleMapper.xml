@@ -23,6 +23,7 @@
 		SELECT s.SAL_DT
 			   ,s.CUST_NO
 			   ,c.CUST_NM
+			   ,s.PRT_CD
 			   ,s.SAL_TP_CD
 			   ,s.SAL_NO
 			   ,s.TOT_SAL_QTY
@@ -40,4 +41,19 @@
   			 AND s.CUST_NO=#{cust_no}
   			</if>
 	</select>
+	
+	<!-- 판매상세조회 -->
+	<select id="getDetailSale" resultType="SaleVO" parameterType="SaleVO">
+		SELECT d.PRD_CD
+			   ,p.PRD_NM
+			   ,d.SAL_QTY
+			   ,d.SAL_AMT
+			   ,d.SAL_SEQ
+			   ,d.sal_dt
+			   ,d.sal_no
+		FROM CS_SAL01_DT d
+		LEFT OUTER JOIN MA_PRD01_MT p ON d.prd_cd=p.prd_cd
+		WHERE d.PRT_CD=#{prt_cd} and d.sal_dt=#{sal_dt} and d.sal_no=#{sal_no}
+	</select> 
+	
 </mapper>

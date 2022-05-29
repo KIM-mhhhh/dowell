@@ -35,10 +35,46 @@
 		});
 		
 		//상세페이지 이동
-		$(document).on('click','.detBtn',function(){
+/*  		$(document).on('click','.detBtn',function(){
 			window.open('${pageContext.request.contextPath}/sale/saleDetailPopup.do','sale','width=1000,height=600');
+		}); */
+		
+ 		$(document).on('click','.detBtn',function(){
+ 			
+ 			var num = $(this).attr('num');
+ 			
+ 			var sal_dt = $('#saleTr'+num).children().eq(0).text();
+ 			var cust_no = $('#saleTr'+num).children().eq(1).text();
+ 			var cust_nm = $('#saleTr'+num).children().eq(2).text();
+ 			var sal_no = $('#saleTr'+num).children().eq(3).text();
+ 			var tot_sal_qty = $('#saleTr'+num).children().eq(4).text();
+ 			var tot_sal_amt = $('#saleTr'+num).children().eq(5).text();
+ 			var csh_stlm_amt = $('#saleTr'+num).children().eq(6).text();
+ 			var crd_stlm_amt = $('#saleTr'+num).children().eq(7).text();
+ 			var pnt_Stlm_amt = $('#saleTr'+num).children().eq(8).text();
+ 			var prt_cd = $('#saleTr'+num).children().eq(11).text();
+ 			
+ 			var info={
+ 				sal_dt:sal_dt,
+ 				cust_no:cust_no,
+ 				cust_nm:cust_nm,
+ 				sal_no:sal_no,
+ 				tot_sal_qty:tot_sal_qty,
+ 				tot_sal_amt:tot_sal_amt,
+ 				csh_stlm_amt:csh_stlm_amt,
+ 				crd_stlm_amt:crd_stlm_amt,
+ 				pnt_Stlm_amt:pnt_Stlm_amt,
+ 				prt_cd:prt_cd
+ 			}
+ 			
+ 			openPopulPost('${pageContext.request.contextPath}/sale/saleDetailPopup.do', info);
+
+ 			
+//			window.open('${pageContext.request.contextPath}/sale/saleDetailPopup.do','sale','width=1000,height=600');
 		});
 		
+
+		 
 		//달력 기본값
 		$('#to').val(new Date().toISOString().substring(0, 10));
 		var now = new Date();	// 현재 날짜 및 시간
@@ -71,11 +107,11 @@
 						output+="<tr><td colspan='11'>검색 결과가 존재하지 않습니다.</td></tr>";
 					}else if(count>0){																			//list 결과값이 있는 경우 table에 append해서 적용.
 						$(param.saleList).each(function(index,item) {
-							output += '<tr>';
+							output += '<tr id="saleTr'+index+'">';
 							output += '<td>'+item.sal_dt+'</td>';
 							output += '<td>'+item.cust_no+'</td>';
 							output += '<td>'+item.cust_nm+'</td>';
-							output += '<td>'+item.sal_no+'<input type="button" class="detBtn" value="상세"></td>';
+							output += '<td>'+item.sal_no+'<input type="button" class="detBtn" num="'+index+'" value="상세"></td>';
 							output += '<td class="'+item.sal_tp_cd+'">'+item.tot_sal_qty+'</td>';
 							output += '<td class="'+item.sal_tp_cd+'">'+item.tot_sal_amt+'</td>';
 							output += '<td>'+item.csh_stlm_amt+'</td>';
@@ -83,6 +119,7 @@
 							output += '<td>'+item.pnt_stlm_amt+'</td>';
 							output += '<td>'+item.fst_user_id+'</td>';
 							output += '<td>'+item.sFst_reg_dt+'</td>';
+							output += '<td style="display:none">'+item.prt_cd+'</td>';
 							output += '</tr>';
 					});
 				}else{
@@ -101,7 +138,32 @@
 			
 		});
 		
-	});
+	});		//document 끝
+	
+	//post로 popup 실행
+	function openPopulPost(url, data) {
+		
+		window.open("", "sale", "directories=no,titlebar=no,toolbar=no,status=no,menubar=no, location=no,width=850, height=700, scrollbars=yes");
+
+		
+	    var form = document.createElement("form");
+	    form.target = "sale";
+	    form.method = "POST";
+	    form.action = url;
+	    form.style.display = "none";
+	 
+	    for (var key in data) {
+	        var input = document.createElement("input");
+	        input.type = "hidden";
+	        input.name = key;
+	        input.value = data[key];
+	        form.appendChild(input);
+	    }
+	 
+	    document.body.appendChild(form);
+	    form.submit();
+	    document.body.removeChild(form);
+	}
 </script>
 </head>
 <body>
@@ -144,17 +206,21 @@
 		<table id="saleTable">
 			<thead>
 				<tr>
-					<th>판매일자</th>
-					<th>고객번호</th>
-					<th>고객명</th>
-					<th>판매번호</th>
+					<th rowspan="2">판매일자</th>
+					<th rowspan="2">고객번호</th>
+					<th rowspan="2">고객명</th>
+					<th rowspan="2">판매번호</th>
+					<th colspan="2">판매</th>
+					<th colspan="3">수금</th>
+					<th rowspan="2">등록자</th>
+					<th rowspan="2">등록시간</th>
+				</tr>
+				<tr>
 					<th>수량</th>
 					<th>금액</th>
 					<th>현금</th>
 					<th>카드</th>
 					<th>포인트</th>
-					<th>등록자</th>
-					<th>등록시간</th>
 				</tr>
 			</thead>
 			<tbody id="saleTbody">
@@ -176,12 +242,23 @@
 						<td>${sale.pnt_stlm_amt}</td>
 						<td>${sale.fst_user_id}</td>
 						<td>${sale.sFst_reg_dt}</td>
+						<td style="display:none">${sale.prt_cd}</td>
 					</tr>
 					</c:forEach>
 			</tbody>
+			<tr id="sumTr">
+				<td colspan="4">합계</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td colspan="2"></td>
+				
+			</tr>
 		</table>
-	
 	</div>
+
 </div>
 <div class="footer">
 	<jsp:include page="/WEB-INF/views/common/footer.jsp"/>

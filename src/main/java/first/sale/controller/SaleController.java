@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -121,9 +122,18 @@ public class SaleController {
 	
 	//상세페이지 열기
 	@RequestMapping("/sale/saleDetailPopup.do")
-	public String openSaleDetail() {
+	public ModelAndView openSaleDetail(@ModelAttribute SaleVO saleVO) {
 		
-		return "/sale/salDetail";
+		System.out.println(saleVO.getCust_nm());
+		
+		List<SaleVO> saleList = saleService.getDetailSale(saleVO);
+		
+		ModelAndView mav = new ModelAndView("/sale/salDetail");
+		mav.addObject("saleVO", saleVO);
+		mav.addObject("saleList", saleList);
+		
+		
+		return mav;
 	}
 	
 }

@@ -12,4 +12,7 @@ public interface SaleMapper {
 	
 	//고객판매관리 검색
 	public List<SaleVO> getSaleList(Map<String,Object> map);
+	
+	//고객판매상세
+	public List<SaleVO> getDetailSale(SaleVO saleVO);
 }

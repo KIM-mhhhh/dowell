@@ -26,7 +26,13 @@ public class SaleVO {
 	private Date lst_upd_dt;
 	private String lst_upd_id;							//CS_SAL01_DT
 	
-
+	private String prd_cd;
+	private String prd_nm;
+	private int sal_qty;
+	private int sal_amt;
+	private int sal_seq;
+	
+	
 	
 	
 	public String getPrt_cd() {
@@ -151,12 +157,45 @@ public class SaleVO {
 	}
 	
 	
-	
 	public String getsFst_reg_dt() {
 		return sFst_reg_dt;
 	}
 	public void setsFst_reg_dt(String sFst_reg_dt) {
 		this.sFst_reg_dt = sFst_reg_dt;
+	}
+	
+	public String getPrd_cd() {
+		return prd_cd;
+	}
+	public void setPrd_cd(String prd_cd) {
+		this.prd_cd = prd_cd;
+	}
+	public String getPrd_nm() {
+		return prd_nm;
+	}
+	public void setPrd_nm(String prd_nm) {
+		this.prd_nm = prd_nm;
+	}
+	public int getSal_qty() {
+		return sal_qty;
+	}
+	public void setSal_qty(int sal_qty) {
+		this.sal_qty = sal_qty;
+	}
+	public int getSal_amt() {
+		return sal_amt;
+	}
+	public void setSal_amt(int sal_amt) {
+		this.sal_amt = sal_amt;
+	}
+	
+	
+	
+	public int getSal_seq() {
+		return sal_seq;
+	}
+	public void setSal_seq(int sal_seq) {
+		this.sal_seq = sal_seq;
 	}
 	@Override
 	public String toString() {
@@ -165,8 +204,12 @@ public class SaleVO {
 				+ ", tot_vat_amt=" + tot_vat_amt + ", csh_stlm_amt=" + csh_stlm_amt + ", crd_stlm_amt=" + crd_stlm_amt
 				+ ", pnt_stlm_amt=" + pnt_stlm_amt + ", cust_no=" + cust_no + ", cust_nm=" + cust_nm + ", crd_no="
 				+ crd_no + ", vld_ym=" + vld_ym + ", crd_co_cd=" + crd_co_cd + ", fst_reg_dt=" + fst_reg_dt
-				+ ", fst_user_id=" + fst_user_id + ", lst_upd_dt=" + lst_upd_dt + ", lst_upd_id=" + lst_upd_id + "]";
+				+ ", sFst_reg_dt=" + sFst_reg_dt + ", fst_user_id=" + fst_user_id + ", lst_upd_dt=" + lst_upd_dt
+				+ ", lst_upd_id=" + lst_upd_id + ", prd_cd=" + prd_cd + ", prd_nm=" + prd_nm + ", sal_qty=" + sal_qty
+				+ ", sal_amt=" + sal_amt + "]";
 	}
+
+	
 	
 	
 	

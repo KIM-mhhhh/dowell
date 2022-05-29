@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,8 +21,8 @@
 <body>
 <h3>판매상세조회</h3>
 <div id="infoBox">
-	<span>매장 :  / 고객번호 : </span>
-	<span><Br>판매수량 :  / 판매금액 :  / 현금 :  / 카드 : </span>
+	<span>매장 :${saleVO.prt_cd} / 고객번호 : ${saleVO.cust_no }</span>
+	<span><Br>판매수량 :  ${saleVO.tot_sal_qty }  / 판매금액 : ${saleVO.tot_sal_amt }   / 현금 : ${saleVO.csh_stlm_amt }   / 카드 : ${saleVO.crd_stlm_amt }  </span>
 </div>
 <div id="salDetList">
 	<Table id="salDetTable">
@@ -35,9 +36,16 @@
 		</tr>
 		</thead>
 		<tbody>
-		<tr>
-			
-		</tr>
+			<c:forEach var="sale" items="${saleList}">
+					<tr>
+						<td>${sale.sal_seq}</td>
+						<td>${sale.prd_cd}</td>
+						<td>${sale.prd_nm}</td>
+						<td>${sale.sal_qty}</td>
+						<td>${sale.sal_amt}</td>
+					
+					</tr>
+			</c:forEach>
 		</tbody>
 	</Table>
 </div>

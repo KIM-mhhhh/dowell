@@ -28,4 +28,10 @@ public class SaleServiceImpl implements SaleService{
 		return saleVO;
 	}
 
+	@Override
+	public List<SaleVO> getDetailSale(SaleVO saleVO) {
+		List<SaleVO> saleList = saleMapper.getDetailSale(saleVO);
+		return saleList;
+	}
+
 }

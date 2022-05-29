@@ -9,13 +9,16 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
+		
+		
+		
 		//회원 검색 팝업
 		$('#searchCust').click(function(){
 			window.open('${pageContext.request.contextPath}/customer/searchCustomer.do','customer','width=700,height=900');
 		});
 		//매장 재고 팝업
 		$('#stockBtn').click(function(){
-			window.open('${pageContext.request.contextPath}/sale/openStock.do','sale','_blank','width=700,height=900');
+			window.open('${pageContext.request.contextPath}/sale/openStock.do','stock','_blank','width=700,height=900');
 		});
 		
 		//창 종료
@@ -32,8 +35,7 @@
 		<ul>
 			<li>
 				<label for="sal_dt">판매일자</label>
-				<input type="date" id="sal_dt_from">
-				<input type="date" id="sal_dt_to">
+				<input type="date" >
 			</li>
 			<li>
 				<label>판매구분</label>
@@ -88,7 +90,7 @@
 	<input type="button" value="-">
 </div>
 <div id="regList">
-	<table>
+	<table id="regTable">
 		<thead>
 			<tr>
 				<th>선택</th>

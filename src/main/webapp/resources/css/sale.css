@@ -96,6 +96,12 @@ th, td {
 	text-align : center;
 }
 
+#sumTr{
+	position: sticky ;
+	bottom: 0;
+	background-color: #dbdbdb;
+}
+
 /* 판매상세조회 */
 #salDetList{
 	width:100%; 
@@ -124,3 +130,30 @@ th, td {
 	border : 3px double black;
 
 }
+
+/* 고객판매수금등록 */
+#regList{
+	width:100%; 
+	overflow:auto;
+	height:350px; 
+	margin:20px auto 0 auto;
+}
+
+#regTable{
+	width:90%; 
+	border:"0" ;
+	cellspacing:"0" ;
+	ellpadding:"0";
+	border-top: 1px solid #444444;
+	border-collapse: collapse;
+	margin:0 auto;
+	margin-bottom : 20px;
+	text-align : center;
+}
+
+#pmBtn{
+	text-align:right;
+	margin-right:50px;
+}
+
+
