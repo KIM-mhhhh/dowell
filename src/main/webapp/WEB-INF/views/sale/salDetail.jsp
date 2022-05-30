@@ -21,7 +21,7 @@
 <body>
 <h3>판매상세조회</h3>
 <div id="infoBox">
-	<span>매장 :${saleVO.prt_cd} / 고객번호 : ${saleVO.cust_no }</span>
+	<span>매장 :${saleVO.prt_cd}  / 고객번호 : ${saleVO.cust_no } ${saleVO.cust_nm } </span>
 	<span><Br>판매수량 :  ${saleVO.tot_sal_qty }  / 판매금액 : ${saleVO.tot_sal_amt }   / 현금 : ${saleVO.csh_stlm_amt }   / 카드 : ${saleVO.crd_stlm_amt }  </span>
 </div>
 <div id="salDetList">
@@ -32,6 +32,8 @@
 			<th>상품코드</th>
 			<th>상품명</th>
 			<th>판매수량</th>
+			<th>공급가</th>
+			<th>부가세</th>
 			<th>판매금액</th>
 		</tr>
 		</thead>
@@ -42,6 +44,8 @@
 						<td>${sale.prd_cd}</td>
 						<td>${sale.prd_nm}</td>
 						<td>${sale.sal_qty}</td>
+						<td>${sale.sal_vos_amt}</td>
+						<td>${sale.sal_vat_amt}</td>
 						<td>${sale.sal_amt}</td>
 					
 					</tr>
@@ -52,7 +56,9 @@
 
 <div id="resultBtn">
 	<input type="button" id="closeBtn" value="닫기">
+	<c:if test="${saleVO.sal_tp_cd eq 'SAL' }">
 	<input type="button" id="submitBtn" value="반품">
+	</c:if>
 </div>
 </body>
 </html>

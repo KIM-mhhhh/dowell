@@ -53,6 +53,7 @@
  			var crd_stlm_amt = $('#saleTr'+num).children().eq(7).text();
  			var pnt_Stlm_amt = $('#saleTr'+num).children().eq(8).text();
  			var prt_cd = $('#saleTr'+num).children().eq(11).text();
+ 			var sal_tp_cd = $('#saleTr'+num).children().eq(12).text();
  			
  			var info={
  				sal_dt:sal_dt,
@@ -64,13 +65,13 @@
  				csh_stlm_amt:csh_stlm_amt,
  				crd_stlm_amt:crd_stlm_amt,
  				pnt_Stlm_amt:pnt_Stlm_amt,
- 				prt_cd:prt_cd
+ 				prt_cd:prt_cd,
+ 				sal_tp_cd:sal_tp_cd
  			}
  			
  			openPopulPost('${pageContext.request.contextPath}/sale/saleDetailPopup.do', info);
 
  			
-//			window.open('${pageContext.request.contextPath}/sale/saleDetailPopup.do','sale','width=1000,height=600');
 		});
 		
 
@@ -120,6 +121,7 @@
 							output += '<td>'+item.fst_user_id+'</td>';
 							output += '<td>'+item.sFst_reg_dt+'</td>';
 							output += '<td style="display:none">'+item.prt_cd+'</td>';
+							output += '<td style="display:none">'+item.sal_tp_cd+'</td>';
 							output += '</tr>';
 					});
 				}else{
@@ -243,6 +245,7 @@
 						<td>${sale.fst_user_id}</td>
 						<td>${sale.sFst_reg_dt}</td>
 						<td style="display:none">${sale.prt_cd}</td>
+						<td style="display:none">${sale.sal_tp_cd}</td>
 					</tr>
 					</c:forEach>
 			</tbody>

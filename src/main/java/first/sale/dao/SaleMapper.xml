@@ -49,11 +49,102 @@
 			   ,d.SAL_QTY
 			   ,d.SAL_AMT
 			   ,d.SAL_SEQ
+			   ,d.SAL_VOS_AMT
+			   ,d.SAL_VAT_AMT
 			   ,d.sal_dt
 			   ,d.sal_no
 		FROM CS_SAL01_DT d
 		LEFT OUTER JOIN MA_PRD01_MT p ON d.prd_cd=p.prd_cd
 		WHERE d.PRT_CD=#{prt_cd} and d.sal_dt=#{sal_dt} and d.sal_no=#{sal_no}
 	</select> 
+	
+	<!--반품처리 SAL_MT -->
+	<!-- <insert id="">
+		INSERT INTO CS_SAL01_MT 
+			(PRT_CD
+			,SAL_DT
+			,SAL_NO
+			,SAL_TP_CD
+			,TOT_SAL_QTY
+			,TOT_SAL_AMT
+			,TOT_VOS_AMT
+			,TOT_VAT_AMT
+			,CSH_STLM_AMT
+			,CRD_STLM_AMT
+			,PNT_STLM_AMT
+			,CUST_NO
+			,CRD_NO
+			,VLD_YM
+			,CRD_CO_CD
+			,FST_REG_DT
+			,FST_USER_ID
+			,LST_UPD_DT
+			,LST_UPD_ID)
+		VALUES(
+			,#{prt_cd}
+			,SYSDATE
+			,#{sal_no}
+			,'RTN'
+			,#{tot_sal_qty}
+			,#{tot_sal_amt}
+			,#{tot_vos_amt}
+			,#{tot_vat_amt}
+			,#{csh_stlm_amt}
+			,#{crd_stlm_amt}
+			,#{pnt_stlm_amt}
+			,#{csh_stlm_amt}
+			,#{cust_no}
+			,#{crd_no}
+			,#{vld_yn}
+			,#{crd_co_cd}
+			,#{fst_reg_dt}
+			,#{fst_user_id}
+			,SYSDATE
+			,#{lst_upd_id}
+		)
+	</insert> -->
+	
+	<!--반품처리 SAL_DT -->
+<!-- 	<insert id="">
+		INSERT INTO CS_SAL01_DT
+			(PRT_CD
+			,SAL_DT
+			,SAL_NO
+			,SAL_SEQ
+			,PRD_CD
+			,PRD_CSMR_UPR
+			,SAL_QTY
+			,SAL_AMT
+			,SAL_VOS_AMT
+			,SAL_VAT_AMT
+			,FST_REG_DT
+			,FST_USER_ID
+			,LST_UPD_DT
+			,LST_UPD_ID)
+		VALUES (
+			,#{prt_cd}
+			,SYSDATE
+			,#{sal_no}
+			,
+			,#{prd_cd}
+			,#{prd_csmr_upr}
+			,#{sal_qty}
+			,#{sal_amt}
+			,#{sal_vos_amt}
+			,#{sal_vat_amt}
+			,#{fst_reg_dt}
+			,#{fst_user_id}
+			,SYSDATE
+			,#{lst_upd_id}
+		)
+	</insert> -->
+	
+	<!--반품 시 재고 + 처리  -->
+<!-- 	<update id="">
+		UPDATE SD_IVCO01_MT 
+		SET IVCO_QTY=IVCO_QTY-#{반품수량}
+		WHERE PRT_CD=#{prt_cd}
+			AND PRD_CD=#{prd_cd}
+	</update> -->
 	
 </mapper>

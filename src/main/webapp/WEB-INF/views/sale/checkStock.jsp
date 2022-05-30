@@ -18,6 +18,8 @@
 			$('#listTbody').empty();
 		}
 		
+
+		
 		//검색해서 재고 가져오기
 		$('#searchBtn').click(function(event){
 			if($('#prt_keyword').val().trim().length<=0){
@@ -43,30 +45,36 @@
 								output +='<td><input type="checkbox" id="checkBox'+index+'"></td>';
 	 							output +='<td>'+item.prd_cd+'</td>';
 								output +='<td>'+item.prd_nm+'</td>';
-								output += '<td id="stock'+index+'">'+item.ivco_qty+'</td>'; 
-								output += '<td>'+item.prd_csmr_upr+'</td>';
-								output += '</tr>';
-/* 
-								if($('#stock'+index).val()=='0'){
-									$('#checkBox'+index).prop('disabled',true);
-								} */
+								output +='<td id="stock'+index+'" num="'+index+'" class="stock">'+item.ivco_qty+'</td>'; 
+								output +='<td>'+item.prd_csmr_upr+'</td>';
+								output +='</tr>';
+	
 							}); 
+							
+/*  									if($('.stock').text()==0){
+										var index = $(this).attr('num');
+										alert(index);
+		//						$('#checkBox'+index).prop('disabled',true); 
+								}  */
+							
 						}else{
 							alert('네트워크 오류 발생');
 						}
 						init();
 						$('#listTbody').append(output);
+
 					},
 					error:function(){
 						alert('네트워크 오류 발생');
 					}
 				});		//ajax끝
 				//submit이벤트 삭제
-				event.preventDefault();
+				event.preventDefault();		
 			}	
+
 		});				//재고 검색 이벤트 끝
 		
-		
+
 	});
 </script>
 </head>

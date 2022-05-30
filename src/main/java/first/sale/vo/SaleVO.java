@@ -31,6 +31,8 @@ public class SaleVO {
 	private int sal_qty;
 	private int sal_amt;
 	private int sal_seq;
+	private int sal_vos_amt;
+	private int sal_vat_amt;
 	
 	
 	
@@ -188,14 +190,26 @@ public class SaleVO {
 	public void setSal_amt(int sal_amt) {
 		this.sal_amt = sal_amt;
 	}
-	
-	
-	
 	public int getSal_seq() {
 		return sal_seq;
 	}
 	public void setSal_seq(int sal_seq) {
 		this.sal_seq = sal_seq;
+	}
+	
+	
+	
+	public int getSal_vos_amt() {
+		return sal_vos_amt;
+	}
+	public void setSal_vos_amt(int sal_vos_amt) {
+		this.sal_vos_amt = sal_vos_amt;
+	}
+	public int getSal_vat_amt() {
+		return sal_vat_amt;
+	}
+	public void setSal_vat_amt(int sal_vat_amt) {
+		this.sal_vat_amt = sal_vat_amt;
 	}
 	@Override
 	public String toString() {

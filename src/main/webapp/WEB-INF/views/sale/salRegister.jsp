@@ -10,7 +10,28 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		
+		$('#prd_cd').focus();
 		
+		//오늘 날짜 구하는 함수
+		var getToday = function(){
+			var date = new Date();
+
+			var year = date.getFullYear();
+			var month = date.getMonth();
+			month += 1;
+			if (month <= 9){
+				 month = "0" + month;
+			}
+			var day = date.getDate();
+			if (day <= 9){
+			   day = "0" + month;
+			}
+			var today = year + '-' + month + '-' + day;
+					
+			return today;
+				} 
+		//판매일자에 오늘의 날짜 고정
+		$('#sal_dt').val(getToday());
 		
 		//회원 검색 팝업
 		$('#searchCust').click(function(){
@@ -25,6 +46,38 @@
 		$('#closeBtn').click(function(){
 			self.close();
 		});
+		
+		//행 추가
+		$('#plusRow').click(function(){
+			//새 행 추가
+			$('#salTbody').append(
+			"<tr><td><input type='checkbox' id='checkBox'></td>"
+			+ "<td></td>"
+			+ "<td><input type='text' id='prd_cd'><img id='stockBtn' class='searchIcon' alt='재고검색' src='${pageContext.request.contextPath}/images/search.png'></td>"
+			+ "<td></td>"
+			+ "<td></td>"
+			+ "<td><input type='text' id=''></td>"
+			+ "<td></td>"
+			+ "<td></td></tr>"
+			)
+		});
+		//행 삭제
+		$('#minusRow').click(function(){
+			if($('#salTbody tr').length<2){
+				return false;
+			}
+			$('#salTbody tr:last').remove();
+		});
+		//상품코드를 입력하고 엔터치면 정보 불러와서 해당 행에 입력>> 미래테그로.
+		$('#prd_cd').keydown(function(key){
+			if (key.keyCode == 13) {		//엔터키를 누르면
+				var prd_cd = $(this).val();
+				var prt_cd = $('#prt_cd').val();
+				alert(prd_cd);
+            }
+
+		}) ;
+		
 	});
 </script>
 </head>
@@ -35,13 +88,13 @@
 		<ul>
 			<li>
 				<label for="sal_dt">판매일자</label>
-				<input type="date" >
+				<input type="date" id="sal_dt" readonly >
 			</li>
 			<li>
 				<label>판매구분</label>
 				<select name="sal_tp_cd" id="sal_tp_cd">
-					<option selected disabled value="0">전체</option>
-					<option value="1">판매</option>
+					<option disabled value="0">전체</option>
+					<option value="1" selected>판매</option>
 				</select>
 			</li>
 			<li>
@@ -86,8 +139,8 @@
 	</ul>
 </div>
 <div id="pmBtn">
-	<input type="button" value="+">
-	<input type="button" value="-">
+	<input type="button" id="plusRow" value="+">
+	<input type="button" id="minusRow" value="-">
 </div>
 <div id="regList">
 	<table id="regTable">
@@ -95,14 +148,25 @@
 			<tr>
 				<th>선택</th>
 				<th>번호</th>
-				<th>상품코드<input type="button" id="stockBtn" value="찾기"></th>
+				<th>상품코드</th>
 				<th>상품명</th>
 				<th>매장재고</th>
 				<th>판매수량</th>
+				<th>소비자단가</th>
 				<th>판매금액</th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody id="salTbody">
+			<tr>
+				<td><input type="checkbox" id="checkBox"></td>
+				<td id="rowCount">1</td>
+				<td><input type="text" id="prd_cd"><img id="stockBtn" class="searchIcon" alt="재고검색" src="${pageContext.request.contextPath}/images/search.png"></td>
+				<td></td>
+				<td></td>
+				<td><input type="text" id=""></td>
+				<td></td>
+				<td></td>
+			</tr>
 		</tbody>
 	</table>
 	
