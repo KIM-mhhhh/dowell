@@ -210,7 +210,7 @@
 				<li class="formList">
 					<label for="cust_nm">*고객명</label>
 					<div class="ipdiv">
-					<input type="text" id="cust_nm" name="cust_nm">
+					<input type="text" id="cust_nm" name="cust_nm" autocomplete='off'>
 					</div>
 				</li>
 				<li  class="formList">

@@ -20,6 +20,27 @@
 		function init(){
 			$('#saleTbody').empty();
 		}
+		getSum();
+		//합계
+/* 			var sum = 0;
+		    
+			$('.cash').each(function(){ //클래스가 cash인 항목의 갯수만큼 진행
+				sum += Number($(this).val()); 
+			
+			});
+			
+			alert(sum); */
+		function getSum() {
+			// 합계 계산
+			var sum = 0;
+			for(var i = 0; i < $('#saleTable >#salTbody tr').length; i++)  {
+				 sum += parseInt($('#saleTable').rows[i].cells[6].innerHTML);
+			}
+				  
+			$('#cshSum').innerTEXT=sum;
+				  
+		}
+		
 		
 		//회원 검색 팝업
 		$('#searchCust').click(function(){
@@ -34,11 +55,7 @@
 			window.open('${pageContext.request.contextPath}/sale/registShow.do','sale','width=1000,height=600');
 		});
 		
-		//상세페이지 이동
-/*  		$(document).on('click','.detBtn',function(){
-			window.open('${pageContext.request.contextPath}/sale/saleDetailPopup.do','sale','width=1000,height=600');
-		}); */
-		
+		//상세페이지 이동		
  		$(document).on('click','.detBtn',function(){
  			
  			var num = $(this).attr('num');
@@ -115,7 +132,7 @@
 							output += '<td>'+item.sal_no+'<input type="button" class="detBtn" num="'+index+'" value="상세"></td>';
 							output += '<td class="'+item.sal_tp_cd+'">'+item.tot_sal_qty+'</td>';
 							output += '<td class="'+item.sal_tp_cd+'">'+item.tot_sal_amt+'</td>';
-							output += '<td>'+item.csh_stlm_amt+'</td>';
+							output += '<td class="cash">'+item.csh_stlm_amt+'</td>';
 							output += '<td>'+item.crd_stlm_amt+'</td>';
 							output += '<td>'+item.pnt_stlm_amt+'</td>';
 							output += '<td>'+item.fst_user_id+'</td>';
@@ -130,12 +147,14 @@
 					init();
 					$('#saleTbody').append(output);
 					$('.RTN').css('color','red');
+					
 				},
 				error:function(){
 					alert('네트워크 오류 발생');
 				}
 			});//ajax 끝
 			event.preventDefault();
+			
 			
 			
 		});
@@ -239,7 +258,7 @@
 						<td>${sale.sal_no}<input type="button" class="detBtn" value="상세"></td>
 						<td class="${sale.sal_tp_cd}">${sale.tot_sal_qty}</td>
 						<td class="${sale.sal_tp_cd}">${sale.tot_sal_amt}</td>
-						<td>${sale.csh_stlm_amt}</td>
+						<td class="cash">${sale.csh_stlm_amt}</td>
 						<td>${sale.crd_stlm_amt}</td>
 						<td>${sale.pnt_stlm_amt}</td>
 						<td>${sale.fst_user_id}</td>
@@ -251,11 +270,11 @@
 			</tbody>
 			<tr id="sumTr">
 				<td colspan="4">합계</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+				<td id="qtySum"></td>
+				<td id="amtSum"></td>
+				<td id="cshSum"></td>
+				<td id="crdSum"></td>
+				<td id="pntSum"></td>
 				<td colspan="2"></td>
 				
 			</tr>

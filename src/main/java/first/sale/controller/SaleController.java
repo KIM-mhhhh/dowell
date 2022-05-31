@@ -92,9 +92,13 @@ public class SaleController {
 	
 	//매장재고 창 열기
 	@RequestMapping("/sale/openStock.do")
-	public String openStockPopup() {
+	public ModelAndView openStockPopup(HttpServletRequest request) {
+		String num= request.getParameter("num");
 		
-		return"/sale/checkStock";
+		ModelAndView mav = new ModelAndView("/sale/checkStock");
+		mav.addObject("num", num);
+		
+		return mav;
 	}
 	//매장재고 검색
 	@RequestMapping("/sale/searchStock.do")

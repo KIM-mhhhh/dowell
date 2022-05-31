@@ -15,6 +15,11 @@
 		$('#closeBtn').click(function(){
 			self.close();
 		});
+		
+		//반품 처리
+		$('#refundBtn').click(function(){
+			alert('반품');
+		});
 	});
 </script>
 </head>
@@ -57,7 +62,7 @@
 <div id="resultBtn">
 	<input type="button" id="closeBtn" value="닫기">
 	<c:if test="${saleVO.sal_tp_cd eq 'SAL' }">
-	<input type="button" id="submitBtn" value="반품">
+		<input type="button" id="refundBtn" value="반품">
 	</c:if>
 </div>
 </body>

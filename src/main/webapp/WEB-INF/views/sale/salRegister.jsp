@@ -38,8 +38,10 @@
 			window.open('${pageContext.request.contextPath}/customer/searchCustomer.do','customer','width=700,height=900');
 		});
 		//매장 재고 팝업
-		$('#stockBtn').click(function(){
-			window.open('${pageContext.request.contextPath}/sale/openStock.do','stock','_blank','width=700,height=900');
+		$(document).on('click','.stockBtn',function(){
+		
+			var num = $(this).attr('num');
+			window.open('${pageContext.request.contextPath}/sale/openStock.do?num='+num+'','stock','_blank','width=700,height=900');
 		});
 		
 		//창 종료
@@ -49,16 +51,18 @@
 		
 		//행 추가
 		$('#plusRow').click(function(){
+			var seq = ($('#regTable >#salTbody tr').length)+1
+
 			//새 행 추가
 			$('#salTbody').append(
 			"<tr><td><input type='checkbox' id='checkBox'></td>"
-			+ "<td></td>"
-			+ "<td><input type='text' id='prd_cd'><img id='stockBtn' class='searchIcon' alt='재고검색' src='${pageContext.request.contextPath}/images/search.png'></td>"
-			+ "<td></td>"
-			+ "<td></td>"
-			+ "<td><input type='text' id=''></td>"
-			+ "<td></td>"
-			+ "<td></td></tr>"
+			+ "<td>"+seq+"</td>"
+			+ "<td><input type='text' id='prd_cd"+seq+"'><img id='stockBtn' num='"+seq+"' class='searchIcon stockBtn' alt='재고검색' src='${pageContext.request.contextPath}/images/search.png'></td>"
+			+ "<td id='prd_nm"+seq+"'></td>"
+			+ "<td id='ivco_qty"+seq+"'></td>"
+			+ "<td><input type='text' class='sal_qty' num='"+seq+"' id='sal_qty"+seq+"'></td>"
+			+ "<td id='prd_csmr_upr"+seq+"'></td>"
+			+ "<td id='cost"+seq+"'></td></tr>"
 			)
 		});
 		//행 삭제
@@ -75,8 +79,15 @@
 				var prt_cd = $('#prt_cd').val();
 				alert(prd_cd);
             }
-
 		}) ;
+		//판매금액 계산
+		$(document).on('change','.sal_qty',function(){
+			var sal_qty = $(this).val();
+			var num = $(this).attr('num');
+			var prd_csmr_upr = $('#prd_csmr_upr'+num).text();
+			var cost = sal_qty * prd_csmr_upr;
+			$('#cost'+num).text(cost);
+		});
 		
 	});
 </script>
@@ -104,9 +115,6 @@
 				<input type="text" id="cust_nm">
 			</li>
 		</ul>
-		<div>
-			<input type="button" id="searchBtn">
-		</div>
 	</form>
 </div>
 <h5>결제금액</h5>
@@ -160,12 +168,12 @@
 			<tr>
 				<td><input type="checkbox" id="checkBox"></td>
 				<td id="rowCount">1</td>
-				<td><input type="text" id="prd_cd"><img id="stockBtn" class="searchIcon" alt="재고검색" src="${pageContext.request.contextPath}/images/search.png"></td>
-				<td></td>
-				<td></td>
-				<td><input type="text" id=""></td>
-				<td></td>
-				<td></td>
+				<td><input type="text" id="prd_cd1"><img id="stockBtn" num="1" class="searchIcon stockBtn" alt="재고검색" src="${pageContext.request.contextPath}/images/search.png"></td>
+				<td id="prd_nm1"></td>
+				<td id="ivco_qty1"></td>
+				<td><input type="text" id="sal_qty1" num="1" class="sal_qty"></td>
+				<td id="prd_csmr_upr1"></td>
+				<td id="cost1"></td>
 			</tr>
 		</tbody>
 	</table>

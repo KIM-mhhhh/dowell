@@ -18,8 +18,16 @@
 			$('#listTbody').empty();
 		}
 		
-
-		
+		//체크박스 x
+		function nonCheck(thing,value){
+			
+			thing.each(function(){
+				if($(this).text()==value){
+					var num=$(this).attr('num');
+					$('#checkBox'+num).attr('disabled',true);
+				}
+			});
+		}
 		//검색해서 재고 가져오기
 		$('#searchBtn').click(function(event){
 			if($('#prt_keyword').val().trim().length<=0){
@@ -42,26 +50,25 @@
 						}else if(param.count>0){
 							$(param.stockList).each(function(index,item) {
 								output += '<tr class="checkTr">';
-								output +='<td><input type="checkbox" id="checkBox'+index+'"></td>';
-	 							output +='<td>'+item.prd_cd+'</td>';
-								output +='<td>'+item.prd_nm+'</td>';
+								output +='<td><input type="checkbox" class="checkBox '+item.prd_ss_cd+'" num="'+index+'" id="checkBox'+index+'"></td>';
+	 							output +='<td class="prd_cd" id="prd_cd'+index+'">'+item.prd_cd+'</td>';
+								output +='<td class="prd_nm" id="prd_nm'+index+'">'+item.prd_nm+'</td>';
 								output +='<td id="stock'+index+'" num="'+index+'" class="stock">'+item.ivco_qty+'</td>'; 
-								output +='<td>'+item.prd_csmr_upr+'</td>';
+								output +='<td class="prd_csmr_upr" num="'+index+'" id="prd_csmr_upr'+index+'">'+item.prd_csmr_upr+'</td>';
 								output +='</tr>';
 	
-							}); 
-							
-/*  									if($('.stock').text()==0){
-										var index = $(this).attr('num');
-										alert(index);
-		//						$('#checkBox'+index).prop('disabled',true); 
-								}  */
-							
+							}); 	
 						}else{
 							alert('네트워크 오류 발생');
 						}
 						init();
 						$('#listTbody').append(output);
+						//재고가 0인경우 체크박스 선택 불가능
+						nonCheck($('.stock'),'0');
+						//소비자가 0 이면 선택 불가능
+						nonCheck($('.prd_csmr_upr'),'0');
+						$('.C').attr('disabled',true);
+						$('.C').parent().parent().css('backgroundColor','#fcf5a2');
 
 					},
 					error:function(){
@@ -72,20 +79,50 @@
 				event.preventDefault();		
 			}	
 
-		});				//재고 검색 이벤트 끝
-		
+		});				//재고 검색 이벤트 끝		
+		 //중복체크 막기
+		$(document).on('click','.checkBox',function(){
+			if($(this).prop('checked')){															//체크되어 있으면 다른 체크되어있던 것 풀리게
+		    	  $('.checkBox').prop('checked',false);
+		    	  $(this).prop('checked',true);
+		       }
+		});	
 
-	});
+		//체크하고 적용 시 원문에 적용
+		$('#submitBtn').click(function(){
+			var num =  $(".checkBox:checked").attr('num');
+			var prd_cd = $('#prd_cd'+num).text();
+			var prd_nm = $('#prd_nm'+num).text();
+			var ivco_qty = $('#stock'+num).text();
+			var prd_csmr_upr = $('#prd_csmr_upr'+num).text();
+			var rowNum = $('#rowNum').val();
+//			alert(rowNum);
+//			alert(prd_cd);
+			if(prd_cd.length==0){											//체크하지않은 경우 적용 안됨.
+				alert('값을 선택하세요');
+				return false;
+			}else{															//체크한 경우 본 페이지의 prt_cd와 prt_nm에 해당 값 넣고 닫음.
+				$(opener.document).find('#prd_cd'+rowNum).val(prd_cd);
+				$(opener.document).find('#prd_nm'+rowNum).text(prd_nm);
+				$(opener.document).find('#ivco_qty'+rowNum).text(ivco_qty);
+				$(opener.document).find('#prd_csmr_upr'+rowNum).text(prd_csmr_upr);
+					self.close();
+			}
+		  });
+		
+	});		//document 끝
 </script>
 </head>
 <body>
 <h3>매장재고조회</h3>
 <div class="searchBox">
 	<form>
+		<input type="hidden" id="rowNum" value="${num}">
+		<input type="hidden" id="prt_cd" value="${prt_cd}">
 		<ul>
 			<li>
 				<label>매장</label>
-				<input type="text" id="prt_keyword">
+				<input type="text" id="prt_keyword" readonly value="${prt_nm }">
 			</li>
 			<li>
 				<label>상품(코드+명)</label>

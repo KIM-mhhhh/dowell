@@ -8,6 +8,7 @@
 			   ,m.PRD_NM
 			   ,i.IVCO_QTY
 			   ,m.PRD_CSMR_UPR
+			   ,m.PRD_SS_CD
 		FROM sd_ivco01_mt i
 		LEFT OUTER JOIN ma_prd01_mt m ON m.PRD_CD=i.prd_cd
 		LEFT OUTER JOIN ma_prt_mt p ON p.prt_cd=i.prt_cd

@@ -243,19 +243,29 @@
 				
 			}else{
 				alert('전화번호 형식에 맞지 않습니다.');
-				$('#mbl_no1').val('');
-				$('#mbl_no2').val('');
-				$('#mbl_no3').val('');
-				$('#mbl_no1').focus();
+			 	if(oMbl.length==11){
+					$('#mbl_no1').val(oMbl.substring(0,3));
+					$('#mbl_no2').val(oMbl.substring(3,7));
+					$('#mbl_no3').val(oMbl.substring(7,12));
+				}else if(oMbl.length==10){
+					$('#mbl_no1').val(oMbl.substring(0,3));
+					$('#mbl_no2').val(oMbl.substring(3,6));
+					$('#mbl_no3').val(oMbl.substring(6,11));
+				} 
 				return false;
 			}
 			if($('#mbl_no1').val() =='000' && ($('#mbl_no2').val() =='000' || $('#mbl_no2').val() =='0000') && $('#mbl_no3').val() =='0000'){
 		
 					alert('000-0000-0000 또는 000-000-0000은 \n사용할 수 없는 핸드폰 번호 입니다.');
-					$('#mbl_no1').val('');
-					$('#mbl_no2').val('');
-					$('#mbl_no3').val('');
-					$('#mbl_no1').focus();
+				 	if(oMbl.length==11){
+						$('#mbl_no1').val(oMbl.substring(0,3));
+						$('#mbl_no2').val(oMbl.substring(3,7));
+						$('#mbl_no3').val(oMbl.substring(7,12));
+					}else if(oMbl.length==10){
+						$('#mbl_no1').val(oMbl.substring(0,3));
+						$('#mbl_no2').val(oMbl.substring(3,6));
+						$('#mbl_no3').val(oMbl.substring(6,11));
+					} 
 					
 					return false;
 
