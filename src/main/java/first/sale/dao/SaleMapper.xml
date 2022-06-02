@@ -59,8 +59,67 @@
 		WHERE d.PRT_CD=#{prt_cd} and d.sal_dt=#{sal_dt} and d.sal_no=#{sal_no}
 	</select> 
 	
+	<!-- 수금등록 -->
+<!-- 	<insert id="registerSale" parameterType="SaleVO">
+		INSERT INTO CS_SAL01_MT
+			(PRT_CD
+			,SAL_DT
+			,SAL_NO
+			,SAL_TP_CD
+			,TOT_SAL_QTY
+			,TOT_SAL_AMT
+			,TOT_VOS_AMT
+			,TOT_VAT_AMT
+			,CSH_STLM_AMT
+			,CRD_STLM_AMT
+			,PNT_STLM_AMT
+			,CUST_NO
+			,CRD_NO
+			,VLD_YM
+			,CRD_CO_CD
+			,FST_REG_DT
+			,FST_USER_ID
+			,LST_UPD_DT
+			,LST_UPD_ID
+			,ORG_SHOP_CD
+			,ORG_SAL_DT
+			,ORG_SAL_NO)
+		VALUES(
+			#{prt_cd}
+			,SYSDATE
+			,#{sal_no}
+			,'SAL'
+			,#{tot_sal_qty}
+			,#{tot_sal_amt}
+			,#{tot_vos_amt}
+			,#{tot_vat_amt}
+			,#{csh_stlm_amt}
+			,#{crd_stlm_amt}
+			,#{pnt_stlm_amt}
+			,#{cust_no}
+			,#{crd_no}
+			,#{vld_yn}
+			,#{crd_co_cd}
+			,#{fst_reg_dt}
+			,#{fst_user_id}
+			,SYSDATE
+			,#{lst_upd_id}
+			,#{org_shop_cd}
+			,#{org_sal_dt}
+			,#{org_sal_no}
+		)
+	</insert> -->
+		<!--판매등록 시 재고 - 처리  -->
+<!-- 	<update id="minusStock" parameterType="map">
+		UPDATE SD_IVCO01_MT 
+		SET IVCO_QTY=IVCO_QTY-#{판매수량}
+		WHERE PRT_CD=#{prt_cd}
+			AND PRD_CD=#{prd_cd}
+	</update> -->
+	
+	
 	<!--반품처리 SAL_MT -->
-	<!-- <insert id="">
+	<!-- <insert id="registerReturn" parameterType="SaleVO">
 		INSERT INTO CS_SAL01_MT 
 			(PRT_CD
 			,SAL_DT
@@ -80,9 +139,12 @@
 			,FST_REG_DT
 			,FST_USER_ID
 			,LST_UPD_DT
-			,LST_UPD_ID)
+			,LST_UPD_ID
+			,ORG_SHOP_CD
+			,ORG_SAL_DT
+			,ORG_SAL_NO)
 		VALUES(
-			,#{prt_cd}
+			#{prt_cd}
 			,SYSDATE
 			,#{sal_no}
 			,'RTN'
@@ -93,7 +155,6 @@
 			,#{csh_stlm_amt}
 			,#{crd_stlm_amt}
 			,#{pnt_stlm_amt}
-			,#{csh_stlm_amt}
 			,#{cust_no}
 			,#{crd_no}
 			,#{vld_yn}
@@ -102,6 +163,9 @@
 			,#{fst_user_id}
 			,SYSDATE
 			,#{lst_upd_id}
+			,#{org_shop_cd}
+			,#{org_sal_dt}
+			,#{org_sal_no}
 		)
 	</insert> -->
 	
@@ -141,9 +205,9 @@
 	</insert> -->
 	
 	<!--반품 시 재고 + 처리  -->
-<!-- 	<update id="">
+<!-- 	<update id="plusStock" parameterType="map">
 		UPDATE SD_IVCO01_MT 
-		SET IVCO_QTY=IVCO_QTY-#{반품수량}
+		SET IVCO_QTY=IVCO_QTY+#{반품수량}
 		WHERE PRT_CD=#{prt_cd}
 			AND PRD_CD=#{prd_cd}
 	</update> -->

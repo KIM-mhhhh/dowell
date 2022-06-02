@@ -10,6 +10,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,9 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
+
 import first.sale.service.SaleService;
 import first.sale.vo.ProductVO;
 import first.sale.vo.SaleVO;
+import oracle.sql.json.OracleJsonObject;
 
 @Controller
 public class SaleController {
@@ -138,6 +144,44 @@ public class SaleController {
 		
 		
 		return mav;
+	}
+	
+	//수금등록
+	@ResponseBody
+	@RequestMapping("/sale/registerSale.do")
+	public Map<String,Object> registerSale(HttpServletRequest request) {
+		System.out.println("호출됨");
+		 String[] arrStr=request.getParameterValues("arr");
+		 System.out.println(arrStr.length);
+		 System.out.println(arrStr[0].length());
+		 String str = arrStr[0];
+		 System.out.println(str);
+		 
+		 JSONParser parser = new JSONParser();
+		 try {
+
+			 for(int i=0;i<arrStr.length;i++) {
+				 Object obj = parser.parse(arrStr[i]);
+				 JSONObject json = (JSONObject)obj;
+				 SaleVO saleVO = new SaleVO();
+				 saleVO.setPrd_cd((String)json.get("prd_cd"));
+				 saleVO.setPrd_csmr_upr(Integer.parseInt((String) json.get("prd_csmr_upr")));
+				 saleVO.setSal_qty(Integer.parseInt((String) json.get("sal_qty")));
+				 saleVO.setSal_amt(Integer.parseInt((String) json.get("sal_amt")));
+				 
+				 System.out.println(saleVO);
+			 }
+			
+		} catch (ParseException e) {
+			
+			e.printStackTrace();
+		}
+
+		Map<String,Object> ajaxMap = new  HashMap<String,Object>();
+		ajaxMap.put("result", "success");
+
+		return ajaxMap;
+		
 	}
 	
 }

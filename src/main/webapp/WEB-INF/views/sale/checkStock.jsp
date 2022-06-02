@@ -103,9 +103,9 @@
 				return false;
 			}else{															//체크한 경우 본 페이지의 prt_cd와 prt_nm에 해당 값 넣고 닫음.
 				$(opener.document).find('#prd_cd'+rowNum).val(prd_cd);
-				$(opener.document).find('#prd_nm'+rowNum).text(prd_nm);
-				$(opener.document).find('#ivco_qty'+rowNum).text(ivco_qty);
-				$(opener.document).find('#prd_csmr_upr'+rowNum).text(prd_csmr_upr);
+				$(opener.document).find('#prd_nm'+rowNum).val(prd_nm);
+				$(opener.document).find('#ivco_qty'+rowNum).val(ivco_qty);
+				$(opener.document).find('#prd_csmr_upr'+rowNum).val(prd_csmr_upr);
 					self.close();
 			}
 		  });

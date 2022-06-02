@@ -8,4 +8,17 @@ $(document).ready(function(){
 	}
 	
 	
+	$.getSum = function(target,result){
+	// 합계 계산
+		var sum = 0;
+			
+		target.each(function(){ //클래스가 cash인 항목의 갯수만큼 진행
+			sum += Number(target.text()); 
+		});
+				  
+		result.text(sum);
+				  
+	} 
+	
+	
 });		

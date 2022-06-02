@@ -1,6 +1,7 @@
 package first.sale.vo;
 
 import java.util.Date;
+import java.util.List;
 
 public class SaleVO {
 	
@@ -20,11 +21,15 @@ public class SaleVO {
 	private String crd_no;
 	private String vld_ym;
 	private String crd_co_cd;
+	private String org_shop_cd;
+	private String org_sal_dt;
+	private String org_sal_no;
 	private Date fst_reg_dt;
 	private String sFst_reg_dt;							//등록일 char로 가져오기
 	private String fst_user_id;
 	private Date lst_upd_dt;
 	private String lst_upd_id;							//CS_SAL01_DT
+	private int prd_csmr_upr;
 	
 	private String prd_cd;
 	private String prd_nm;
@@ -34,9 +39,14 @@ public class SaleVO {
 	private int sal_vos_amt;
 	private int sal_vat_amt;
 	
+
 	
-	
-	
+	public int getPrd_csmr_upr() {
+		return prd_csmr_upr;
+	}
+	public void setPrd_csmr_upr(int prd_csmr_upr) {
+		this.prd_csmr_upr = prd_csmr_upr;
+	}
 	public String getPrt_cd() {
 		return prt_cd;
 	}
@@ -197,8 +207,24 @@ public class SaleVO {
 		this.sal_seq = sal_seq;
 	}
 	
-	
-	
+	public String getOrg_shop_cd() {
+		return org_shop_cd;
+	}
+	public void setOrg_shop_cd(String org_shop_cd) {
+		this.org_shop_cd = org_shop_cd;
+	}
+	public String getOrg_sal_dt() {
+		return org_sal_dt;
+	}
+	public void setOrg_sal_dt(String org_sal_dt) {
+		this.org_sal_dt = org_sal_dt;
+	}
+	public String getOrg_sal_no() {
+		return org_sal_no;
+	}
+	public void setOrg_sal_no(String org_sal_no) {
+		this.org_sal_no = org_sal_no;
+	}
 	public int getSal_vos_amt() {
 		return sal_vos_amt;
 	}
@@ -217,11 +243,15 @@ public class SaleVO {
 				+ ", tot_sal_qty=" + tot_sal_qty + ", tot_sal_amt=" + tot_sal_amt + ", tot_vos_amt=" + tot_vos_amt
 				+ ", tot_vat_amt=" + tot_vat_amt + ", csh_stlm_amt=" + csh_stlm_amt + ", crd_stlm_amt=" + crd_stlm_amt
 				+ ", pnt_stlm_amt=" + pnt_stlm_amt + ", cust_no=" + cust_no + ", cust_nm=" + cust_nm + ", crd_no="
-				+ crd_no + ", vld_ym=" + vld_ym + ", crd_co_cd=" + crd_co_cd + ", fst_reg_dt=" + fst_reg_dt
+				+ crd_no + ", vld_ym=" + vld_ym + ", crd_co_cd=" + crd_co_cd + ", org_shop_cd=" + org_shop_cd
+				+ ", org_sal_dt=" + org_sal_dt + ", org_sal_no=" + org_sal_no + ", fst_reg_dt=" + fst_reg_dt
 				+ ", sFst_reg_dt=" + sFst_reg_dt + ", fst_user_id=" + fst_user_id + ", lst_upd_dt=" + lst_upd_dt
-				+ ", lst_upd_id=" + lst_upd_id + ", prd_cd=" + prd_cd + ", prd_nm=" + prd_nm + ", sal_qty=" + sal_qty
-				+ ", sal_amt=" + sal_amt + "]";
+				+ ", lst_upd_id=" + lst_upd_id + ", prd_csmr_upr=" + prd_csmr_upr + ", prd_cd=" + prd_cd + ", prd_nm="
+				+ prd_nm + ", sal_qty=" + sal_qty + ", sal_amt=" + sal_amt + ", sal_seq=" + sal_seq + ", sal_vos_amt="
+				+ sal_vos_amt + ", sal_vat_amt=" + sal_vat_amt + "]";
 	}
+
+	
 
 	
 	

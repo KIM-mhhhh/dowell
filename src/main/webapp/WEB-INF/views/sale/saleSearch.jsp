@@ -10,6 +10,7 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/common.js"></script>
 <script type="text/javascript">
 
 	$(document).ready(function(){
@@ -22,24 +23,18 @@
 		}
 		getSum();
 		//합계
-/* 			var sum = 0;
-		    
-			$('.cash').each(function(){ //클래스가 cash인 항목의 갯수만큼 진행
-				sum += Number($(this).val()); 
-			
-			});
-			
-			alert(sum); */
-		function getSum() {
+
+ 		function getSum() {
 			// 합계 계산
 			var sum = 0;
-			for(var i = 0; i < $('#saleTable >#salTbody tr').length; i++)  {
-				 sum += parseInt($('#saleTable').rows[i].cells[6].innerHTML);
-			}
+			
+			$('.cash').each(function(){ //클래스가 cash인 항목의 갯수만큼 진행
+				sum += Number($(this).text()); 
+			});
 				  
-			$('#cshSum').innerTEXT=sum;
+			$('#cshSum').text(sum);
 				  
-		}
+		} 
 		
 		
 		//회원 검색 팝업
@@ -147,7 +142,8 @@
 					init();
 					$('#saleTbody').append(output);
 					$('.RTN').css('color','red');
-					
+
+					getSum();
 				},
 				error:function(){
 					alert('네트워크 오류 발생');
@@ -220,9 +216,11 @@
 			
 		</form>
 	</div>
+<c:if test="${prt_dt_cd eq '2'}">	
 	<div id="btnDiv">
 		<button id="registBtn">판매등록</button>
 	</div>
+</c:if>
 	<div id="saleList">
 		<table id="saleTable">
 			<thead>
