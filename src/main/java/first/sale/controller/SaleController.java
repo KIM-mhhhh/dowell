@@ -1,6 +1,7 @@
 package first.sale.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -149,13 +150,17 @@ public class SaleController {
 	//수금등록
 	@ResponseBody
 	@RequestMapping("/sale/registerSale.do")
-	public Map<String,Object> registerSale(HttpServletRequest request) {
+	public Map<String,Object> registerSale(HttpServletRequest request, HttpSession session) {
 		System.out.println("호출됨");
 		 String[] arrStr=request.getParameterValues("arr");
 		 System.out.println(arrStr.length);
-		 System.out.println(arrStr[0].length());
-		 String str = arrStr[0];
-		 System.out.println(str);
+//		 System.out.println(arrStr[0].length());
+//		 String str = arrStr[0];
+//		 System.out.println(str);
+		 //상품품목입력할 list
+		 List<SaleVO> saleList = new ArrayList<SaleVO>();
+		
+		 
 		 
 		 JSONParser parser = new JSONParser();
 		 try {
@@ -164,13 +169,28 @@ public class SaleController {
 				 Object obj = parser.parse(arrStr[i]);
 				 JSONObject json = (JSONObject)obj;
 				 SaleVO saleVO = new SaleVO();
+				 saleVO.setPrt_cd((String)session.getAttribute("prt_cd"));
 				 saleVO.setPrd_cd((String)json.get("prd_cd"));
+				 saleVO.setPrd_nm((String)json.get("prd_nm"));
+				 saleVO.setCust_no((String)json.get("cust_no"));
+				 saleVO.setCust_nm((String)json.get("cust_nm"));
+				 saleVO.setSal_dt((String)json.get("sal_dt"));
+				 saleVO.setVld_ym((String)json.get("vld_ym"));
+				 saleVO.setCrd_co_cd((String)json.get("crd_co_cd"));
+				 saleVO.setCrd_no((String)json.get("crd_no"));
+				 saleVO.setCsh_stlm_amt(Integer.parseInt((String) json.get("csh_stlm_amt")));
+				 saleVO.setCrd_stlm_amt(Integer.parseInt((String) json.get("crd_stlm_amt")));
 				 saleVO.setPrd_csmr_upr(Integer.parseInt((String) json.get("prd_csmr_upr")));
 				 saleVO.setSal_qty(Integer.parseInt((String) json.get("sal_qty")));
 				 saleVO.setSal_amt(Integer.parseInt((String) json.get("sal_amt")));
 				 
+				 saleList.add(saleVO);
 				 System.out.println(saleVO);
 			 }
+			 System.out.println(saleList.size());
+			 //mt에 입력할 vo
+			 SaleVO mtSaleVO = saleList.get(0);
+			 System.out.println("mtVO:" + mtSaleVO);
 			
 		} catch (ParseException e) {
 			

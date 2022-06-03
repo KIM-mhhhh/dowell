@@ -12,6 +12,7 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		
+		
 		$('#prd_cd').focus();
 		
 		//오늘 날짜 구하는 함수
@@ -59,7 +60,7 @@
 			$('#salTbody').append(
 			"<tr><td><input type='checkbox' id='checkBox'></td>"
 			+ "<td>"+seq+"</td>"
-			+ "<td><input type='text' name='prd_cd' id='prd_cd"+seq+"'><img id='stockBtn' num='"+seq+"' class='searchIcon stockBtn' alt='재고검색' src='${pageContext.request.contextPath}/images/search.png'></td>"
+			+ "<td><input type='text' class='prd_cd' num='"+seq+"'  name='prd_cd' id='prd_cd"+seq+"'><img id='stockBtn' num='"+seq+"' class='searchIcon stockBtn' alt='재고검색' src='${pageContext.request.contextPath}/images/search.png'></td>"
 			+ "<td><input type='text' name='prd_nm' id='prd_nm"+seq+"'></td>"
 			+ "<td><input type='text' name='ivco_qty' id='ivco_qty"+seq+"'></td>"
 			+ "<td><input type='text' name='sal_qty' class='sal_qty' num='"+seq+"' id='sal_qty"+seq+"'></td>"
@@ -74,12 +75,69 @@
 			}
 			$('#salTbody tr:last').remove();
 		});
-		//상품코드를 입력하고 엔터치면 정보 불러와서 해당 행에 입력>> 미래테그로.
-		$('#prd_cd').keydown(function(key){
+		//상품코드를 입력하고 엔터치면 ajax로 정보 불러와서 해당 행에 입력>> 미래테그로.
+		$(document).on('keydown','.prd_cd',function(key){
 			if (key.keyCode == 13) {		//엔터키를 누르면
-				var prd_cd = $(this).val();
-				var prt_cd = $('#prt_cd').val();
-				alert(prd_cd);
+				var prd_keyword = $(this).val();
+				var prt_keyword = $('#prt_cd').val();
+				var num = $(this).attr('num');
+//				alert(prd_keyword + "/" + prt_keyword);
+				$.ajax({
+					type:'post',
+					data:{prt_keyword:prt_keyword,prd_keyword:prd_keyword},
+					url: '${pageContext.request.contextPath}/sale/searchStock.do',
+					dataType:'json',
+					cache:false,
+					timeout:30000,
+					success:function(param){
+						if(param.count<=0){
+							alert('검색 결과가 존재하지 않습니다.');
+						}else if(param.count==1){
+							if(param.stockList[0].ivco_qty <=0){
+								alert('재고가 없습니다.');
+								$('#prd_cd'+num).val('').focus();
+							}else if(param.stockList[0].prd_csmr_upr <=0){
+								alert('소비자단가가 없습니다.');
+								$('#prd_cd'+num).val('').focus();
+							}else if(param.stockList[0].prd_ss_cd == 'C'){
+								alert('상품상태가 정상이 아닙니다.');
+								$('#prd_cd'+num).val('').focus();
+							}else{
+								$('#prd_nm'+num).val(param.stockList[0].prd_nm);
+								$('#ivco_qty'+num).val(param.stockList[0].ivco_qty);
+								$('#prd_csmr_upr'+num).val(param.stockList[0].prd_csmr_upr);
+							}
+						}else{
+							var output='';
+							$(param.stockList).each(function(index,item) {
+								output += '<tr class="checkTr">';
+								output +='<td><input type="checkbox" class="checkBox '+item.prd_ss_cd+'" num="'+index+'" id="checkBox'+index+'"></td>';
+	 							output +='<td class="prd_cd" id="prd_cd'+index+'">'+item.prd_cd+'</td>';
+								output +='<td class="prd_nm" id="prd_nm'+index+'">'+item.prd_nm+'</td>';
+								output +='<td id="stock'+index+'" num="'+index+'" class="stock">'+item.ivco_qty+'</td>'; 
+								output +='<td class="prd_csmr_upr" num="'+index+'" id="prd_csmr_upr'+index+'">'+item.prd_csmr_upr+'</td>';
+								output +='</tr>';	
+							});
+							
+							//팝업창 오픈
+							var option = 'width=650, height=500, top=50, left=50, location=no';
+							var openPrdPop = window.open('${pageContext.request.contextPath}/sale/openStock.do?num='+num+'', 'stockpopup', option);      
+							      
+							openPrdPop.onload = function(){
+								openPrdPop.document.getElementById("prd_keyword").value = $('#prd_cd'+num).val();
+/* 							  var tbody =  openPrdPop.document.getElementById("listTbody");
+							  tbody.innerHTML+=output; */
+							  openPrdPop.document.getElementById("searchBtn").classList.add("putBtn");
+							  
+
+							}
+						}
+					},
+					error:function(){
+						alert('네트워크 오류 발생');
+					}
+				});		//ajax끝
+
             }
 		}) ;
 		//판매금액 계산
@@ -93,6 +151,8 @@
 		
 		//test
  		$('#submitBtn').click(function(e){
+ 			$('#crd_no').val($('#crd_no1').val()+$('#crd_no2').val()+$('#crd_no3').val()+$('#crd_no4').val());
+ 			
  			var arr = [];
 			  $('#regTable tr').each(function() {
 				  var form = $('#registerForm').clone();
@@ -125,7 +185,7 @@
 					error:function(request,status,error){
 						alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 					}
-				}); 
+				}); 	//ajax끝
 			  e.preventDefault();
 			  
 			 
@@ -138,7 +198,7 @@
 <h4>고객판매수금등록</h4>
 <form id="registerForm" action="${pageContext.request.contextPath}/sale/registerSale.do" method="post">
 <div class="searchBox">
-	
+		<input type="hidden" id="prt_cd" value="${prt_cd}">
 		<ul>
 			<li>
 				<label for="sal_dt">판매일자</label>
@@ -212,7 +272,7 @@
 			<tr>
 				<td><input type="checkbox" id="checkBox"></td>
 				<td id="rowCount">1</td>
-				<td><input type="text" name="prd_cd" id="prd_cd1"><img id="stockBtn" num="1" class="searchIcon stockBtn" alt="재고검색" src="${pageContext.request.contextPath}/images/search.png"></td>
+				<td><input type="text" name="prd_cd" num="1" class="prd_cd" id="prd_cd1"><img id="stockBtn" num="1" class="searchIcon stockBtn" alt="재고검색" src="${pageContext.request.contextPath}/images/search.png"></td>
 				<td><input type="text" name="prd_nm" id="prd_nm1"></td>
 				<td><input type="text" name="ivco_qty" id="ivco_qty1"></td>
 				<td><input type="text" name="sal_qty" id="sal_qty1" num="1" class="sal_qty"></td>

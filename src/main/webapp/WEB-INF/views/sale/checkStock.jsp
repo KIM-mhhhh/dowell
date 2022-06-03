@@ -9,6 +9,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
+		
 		//창 종료
 		$('#closeBtn').click(function(){
 			self.close();
@@ -28,12 +29,11 @@
 				}
 			});
 		}
+		
+
+		
 		//검색해서 재고 가져오기
 		$('#searchBtn').click(function(event){
-			if($('#prt_keyword').val().trim().length<=0){
-				alert('매장을 입력하세요.');
-				return false;
-			}else{
 				var prt_keyword = $('#prt_keyword').val();
 				var prd_keyword = $('#prd_keyword').val();
 				var output ="";
@@ -65,7 +65,7 @@
 						$('#listTbody').append(output);
 						//재고가 0인경우 체크박스 선택 불가능
 						nonCheck($('.stock'),'0');
-						//소비자가 0 이면 선택 불가능
+						//소비자가가 0 이면 선택 불가능
 						nonCheck($('.prd_csmr_upr'),'0');
 						$('.C').attr('disabled',true);
 						$('.C').parent().parent().css('backgroundColor','#fcf5a2');
@@ -77,7 +77,7 @@
 				});		//ajax끝
 				//submit이벤트 삭제
 				event.preventDefault();		
-			}	
+				
 
 		});				//재고 검색 이벤트 끝		
 		 //중복체크 막기
@@ -87,6 +87,11 @@
 		    	  $(this).prop('checked',true);
 		       }
 		});	
+
+		if($('.putBtn')){
+			$('#searchBtn').click();
+		}
+
 
 		//체크하고 적용 시 원문에 적용
 		$('#submitBtn').click(function(){
@@ -157,4 +162,9 @@
 	<input type="button" id="submitBtn" value="적용">
 </div>
 </body>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$(opener.document).openPrdPop = this;
+	});
+</script>
 </html>
