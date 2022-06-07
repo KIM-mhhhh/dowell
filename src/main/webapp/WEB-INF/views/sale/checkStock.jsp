@@ -29,7 +29,18 @@
 				}
 			});
 		}
-		
+		getSum();
+		//합계 함수
+		function getSum() {
+			// 합계 계산
+			var sum = 0;
+			
+			$('.stock').each(function(){ //클래스가 cash인 항목의 갯수만큼 진행
+				sum += Number($(this).text()); 
+			});
+				  
+			$('#stockSum').text(sum);	  
+		} 
 
 		
 		//검색해서 재고 가져오기
@@ -53,7 +64,7 @@
 								output +='<td><input type="checkbox" class="checkBox '+item.prd_ss_cd+'" num="'+index+'" id="checkBox'+index+'"></td>';
 	 							output +='<td class="prd_cd" id="prd_cd'+index+'">'+item.prd_cd+'</td>';
 								output +='<td class="prd_nm" id="prd_nm'+index+'">'+item.prd_nm+'</td>';
-								output +='<td id="stock'+index+'" num="'+index+'" class="stock">'+item.ivco_qty+'</td>'; 
+								output +='<td class="stock" id="stock'+index+'" num="'+index+'" class="stock">'+item.ivco_qty+'</td>'; 
 								output +='<td class="prd_csmr_upr" num="'+index+'" id="prd_csmr_upr'+index+'">'+item.prd_csmr_upr+'</td>';
 								output +='</tr>';
 	
@@ -69,7 +80,7 @@
 						nonCheck($('.prd_csmr_upr'),'0');
 						$('.C').attr('disabled',true);
 						$('.C').parent().parent().css('backgroundColor','#fcf5a2');
-
+						getSum();
 					},
 					error:function(){
 						alert('네트워크 오류 발생');
@@ -154,6 +165,11 @@
 		<tbody id="listTbody">
 			
 		</tbody>
+		<tr id="sumTr">
+				<td colspan="3">합계</td>
+				<td id="stockSum"></td>
+				<td id="costSum"></td>
+		</tr>
 	</table>
 </div>
 

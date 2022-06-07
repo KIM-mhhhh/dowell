@@ -57,6 +57,7 @@ public class SaleController {
 		
 		List<SaleVO> saleList = saleService.getSaleList(map);
 		System.out.println("saleList 수:"+saleList.size());
+		System.out.println(saleList);
 		
 		ModelAndView mav = new ModelAndView("/sale/saleSearch");
 		mav.addObject("saleList", saleList);
@@ -82,6 +83,7 @@ public class SaleController {
 		List<SaleVO> saleList = saleService.getSaleList(map);
 		int count = saleList.size();
 		System.out.println("saleList갯수:" + count);
+		System.out.println(saleList);
 		
 		Map<String,Object> ajaxMap = new HashMap<String,Object>();
 		ajaxMap.put("saleList", saleList);
@@ -92,9 +94,12 @@ public class SaleController {
 	
 	//고객판매수금등록 창 열기
 	@RequestMapping("/sale/registShow.do")
-	public String openRegister() {
+	public ModelAndView openRegister() {
+		List<Map<String,Object>> codeList = saleService.getCrdCode();
+		ModelAndView mav = new ModelAndView("/sale/salRegister");
+		mav.addObject("codeList", codeList);
 		
-		return"/sale/salRegister";
+		return mav;
 	}
 	
 	//매장재고 창 열기
@@ -134,7 +139,7 @@ public class SaleController {
 	//상세페이지 열기
 	@RequestMapping("/sale/saleDetailPopup.do")
 	public ModelAndView openSaleDetail(@ModelAttribute SaleVO saleVO) {
-		
+
 		System.out.println(saleVO.getCust_nm());
 		
 		List<SaleVO> saleList = saleService.getDetailSale(saleVO);
@@ -143,7 +148,6 @@ public class SaleController {
 		mav.addObject("saleVO", saleVO);
 		mav.addObject("saleList", saleList);
 		
-		
 		return mav;
 	}
 	
@@ -151,6 +155,7 @@ public class SaleController {
 	@ResponseBody
 	@RequestMapping("/sale/registerSale.do")
 	public Map<String,Object> registerSale(HttpServletRequest request, HttpSession session) {
+		Map<String,Object> ajaxMap = new  HashMap<String,Object>();
 		System.out.println("호출됨");
 		 String[] arrStr=request.getParameterValues("arr");
 		 System.out.println(arrStr.length);
@@ -160,11 +165,8 @@ public class SaleController {
 		 //상품품목입력할 list
 		 List<SaleVO> saleList = new ArrayList<SaleVO>();
 		
-		 
-		 
 		 JSONParser parser = new JSONParser();
 		 try {
-
 			 for(int i=0;i<arrStr.length;i++) {
 				 Object obj = parser.parse(arrStr[i]);
 				 JSONObject json = (JSONObject)obj;
@@ -178,11 +180,24 @@ public class SaleController {
 				 saleVO.setVld_ym((String)json.get("vld_ym"));
 				 saleVO.setCrd_co_cd((String)json.get("crd_co_cd"));
 				 saleVO.setCrd_no((String)json.get("crd_no"));
-				 saleVO.setCsh_stlm_amt(Integer.parseInt((String) json.get("csh_stlm_amt")));
-				 saleVO.setCrd_stlm_amt(Integer.parseInt((String) json.get("crd_stlm_amt")));
 				 saleVO.setPrd_csmr_upr(Integer.parseInt((String) json.get("prd_csmr_upr")));
 				 saleVO.setSal_qty(Integer.parseInt((String) json.get("sal_qty")));
 				 saleVO.setSal_amt(Integer.parseInt((String) json.get("sal_amt")));
+				 saleVO.setTot_sal_qty(Integer.parseInt((String) json.get("tot_sal_qty")));
+				 saleVO.setTot_sal_amt(Integer.parseInt((String) json.get("tot_sal_amt")));
+				 saleVO.setFst_user_id((String)session.getAttribute("id"));
+				 saleVO.setLst_upd_id((String)session.getAttribute("id"));
+				 
+				 if(json.get("csh_stlm_amt").equals("")){
+					 saleVO.setCsh_stlm_amt(0);
+				 }else {
+					 saleVO.setCsh_stlm_amt(Integer.parseInt((String) json.get("csh_stlm_amt")));
+				 }
+				 if(json.get("crd_stlm_amt").equals("")){
+					 saleVO.setCrd_stlm_amt(0);
+				 }else {
+					 saleVO.setCrd_stlm_amt(Integer.parseInt((String) json.get("crd_stlm_amt")));
+				 }
 				 
 				 saleList.add(saleVO);
 				 System.out.println(saleVO);
@@ -191,16 +206,30 @@ public class SaleController {
 			 //mt에 입력할 vo
 			 SaleVO mtSaleVO = saleList.get(0);
 			 System.out.println("mtVO:" + mtSaleVO);
+			 Map<String,Object> map = new  HashMap<String,Object>();
+			 map.put("list", saleList);
+			 map.put("mtSaleVO", mtSaleVO);
+			 saleService.registerSale(map);
+			 ajaxMap.put("result", "success");
 			
 		} catch (ParseException e) {
-			
+			ajaxMap.put("result", "unsuccess");
 			e.printStackTrace();
 		}
 
-		Map<String,Object> ajaxMap = new  HashMap<String,Object>();
-		ajaxMap.put("result", "success");
-
 		return ajaxMap;
+		
+	}
+	
+	//반품
+
+	@RequestMapping("/sale/returnSale.do")
+	public void returnSale(@ModelAttribute SaleVO saleVO){
+		Map<String,Object> ajaxMap = new  HashMap<String,Object>();
+		
+		
+		ajaxMap.put("result", "success");
+		
 		
 	}
 	

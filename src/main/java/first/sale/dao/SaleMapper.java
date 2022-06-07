@@ -15,4 +15,20 @@ public interface SaleMapper {
 	
 	//고객판매상세
 	public List<SaleVO> getDetailSale(SaleVO saleVO);
+	//카드코드
+	public List<Map<String,Object>> getCrdCode();
+	
+	//판매등록(mt)
+	public void registerSaleMt(SaleVO saleVO);
+	//판매등록(dt)
+	public void registerSaleDt(Map<String,Object> map);
+	//판매 시 재고 삭감
+	public void minusStock(Map<String,Object> map);
+	
+	//반품 등록(mt)
+	public void registerReturnMt(SaleVO saleVO);
+	//반품 등록(dt)
+	public void registerReturnDt(Map<String,Object> map);
+	//반품 시 재고 +
+	public void plusStock(SaleVO saleVO);
 }

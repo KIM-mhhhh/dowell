@@ -59,8 +59,16 @@
 		WHERE d.PRT_CD=#{prt_cd} and d.sal_dt=#{sal_dt} and d.sal_no=#{sal_no}
 	</select> 
 	
+	 <!-- 카드코드 항목 db에서 불러오기 -->
+ 	<select id="getCrdCode" resultType="java.util.HashMap">
+ 		SELECT dtl_cd														<!--상세코드  -->
+ 			   , dtl_cd_nm 													<!--상세코드명  -->	
+ 		FROM ma_code_dt 													<!--코드테이블 -->
+ 		WHERE code_cd='CRD_CO_CD'												<!--공통코드가 직업코드인 조건.  -->
+ 	</select>
+	
 	<!-- 수금등록 -->
-<!-- 	<insert id="registerSale" parameterType="SaleVO">
+ 	<insert id="registerSaleMt" parameterType="SaleVO">
 		INSERT INTO CS_SAL01_MT
 			(PRT_CD
 			,SAL_DT
@@ -80,46 +88,96 @@
 			,FST_REG_DT
 			,FST_USER_ID
 			,LST_UPD_DT
-			,LST_UPD_ID
-			,ORG_SHOP_CD
-			,ORG_SAL_DT
-			,ORG_SAL_NO)
+			,LST_UPD_ID)
 		VALUES(
 			#{prt_cd}
-			,SYSDATE
-			,#{sal_no}
+			,TO_CHAR(SYSDATE,'yyyyMMdd')
+			,(SELECT NVL(MAX(SAL_NO),0)+1
+			  FROM CS_SAL01_MT
+			  WHERE PRT_CD = #{prt_cd} 
+			  	AND SAL_DT = TO_CHAR(SYSDATE,'yyyyMMdd'))
 			,'SAL'
 			,#{tot_sal_qty}
 			,#{tot_sal_amt}
-			,#{tot_vos_amt}
-			,#{tot_vat_amt}
+			,#{tot_sal_amt}-(#{tot_sal_amt} * 0.1)
+			,#{tot_sal_amt} * 0.1
 			,#{csh_stlm_amt}
 			,#{crd_stlm_amt}
 			,#{pnt_stlm_amt}
 			,#{cust_no}
 			,#{crd_no}
-			,#{vld_yn}
+			,#{vld_ym}
 			,#{crd_co_cd}
-			,#{fst_reg_dt}
+			,SYSDATE
 			,#{fst_user_id}
 			,SYSDATE
 			,#{lst_upd_id}
-			,#{org_shop_cd}
-			,#{org_sal_dt}
-			,#{org_sal_no}
 		)
-	</insert> -->
+	</insert> 	
+		
+	<!--판매등록 SAL_DT -->
+ 	<insert id="registerSaleDt" parameterType="java.util.Map">
+ 		<foreach collection="list" item="item" index="index" separator="" open="INSERT ALL" close="SELECT * FROM DUAL"  >
+ 	
+		INTO CS_SAL01_DT
+			(PRT_CD
+			,SAL_DT
+			,SAL_NO
+			,SAL_SEQ
+			,PRD_CD
+			,PRD_CSMR_UPR
+			,SAL_QTY
+			,SAL_AMT
+			,SAL_VOS_AMT
+			,SAL_VAT_AMT
+			,FST_REG_DT
+			,FST_USER_ID
+			,LST_UPD_DT
+			,LST_UPD_ID)
+		VALUES (
+			#{item.prt_cd}
+			,TO_CHAR(SYSDATE,'yyyyMMdd')
+			,(SELECT NVL(MAX(SAL_NO),0)
+			  FROM CS_SAL01_MT
+			  WHERE PRT_CD = #{item.prt_cd} 
+			  	AND SAL_DT = TO_CHAR(SYSDATE,'yyyyMMdd'))
+			,(SELECT NVL(MAX(SAL_SEQ),0)+1
+			  FROM CS_SAL01_DT
+			  WHERE PRT_CD = #{item.prt_cd}
+			  	AND SAL_DT = TO_CHAR(SYSDATE,'yyyyMMdd')
+			  	AND SAL_NO = (SELECT NVL(MAX(SAL_NO),0)
+			  				  FROM CS_SAL01_DT 
+			  				  WHERE PRT_CD = #{item.prt_cd} 
+			  				    AND SAL_DT = TO_CHAR(SYSDATE,'yyyyMMdd'))+1)+#{index}
+			,#{item.prd_cd}
+			,#{item.prd_csmr_upr}
+			,#{item.sal_qty}
+			,#{item.sal_amt}
+			,#{item.sal_amt} * 0.9
+			,#{item.sal_amt} * 0.1
+			,SYSDATE
+			,#{item.fst_user_id}
+			,SYSDATE
+			,#{item.lst_upd_id}
+		)
+		</foreach>	
+	</insert>
+	
 		<!--판매등록 시 재고 - 처리  -->
-<!-- 	<update id="minusStock" parameterType="map">
-		UPDATE SD_IVCO01_MT 
-		SET IVCO_QTY=IVCO_QTY-#{판매수량}
-		WHERE PRT_CD=#{prt_cd}
-			AND PRD_CD=#{prd_cd}
-	</update> -->
+ 	<update id="minusStock" parameterType="java.util.Map">
+ 		<foreach collection="list" item="item" index="index" separator=";" open="DECLARE BEGIN" close="; END;"  >
+			UPDATE SD_IVCO01_MT 
+			SET IVCO_QTY=IVCO_QTY-#{item.sal_qty}
+				,LST_UPD_DT=SYSDATE
+				,LST_UPD_ID=#{item.lst_upd_id}
+			WHERE PRT_CD=#{item.prt_cd}
+				AND PRD_CD=#{item.prd_cd}
+		</foreach>
+	</update> 
 	
 	
 	<!--반품처리 SAL_MT -->
-	<!-- <insert id="registerReturn" parameterType="SaleVO">
+	<!-- <insert id="registerReturnMt" parameterType="SaleVO">
 		INSERT INTO CS_SAL01_MT 
 			(PRT_CD
 			,SAL_DT
@@ -157,9 +215,9 @@
 			,#{pnt_stlm_amt}
 			,#{cust_no}
 			,#{crd_no}
-			,#{vld_yn}
+			,#{vld_ym}
 			,#{crd_co_cd}
-			,#{fst_reg_dt}
+			,SYSDATE
 			,#{fst_user_id}
 			,SYSDATE
 			,#{lst_upd_id}
@@ -170,7 +228,7 @@
 	</insert> -->
 	
 	<!--반품처리 SAL_DT -->
-<!-- 	<insert id="">
+<!-- 	<insert id="registerReturnMt" parameterType="map">
 		INSERT INTO CS_SAL01_DT
 			(PRT_CD
 			,SAL_DT
@@ -197,19 +255,24 @@
 			,#{sal_amt}
 			,#{sal_vos_amt}
 			,#{sal_vat_amt}
-			,#{fst_reg_dt}
+			,SYSDATE
 			,#{fst_user_id}
 			,SYSDATE
 			,#{lst_upd_id}
 		)
 	</insert> -->
 	
+	
 	<!--반품 시 재고 + 처리  -->
-<!-- 	<update id="plusStock" parameterType="map">
-		UPDATE SD_IVCO01_MT 
-		SET IVCO_QTY=IVCO_QTY+#{반품수량}
-		WHERE PRT_CD=#{prt_cd}
-			AND PRD_CD=#{prd_cd}
+<!-- 	<update id="plusStock" parameterType="java.util.Map">
+		<foreach collection="list" item="item" index="index" separator=";" open="DECLARE BEGIN" close="; END;"  >
+			UPDATE SD_IVCO01_MT 
+			SET IVCO_QTY=IVCO_QTY+#{item.sal_qty}
+				,LST_UPD_DT=SYSDATE
+				,LST_UPD_ID=#{item.lst_upd_id}
+			WHERE PRT_CD=#{item.prt_cd}
+				AND PRD_CD=#{item.prd_cd}
+		</foreach>	
 	</update> -->
 	
 </mapper>

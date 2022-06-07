@@ -10,15 +10,18 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
-
 		//창 종료
 		$('#closeBtn').click(function(){
 			self.close();
 		});
-		
 		//반품 처리
 		$('#refundBtn').click(function(){
-			alert('반품');
+			var yn = confirm("등록하시겠습니까?");
+				if(yn==false){
+					return false;
+				}else{
+					alert('등록!');
+				}
 		});
 	});
 </script>
@@ -30,7 +33,9 @@
 	<span><Br>판매수량 :  ${saleVO.tot_sal_qty }  / 판매금액 : ${saleVO.tot_sal_amt }   / 현금 : ${saleVO.csh_stlm_amt }   / 카드 : ${saleVO.crd_stlm_amt }  </span>
 </div>
 <div id="salDetList">
+	
 	<Table id="salDetTable">
+	
 		<thead>
 		<tr>
 			<th>번호</th>
@@ -60,10 +65,15 @@
 </div>
 
 <div id="resultBtn">
+<%-- 	<form action="${pageContext.request.contextPath}/sale/returnSale.do" method="post">
+	<c:forEach var="sale" items="${saleVO}">
+		<input type="hidden" name="prt_cd" value="${saleVO.prt_cd}">
+	</c:forEach> --%>
 	<input type="button" id="closeBtn" value="닫기">
 	<c:if test="${saleVO.sal_tp_cd eq 'SAL' }">
-		<input type="button" id="refundBtn" value="반품">
+		<input type="submit" id="refundBtn" value="반품">
 	</c:if>
+<!-- 	</form> -->
 </div>
 </body>
 </html>

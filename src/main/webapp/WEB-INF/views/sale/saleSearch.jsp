@@ -17,6 +17,11 @@
 		//반품인 경우 빨간색 처리
 		$('.RTN').css('color','red');
 		
+		//본사는 매장 검색 가능. 매장인경우 불가능. 
+		if(${prt_dt_cd} =='2'){
+			$('.prt').attr('readonly',true).css('backgroundColor','#c9c9c9');
+		}
+		
 		//리스트 기본 값 초기화
 		function init(){
 			$('#saleTbody').empty();
@@ -32,18 +37,21 @@
 				sum += Number($(this).text()); 
 			});
 				  
-			$('#cshSum').text(sum);
+			$('#cshSum').text(sum.toLocaleString());				// ,넣어준다
 				  
 		} 
-		
-		
 		//회원 검색 팝업
 		$('#searchCust').click(function(){
 			window.open('${pageContext.request.contextPath}/customer/searchCustomer.do','customer','width=700,height=900');
 		});
 		//매장 검색 팝업
 		$('#searchMarket').click(function(){
-			window.open('${pageContext.request.contextPath}/market/marketShow.do','market','width=500,height=600');
+			if(${prt_dt_cd} =='2'){					//매장인 경우 클릭 불가
+				return false;
+			}else{									//본사인 경우 가능. 팝업창 띄우기
+				window.open('${pageContext.request.contextPath}/market/marketShow.do','market','width=500,height=600');
+			}
+		
 		});
 		//고객판매수금등록 팝업
 		$('#registBtn').click(function(){
@@ -81,13 +89,9 @@
  				sal_tp_cd:sal_tp_cd
  			}
  			
- 			openPopulPost('${pageContext.request.contextPath}/sale/saleDetailPopup.do', info);
-
- 			
+ 			openPopulPost('${pageContext.request.contextPath}/sale/saleDetailPopup.do', info);	
 		});
 		
-
-		 
 		//달력 기본값
 		$('#to').val(new Date().toISOString().substring(0, 10));
 		var now = new Date();	// 현재 날짜 및 시간
@@ -120,11 +124,11 @@
 						output+="<tr><td colspan='11'>검색 결과가 존재하지 않습니다.</td></tr>";
 					}else if(count>0){																			//list 결과값이 있는 경우 table에 append해서 적용.
 						$(param.saleList).each(function(index,item) {
-							output += '<tr id="saleTr'+index+'">';
+							output += '<tr id="saleTr'+index+1+'">';
 							output += '<td>'+item.sal_dt+'</td>';
 							output += '<td>'+item.cust_no+'</td>';
 							output += '<td>'+item.cust_nm+'</td>';
-							output += '<td>'+item.sal_no+'<input type="button" class="detBtn" num="'+index+'" value="상세"></td>';
+							output += '<td>'+item.sal_no+'<input type="button" class="detBtn" num="'+index+1+'" value="상세"></td>';
 							output += '<td class="'+item.sal_tp_cd+'">'+item.tot_sal_qty+'</td>';
 							output += '<td class="'+item.sal_tp_cd+'">'+item.tot_sal_amt+'</td>';
 							output += '<td class="cash">'+item.csh_stlm_amt+'</td>';
@@ -149,12 +153,8 @@
 					alert('네트워크 오류 발생');
 				}
 			});//ajax 끝
-			event.preventDefault();
-			
-			
-			
+			event.preventDefault();	
 		});
-		
 	});		//document 끝
 	
 	//post로 popup 실행
@@ -162,7 +162,6 @@
 		
 		window.open("", "sale", "directories=no,titlebar=no,toolbar=no,status=no,menubar=no, location=no,width=850, height=700, scrollbars=yes");
 
-		
 	    var form = document.createElement("form");
 	    form.target = "sale";
 	    form.method = "POST";
@@ -199,9 +198,9 @@
 				</li>
 				<li>
 					<label>매장</label>
-					<input type="text" id="prt_cd" name="prt_cd" value="${prt_cd }">
-					<img id="searchMarket" class="searchIcon" alt="매장조회" src="${pageContext.request.contextPath}/images/search.png" >
-					<input type="text" id="prt_nm" name="prt_nm" value="${prt_nm }">
+					<input type="text" class="prt" id="prt_cd" name="prt_cd" value="${prt_cd }">
+					<img id="searchMarket" class="searchIcon prt" alt="매장조회" src="${pageContext.request.contextPath}/images/search.png" >
+					<input type="text" class="prt" id="prt_nm" name="prt_nm" value="${prt_nm }">
 				</li>
 				<li>
 					<label>고객번호</label>
@@ -248,12 +247,12 @@
 						<td colspan='11'>검색 결과가 존재하지 않습니다.</td>
 					</tr>
 				</c:if>
-					<c:forEach var="sale" items="${saleList}">
-					<tr>
+					<c:forEach var="sale" items="${saleList}" varStatus="status">
+					<tr id="saleTr${status.index }">
 						<td>${sale.sal_dt}</td>
 						<td>${sale.cust_no}</td>
 						<td>${sale.cust_nm}</td>
-						<td>${sale.sal_no}<input type="button" class="detBtn" value="상세"></td>
+						<td>${sale.sal_no}<input type="button" class="detBtn" num=${status.index } value="상세"></td>
 						<td class="${sale.sal_tp_cd}">${sale.tot_sal_qty}</td>
 						<td class="${sale.sal_tp_cd}">${sale.tot_sal_amt}</td>
 						<td class="cash">${sale.csh_stlm_amt}</td>
