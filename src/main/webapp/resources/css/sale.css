@@ -12,6 +12,10 @@
 	left: 0; 
 	bottom: 0; 
 }
+h3 img{
+	width:15px;
+	height:15px;
+}
 
 #resultBtn{
 	text-align:center;
@@ -128,7 +132,14 @@ th, td {
 	height:60px;
 	background-color:white;
 	border : 3px double black;
-
+}
+#infoForm > ul{
+	list-style:none;
+}
+#infoForm ul li{
+	display:inline-block;
+	width:50%;
+	float:left;
 }
 
 /* 고객판매수금등록 */
@@ -149,6 +160,21 @@ th, td {
 	margin:0 auto;
 	margin-bottom : 20px;
 	text-align : center;
+}
+
+#salTbody input[name=ivco_qty],input[name=prd_csmr_upr],input[name=sal_amt]{
+		border:none;
+		width:80px;
+		font-size:14px;
+}
+#salTbody input[name=prd_nm]{
+		border:none;
+		width:130px;
+		font-size:14px;
+}
+#salTbody input[name=sal_qty]{
+		width:80px;
+		font-size:14px;
 }
 
 #pmBtn{

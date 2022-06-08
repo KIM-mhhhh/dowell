@@ -28,16 +28,67 @@
 		}
 		getSum();
 		//합계
-
  		function getSum() {
 			// 합계 계산
 			var sum = 0;
+			var cdSum = 0;
+			var pntSum = 0;
+			var qtySum = 0;
+			var amtSum = 0;
 			
-			$('.cash').each(function(){ //클래스가 cash인 항목의 갯수만큼 진행
-				sum += Number($(this).text()); 
-			});
-				  
+			//구매수량 합계
+			$('.qty').each(function(){ //클래스가 cash인 항목의 갯수만큼 진행
+				var num = $(this).attr('num');
+				if($('#sal_tp_cd'+num).text() == 'SAL'){
+					qtySum += Number($(this).text());
+				}else{
+					qtySum -= Number($(this).text());
+				}
+			});	 
+			$('#qtySum').text(qtySum);	
+			
+			//구매가격 합계
+			$('.amt').each(function(){ 
+				var num = $(this).attr('num');
+				if($('#sal_tp_cd'+num).text() == 'SAL'){
+					amtSum += Number($(this).text());
+				}else{
+					amtSum -= Number($(this).text());
+				} 
+			});	  
+			$('#amtSum').text(amtSum.toLocaleString());				// ,넣어준다
+			
+			//현금결제액 합계
+			$('.cash').each(function(){ 
+				var num = $(this).attr('num');
+				if($('#sal_tp_cd'+num).text() == 'SAL'){
+					sum += Number($(this).text()); 
+				}else{
+					sum -= Number($(this).text()); 
+				} 	
+			});	  
 			$('#cshSum').text(sum.toLocaleString());				// ,넣어준다
+			
+			//카드결제액 합계
+			$('.card').each(function(){ 
+				var num = $(this).attr('num');
+				if($('#sal_tp_cd'+num).text() == 'SAL'){
+					cdSum += Number($(this).text()); 
+				}else{
+					cdSum -= Number($(this).text());
+				} 		 
+			});	
+			$('#crdSum').text(cdSum.toLocaleString());
+			//포인트결제액 합계
+			$('.pnt').each(function(){ 
+				var num = $(this).attr('num');
+				if($('#sal_tp_cd'+num).text() == 'SAL'){
+					pntSum += Number($(this).text()); 
+				}else{
+					pntSum -= Number($(this).text()); 
+				} 		
+			});	
+			$('#pntSum').text(pntSum.toLocaleString());
 				  
 		} 
 		//회원 검색 팝업
@@ -63,7 +114,7 @@
  			
  			var num = $(this).attr('num');
  			
- 			var sal_dt = $('#saleTr'+num).children().eq(0).text();
+ 			var sal_dt = $('#saleTr'+num).children().eq(0).text().replace(/\-/g,'');
  			var cust_no = $('#saleTr'+num).children().eq(1).text();
  			var cust_nm = $('#saleTr'+num).children().eq(2).text();
  			var sal_no = $('#saleTr'+num).children().eq(3).text();
@@ -99,6 +150,7 @@
 		
 		//검색해서 조건에 맞는 list가져오기
 		$('#searchBtn').click(function(event){
+
 			var count;
 			var output ="";
 			
@@ -106,6 +158,10 @@
 			var cust_no = $('#sCust_no').val().trim();
 			var from = $('input[name="from"]').val().replace(/\-/g,'');
 			var to = $('input[name="to"]').val().replace(/\-/g,'');
+			if(from == '' || to == ''){
+				alert('날짜를 선택하세요.');
+				return false;
+			}
 			if(from>to){																//from의 숫자가 to보다 큰 경우 제출 안됨.
 				alert('선택하신 날짜가 범위에 맞지 않습니다.');
 				return false;
@@ -129,15 +185,15 @@
 							output += '<td>'+item.cust_no+'</td>';
 							output += '<td>'+item.cust_nm+'</td>';
 							output += '<td>'+item.sal_no+'<input type="button" class="detBtn" num="'+index+1+'" value="상세"></td>';
-							output += '<td class="'+item.sal_tp_cd+'">'+item.tot_sal_qty+'</td>';
-							output += '<td class="'+item.sal_tp_cd+'">'+item.tot_sal_amt+'</td>';
-							output += '<td class="cash">'+item.csh_stlm_amt+'</td>';
-							output += '<td>'+item.crd_stlm_amt+'</td>';
-							output += '<td>'+item.pnt_stlm_amt+'</td>';
-							output += '<td>'+item.fst_user_id+'</td>';
+							output += '<td class="'+item.sal_tp_cd+' qty" num="'+index+1+'">'+item.tot_sal_qty+'</td>';
+							output += '<td class="'+item.sal_tp_cd+' amt" num="'+index+1+'">'+item.tot_sal_amt+'</td>';
+							output += '<td class="cash" num="'+index+1+'">'+item.csh_stlm_amt+'</td>';
+							output += '<td class="card" num="'+index+1+'">'+item.crd_stlm_amt+'</td>';
+							output += '<td class="pnt" num="'+index+1+'">'+item.pnt_stlm_amt+'</td>';
+							output += '<td>'+item.user_nm+'</td>';
 							output += '<td>'+item.sFst_reg_dt+'</td>';
 							output += '<td style="display:none">'+item.prt_cd+'</td>';
-							output += '<td style="display:none">'+item.sal_tp_cd+'</td>';
+							output += '<td style="display:none" id="sal_tp_cd'+index+1+'">'+item.sal_tp_cd+'</td>';
 							output += '</tr>';
 					});
 				}else{
@@ -187,7 +243,7 @@
 	<jsp:include page="/WEB-INF/views/common/header.jsp"/>
 </div>
 <div id='wrapper'>
-	<h3>고객판매관리</h3>
+	<h3>고객판매관리<img alt="새로고침" src="${pageContext.request.contextPath}/images/reload.png" onclick="window.location.reload()"></h3>
 	<div class="searchBox">
 		<form>
 			<ul>
@@ -253,15 +309,15 @@
 						<td>${sale.cust_no}</td>
 						<td>${sale.cust_nm}</td>
 						<td>${sale.sal_no}<input type="button" class="detBtn" num=${status.index } value="상세"></td>
-						<td class="${sale.sal_tp_cd}">${sale.tot_sal_qty}</td>
-						<td class="${sale.sal_tp_cd}">${sale.tot_sal_amt}</td>
-						<td class="cash">${sale.csh_stlm_amt}</td>
-						<td>${sale.crd_stlm_amt}</td>
-						<td>${sale.pnt_stlm_amt}</td>
-						<td>${sale.fst_user_id}</td>
+						<td class="${sale.sal_tp_cd} qty" num=${status.index }>${sale.tot_sal_qty}</td>
+						<td class="${sale.sal_tp_cd} amt" num=${status.index }>${sale.tot_sal_amt}</td>
+						<td class="cash" num=${status.index }>${sale.csh_stlm_amt}</td>
+						<td class="card" num=${status.index }>${sale.crd_stlm_amt}</td>
+						<td class="pnt" num=${status.index }>${sale.pnt_stlm_amt}</td>
+						<td>${sale.user_nm}</td>
 						<td>${sale.sFst_reg_dt}</td>
 						<td style="display:none">${sale.prt_cd}</td>
-						<td style="display:none">${sale.sal_tp_cd}</td>
+						<td style="display:none" id="sal_tp_cd${status.index }">${sale.sal_tp_cd}</td>
 					</tr>
 					</c:forEach>
 			</tbody>

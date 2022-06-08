@@ -77,11 +77,11 @@
 			"<tr><td><input type='checkbox' num='"+seq+"' id='checkBox' class='checkBox'></td>"
 			+ "<td>"+seq+"</td>"
 			+ "<td><input type='text' class='prd_cd' num='"+seq+"'  name='prd_cd' id='prd_cd"+seq+"'><img id='stockBtn' num='"+seq+"' class='searchIcon stockBtn' alt='재고검색' src='${pageContext.request.contextPath}/images/search.png'></td>"
-			+ "<td><input type='text' name='prd_nm' id='prd_nm"+seq+"'></td>"
-			+ "<td><input type='text' name='ivco_qty' id='ivco_qty"+seq+"'></td>"
+			+ "<td><input type='text' name='prd_nm' readonly id='prd_nm"+seq+"'></td>"
+			+ "<td><input type='text' name='ivco_qty' readonly id='ivco_qty"+seq+"'></td>"
 			+ "<td><input type='text' name='sal_qty' class='sal_qty' num='"+seq+"' id='sal_qty"+seq+"'></td>"
-			+ "<td><input type='text' name='prd_csmr_upr' id='prd_csmr_upr"+seq+"'></td>"
-			+ "<td><input type='text' class='sal_amt' name='sal_amt' id='sal_amt"+seq+"'></td></tr>"
+			+ "<td><input type='text' name='prd_csmr_upr' readonly id='prd_csmr_upr"+seq+"'></td>"
+			+ "<td><input type='text' class='sal_amt' readonly name='sal_amt' id='sal_amt"+seq+"'></td></tr>"
 			)
 		});
 		//행 삭제
@@ -142,53 +142,97 @@
 
             }
 		}) ;
+		
+		//카드 유효일자 6자리 체크, 숫자 정규식 체크
+		$('#vld_ym').change(function(){
+			const regExp = /[0-9]/g;
+			if(regExp.test($(this).val())){
+				if($(this).val().length !=6){
+					alert('6자리의 숫자를 입력하세요.');
+					$(this).val('').focus();
+				}
+			}else{
+				alert('숫자를 입력하세요.');
+				$(this).val('').focus();
+			}
+		});
+		
 		//판매금액 계산
 		$(document).on('change','.sal_qty',function(){
-			var sal_qty = $(this).val();
 			var num = $(this).attr('num');
+			if($(this).val() <=0){
+				alert('1이상의 갯수를 입력하세요');
+				$(this).val('').focus();
+				return false;
+			}else if(Number($(this).val())>Number($('#ivco_qty'+num).val())){
+				alert('재고보다 많이 구매할 수 없습니다.');
+				$(this).val('').focus();
+				return false;
+			}
+			var sal_qty = $(this).val();
 			var prd_csmr_upr = $('#prd_csmr_upr'+num).val();
 			var cost = sal_qty * prd_csmr_upr;
 			$('#sal_amt'+num).val(cost);
 			getSum();
 		});
 		
-		//체크된 것의 value들이 비어있으면 제출 불가능
+		//value 비어잇으면 체크 불가능
 		$(document).on('click','.checkBox',function(){													
 			var num = $(this).attr('num');
 			if($(this).is(':checked')){
-				
-				alert('체크됨');
+				$(this).prop('checked',false);
+				if($('#prd_cd'+num).val().length<=0){
+					alert('상품코드를 입력하세요.');	
+				}else if($('#sal_qty'+num).val().length<=0){
+					alert('판매수량을 입력하세요.');
+				}else{
+					$(this).prop('checked',true);
+				}
 			}else{
-				alert('안됨');
+				
 			}
 		});	
 		
 		//등록
  		$('#submitBtn').click(function(e){
- 			
+ 			//고객정보 필수
+ 			if($('#sCust_no').val().length<=0){
+ 				alert('고객정보를 입력하세요.');
+ 				return false;
+ 			};
+ 			//현금과 카드 둘 다 비어있으면 제출 불가
+ 			if($('#csh_stlm_amt').val().length<=0 && $('#crd_stlm_amt').val().length<=0){
+ 				alert('금액을 입력하세요');
+ //				$('#csh_stlm_amt').val().focus();
+ 				return false;
+ 			}else if(Number($('#csh_stlm_amt').val())+Number($('#crd_stlm_amt').val()) != $('#amtSum').text().replace(/\,/g,'')){	//현금 + 카드와 총 구매금액이 다르면 제출 불가
+ 				alert('결제금액과 판매금액이 동일하지 않습니다.');
+ 				return false;
+ 			};
+ 						
  			//카드에 금액 있으면 다른 카드 항목 필수입력.
  			if($('#crd_stlm_amt').val().length>0){
- 				if($('#dVld_ym').val().length<=0){
- 					alert('유효일자를 선택하세요.');
- 					$('#dVld_ym').val().focus();
+ 				if($('#vld_ym').val().length<=0){
+ 					alert('유효일자를 입력하세요.');
+ 					$('#vld_ym').val().focus();
  					return false;
  				}else if($('#sCrd_co_cd').val().length<=0){
  					alert('카드회사를 선택하세요.');
  					$('#crd_co_cd').val().focus();
  					return false;
- 				}else if($('#crd_no1').val().length<=0){
+ 				}else if($('#crd_no1').val().length<=4){
  					alert('카드번호를 입력하세요.');
  					$('#crd_no1').val().focus();
  					return false;
- 				}else if($('#crd_no2').val().length<=0){
+ 				}else if($('#crd_no2').val().length<=4){
  					alert('카드번호를 모두 입력하세요.');
  					$('#crd_no2').val().focus();
  					return false;
- 				}else if($('#crd_no3').val().length<=0){
+ 				}else if($('#crd_no3').val().length<=4){
  					alert('카드번호를 모두 입력하세요.');
  					$('#crd_no3').val().focus();
  					return false;
- 				}else if($('#crd_no4').val().length<=0){
+ 				}else if($('#crd_no4').val().length<=4){
  					alert('카드번호를 모두 입력하세요.');
  					$('#crd_no4').val().focus();
  					return false;
@@ -196,16 +240,15 @@
  			}
  			
  			$('#crd_no').val($('#crd_no1').val()+$('#crd_no2').val()+$('#crd_no3').val()+$('#crd_no4').val());
- 			$('#vld_ym').val($('#dVld_ym').val().replace(/\-/g,'').substring(2));
  			$('#tot_sal_qty').val($('#qtySum').text());
  			$('#tot_sal_amt').val($('#amtSum').text().replace(/\,/g,''));
  			$('#crd_co_cd').val($('#sCrd_co_cd').val());
  			
  			//체크된 것 없으면 제출 불가능.
  			if($('input[type=checkbox]:checked').length <=0){
- 				alert('값을 선택하세요.');
+ 				alert('등록할 값을 선택하세요.');
  				return false;
- 			}		
+ 			};		
  			
  			var arr = [];
 			  $('#regTable tr').each(function() {
@@ -244,9 +287,7 @@
 							}
 						}); //ajax끝
 				}
-			  e.preventDefault();
-			  
-			 
+			  e.preventDefault(); 
 		}); 	  
 		
 	});
@@ -293,14 +334,14 @@
 		</li>
 		<li>
 			<label>유효일자</label>
-			<input type="hidden" name="vld_ym" id="vld_ym">
-			<input type="date" id="dVld_ym">
+			<input type="text" name="vld_ym" id="vld_ym">
+		
 		</li>
 		<li>
 			<label>카드회사</label>
 			<input type="hidden" name="crd_co_cd" id="crd_co_cd">
 			<select id="sCrd_co_cd">
-								<option selected>-선택-</option>
+								<option selected value="">-선택-</option>
 							<c:forEach var="code" items="${codeList }">
 								<option value="${code.DTL_CD }">${code.DTL_CD_NM }</option>
 							</c:forEach>
@@ -340,11 +381,11 @@
 				<td><input type="checkbox" id="checkBox1" num="1" class="checkBox" ></td>
 				<td id="rowCount">1</td>
 				<td><input type="text" name="prd_cd" num="1" class="prd_cd" id="prd_cd1"><img id="stockBtn" num="1" class="searchIcon stockBtn" alt="재고검색" src="${pageContext.request.contextPath}/images/search.png"></td>
-				<td><input type="text" name="prd_nm" id="prd_nm1"></td>
-				<td><input type="text" name="ivco_qty" id="ivco_qty1"></td>
+				<td><input type="text" name="prd_nm" id="prd_nm1" readonly></td>
+				<td><input type="text" name="ivco_qty" id="ivco_qty1" readonly></td>
 				<td><input type="text" name="sal_qty" id="sal_qty1" num="1" class="sal_qty"></td>
-				<td><input type="text" name="prd_csmr_upr" id="prd_csmr_upr1"></td>
-				<td><input type="text" class="sal_amt" name="sal_amt" id="sal_amt1"></td>
+				<td><input type="text" name="prd_csmr_upr" id="prd_csmr_upr1" readonly></td>
+				<td><input type="text" class="sal_amt" name="sal_amt" id="sal_amt1" readonly></td>
 			</tr>
 		</tbody>
 		<tr id="sumTr">
@@ -358,7 +399,6 @@
 </div>
 <div id="resultBtn">
 	<input type="button" id="closeBtn" value="닫기">
-	<input type="button" id="checkBtn" value="test">
 	<input type="submit" id="submitBtn" value="적용">
 </div>
 

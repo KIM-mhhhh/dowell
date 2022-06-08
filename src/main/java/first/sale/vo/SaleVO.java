@@ -38,9 +38,17 @@ public class SaleVO {
 	private int sal_seq;
 	private int sal_vos_amt;
 	private int sal_vat_amt;
+	private String user_nm;
 	
-
 	
+	
+	
+	public String getUser_nm() {
+		return user_nm;
+	}
+	public void setUser_nm(String user_nm) {
+		this.user_nm = user_nm;
+	}
 	public int getPrd_csmr_upr() {
 		return prd_csmr_upr;
 	}

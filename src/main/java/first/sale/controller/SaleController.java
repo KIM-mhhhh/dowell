@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.catalina.Session;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -143,9 +144,11 @@ public class SaleController {
 		System.out.println(saleVO.getCust_nm());
 		
 		List<SaleVO> saleList = saleService.getDetailSale(saleVO);
+		System.out.println(saleList);
 		
 		ModelAndView mav = new ModelAndView("/sale/salDetail");
 		mav.addObject("saleVO", saleVO);
+		System.out.println(saleVO);
 		mav.addObject("saleList", saleList);
 		
 		return mav;
@@ -224,12 +227,18 @@ public class SaleController {
 	//반품
 
 	@RequestMapping("/sale/returnSale.do")
-	public void returnSale(@ModelAttribute SaleVO saleVO){
-		Map<String,Object> ajaxMap = new  HashMap<String,Object>();
+	public String returnSale(@ModelAttribute SaleVO saleVO, HttpSession session){
+		Map<String,Object> map = new  HashMap<String,Object>();
 		
+		String id = (String) session.getAttribute("id");
 		
-		ajaxMap.put("result", "success");
+		System.out.println("반품:"+saleVO);
 		
+		map.put("id", id);
+		map.put("saleVO", saleVO);
+		saleService.registerReturn(map);
+		
+		return "/sale/register";
 		
 	}
 	

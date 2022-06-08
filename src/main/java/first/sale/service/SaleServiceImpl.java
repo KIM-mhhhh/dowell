@@ -1,5 +1,6 @@
 package first.sale.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,14 +57,25 @@ public class SaleServiceImpl implements SaleService{
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public void registerReturn(Map<String, Object> map) {
+	public void registerReturn(Map<String,Object> omap) {
 		
-	
 		TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition()); 
 		try {
-		saleMapper.registerReturnMt((SaleVO) map.get("mtSaleVO"));
-		saleMapper.registerReturnDt(map);
-		saleMapper.plusStock((SaleVO) map.get("mtSaleVO"));
+			
+			Map<String, Object> map = new HashMap<String,Object>();
+			SaleVO mtSaleVO = saleMapper.getRet((SaleVO) omap.get("saleVO"));
+			mtSaleVO.setLst_upd_id((String) omap.get("id"));
+			System.out.println("반품mt:"+mtSaleVO);
+			List<SaleVO> saleList = saleMapper.getDetailSale((SaleVO) omap.get("saleVO"));
+			System.out.println("반품dtlist:"+saleList);
+			
+			map.put("saleVO", mtSaleVO);
+			map.put("list", saleList);
+			map.put("id",(String) omap.get("id"));
+			
+			saleMapper.registerReturnMt(mtSaleVO);
+			saleMapper.registerReturnDt(map);
+			saleMapper.plusStock(map);
 		}catch (RuntimeException e) { 
 			transactionManager.rollback(status); 
 			throw e; 

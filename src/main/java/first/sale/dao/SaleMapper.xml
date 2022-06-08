@@ -21,7 +21,7 @@
 	
 	<!-- 고객판매관리 검색 -->
 	<select id="getSaleList" resultType="SaleVO" parameterType="map">
-		SELECT s.SAL_DT
+		SELECT (SUBSTR(s.SAL_DT,1,4) || '-' || SUBSTR(s.SAL_DT,5,2) || '-' || SUBSTR(s.SAL_DT,7,2))AS SAL_DT
 			   ,s.CUST_NO
 			   ,c.CUST_NM
 			   ,s.PRT_CD
@@ -33,19 +33,24 @@
 			   ,s.CRD_STLM_AMT
 			   ,s.PNT_STLM_AMT
 			   ,s.FST_USER_ID
+			   ,m.user_nm
 			   ,TO_CHAR(s.FST_REG_DT,'yyyy-MM-dd') AS sFst_reg_dt	
 		FROM CS_SAL01_MT s
 		LEFT OUTER JOIN CS_CUST01_MT c ON s.cust_no=c.cust_no
+		LEFT OUTER JOIN MA_USER_MT m ON s.fst_user_id=m.USER_ID
 		WHERE s.PRT_CD=#{prt_cd}
 			AND s.SAL_DT BETWEEN #{from} AND #{to}
 			<if test="cust_no != null and cust_no !=''">																									<!--회원명 x / 휴대폰번호 o면 휴대폰번호 조건만 적용  -->	
   			 AND s.CUST_NO=#{cust_no}
   			</if>
+  		ORDER BY SAL_DT DESC, s.SAL_NO DESC
 	</select>
 	
 	<!-- 판매상세조회 -->
 	<select id="getDetailSale" resultType="SaleVO" parameterType="SaleVO">
 		SELECT d.PRD_CD
+			   ,d.prt_cd
+			   ,d.prd_csmr_upr
 			   ,p.PRD_NM
 			   ,d.SAL_QTY
 			   ,d.SAL_AMT
@@ -175,9 +180,33 @@
 		</foreach>
 	</update> 
 	
+	<!-- 반품항목 가져오기  -->
+	<select id="getRet" resultType="SaleVO" parameterType="SaleVO">
+		SELECT PRT_CD
+			  ,SAL_DT
+			  ,SAL_NO
+			  ,SAL_TP_CD
+			  ,TOT_SAL_QTY
+			  ,TOT_SAL_AMT
+			  ,TOT_VOS_AMT
+			  ,TOT_VAT_AMT
+			  ,CSH_STLM_AMT
+			  ,CRD_STLM_AMT
+			  ,PNT_STLM_AMT
+			  ,CUST_NO
+			  ,CRD_NO
+			  ,VLD_YM
+			  ,CRD_CO_CD
+			  ,FST_REG_DT
+			  ,FST_USER_ID
+			  ,LST_UPD_DT
+			  ,LST_UPD_ID 
+		FROM CS_SAL01_MT
+		WHERE PRT_CD=#{prt_cd} and sal_dt=#{sal_dt} and sal_no=#{sal_no}	
+	</select> 
 	
 	<!--반품처리 SAL_MT -->
-	<!-- <insert id="registerReturnMt" parameterType="SaleVO">
+	 <insert id="registerReturnMt" parameterType="SaleVO">
 		INSERT INTO CS_SAL01_MT 
 			(PRT_CD
 			,SAL_DT
@@ -203,8 +232,11 @@
 			,ORG_SAL_NO)
 		VALUES(
 			#{prt_cd}
-			,SYSDATE
-			,#{sal_no}
+			,TO_CHAR(SYSDATE,'yyyyMMdd')
+			,(SELECT NVL(MAX(SAL_NO),0)+1
+			  FROM CS_SAL01_MT
+			  WHERE PRT_CD = #{prt_cd} 
+			  	AND SAL_DT = TO_CHAR(SYSDATE,'yyyyMMdd'))
 			,'RTN'
 			,#{tot_sal_qty}
 			,#{tot_sal_amt}
@@ -218,61 +250,73 @@
 			,#{vld_ym}
 			,#{crd_co_cd}
 			,SYSDATE
-			,#{fst_user_id}
+			,#{lst_upd_id}
 			,SYSDATE
 			,#{lst_upd_id}
-			,#{org_shop_cd}
-			,#{org_sal_dt}
-			,#{org_sal_no}
+			,#{prt_cd}
+			,#{sal_dt}
+			,#{sal_no}
 		)
-	</insert> -->
+	</insert> 
 	
 	<!--반품처리 SAL_DT -->
-<!-- 	<insert id="registerReturnMt" parameterType="map">
-		INSERT INTO CS_SAL01_DT
-			(PRT_CD
-			,SAL_DT
-			,SAL_NO
-			,SAL_SEQ
-			,PRD_CD
-			,PRD_CSMR_UPR
-			,SAL_QTY
-			,SAL_AMT
-			,SAL_VOS_AMT
-			,SAL_VAT_AMT
-			,FST_REG_DT
-			,FST_USER_ID
-			,LST_UPD_DT
-			,LST_UPD_ID)
-		VALUES (
-			,#{prt_cd}
-			,SYSDATE
-			,#{sal_no}
-			,
-			,#{prd_cd}
-			,#{prd_csmr_upr}
-			,#{sal_qty}
-			,#{sal_amt}
-			,#{sal_vos_amt}
-			,#{sal_vat_amt}
-			,SYSDATE
-			,#{fst_user_id}
-			,SYSDATE
-			,#{lst_upd_id}
-		)
-	</insert> -->
+ 	<insert id="registerReturnDt" parameterType="map">
+		<foreach collection="list" item="item" index="index" separator="" open="INSERT ALL" close="SELECT * FROM DUAL"  >
+			INTO CS_SAL01_DT
+				(PRT_CD
+				,SAL_DT
+				,SAL_NO
+				,SAL_SEQ
+				,PRD_CD
+				,PRD_CSMR_UPR
+				,SAL_QTY
+				,SAL_AMT
+				,SAL_VOS_AMT
+				,SAL_VAT_AMT
+				,FST_REG_DT
+				,FST_USER_ID
+				,LST_UPD_DT
+				,LST_UPD_ID)
+			VALUES (
+				#{item.prt_cd}
+				,TO_CHAR(SYSDATE,'yyyyMMdd')
+				,(SELECT NVL(MAX(SAL_NO),0)
+				  FROM CS_SAL01_MT
+				  WHERE PRT_CD = #{item.prt_cd} 
+				  	AND SAL_DT = TO_CHAR(SYSDATE,'yyyyMMdd'))
+				,(SELECT NVL(MAX(SAL_SEQ),0)+1
+				  FROM CS_SAL01_DT
+				  WHERE PRT_CD = #{item.prt_cd}
+				  	AND SAL_DT = TO_CHAR(SYSDATE,'yyyyMMdd')
+				  	AND SAL_NO = (SELECT NVL(MAX(SAL_NO),0)
+			  					  FROM CS_SAL01_DT 
+			  					  WHERE PRT_CD = #{item.prt_cd} 
+			  					    AND SAL_DT = TO_CHAR(SYSDATE,'yyyyMMdd'))+1)+#{index}
+				,#{item.prd_cd}
+				,#{item.prd_csmr_upr}
+				,#{item.sal_qty}
+				,#{item.sal_amt}
+				,#{item.sal_vos_amt}
+				,#{item.sal_vat_amt}
+				,SYSDATE
+				,#{id}
+				,SYSDATE
+				,#{id}
+			)
+		</foreach>
+	</insert> 
 	
 	
 	<!--반품 시 재고 + 처리  -->
-<!-- 	<update id="plusStock" parameterType="java.util.Map">
+ 	<update id="plusStock" parameterType="java.util.Map">
 		<foreach collection="list" item="item" index="index" separator=";" open="DECLARE BEGIN" close="; END;"  >
 			UPDATE SD_IVCO01_MT 
 			SET IVCO_QTY=IVCO_QTY+#{item.sal_qty}
 				,LST_UPD_DT=SYSDATE
-				,LST_UPD_ID=#{item.lst_upd_id}
+				,LST_UPD_ID=#{id}
 			WHERE PRT_CD=#{item.prt_cd}
 				AND PRD_CD=#{item.prd_cd}
 		</foreach>	
-	</update> -->
+	</update> 
 	
 </mapper>

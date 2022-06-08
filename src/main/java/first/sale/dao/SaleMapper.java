@@ -25,10 +25,15 @@ public interface SaleMapper {
 	//판매 시 재고 삭감
 	public void minusStock(Map<String,Object> map);
 	
+	//반품할 내역 가져오기(mt)
+	public SaleVO getRet(SaleVO saleVO);
+	//반품할 내역 가져오기(dt)
+	public List<SaleVO> getRetDt(SaleVO saleVO);
+	
 	//반품 등록(mt)
 	public void registerReturnMt(SaleVO saleVO);
 	//반품 등록(dt)
 	public void registerReturnDt(Map<String,Object> map);
 	//반품 시 재고 +
-	public void plusStock(SaleVO saleVO);
+	public void plusStock(Map<String,Object> map);
 }
