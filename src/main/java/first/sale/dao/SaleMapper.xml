@@ -35,6 +35,9 @@
 			   ,s.FST_USER_ID
 			   ,m.user_nm
 			   ,TO_CHAR(s.FST_REG_DT,'yyyy-MM-dd') AS sFst_reg_dt	
+			   ,s.ORG_SHOP_CD
+			   ,s.ORG_SAL_DT
+			   ,s.ORG_SAL_NO
 		FROM CS_SAL01_MT s
 		LEFT OUTER JOIN CS_CUST01_MT c ON s.cust_no=c.cust_no
 		LEFT OUTER JOIN MA_USER_MT m ON s.fst_user_id=m.USER_ID

@@ -14,6 +14,7 @@
 	$(document).ready(function(){
 		var cust_no = "";
 		var cust_nm = "";
+		var cust_ss_cd = "";
 		
 		//리스트 기본 값 초기화
 		function init(){
@@ -27,6 +28,7 @@
 		    	  $(this).prop('checked',true);
 			    	cust_no = $(this).parent().parent().find('td').find('span').eq(0).text();				//변수에 체크한 값의 항목 할당.
 			    	cust_nm = $(this).parent().parent().find('td').find('span').eq(1).text();
+			    	cust_ss_cd = $(this).parent().parent().find('td').find('span').eq(3).text();
 		      }
 		});	
 		//창 종료
@@ -42,8 +44,8 @@
 			}else{																			//체크한 값을 본 페이지의 각 부분에 할당.
 
 				$(opener.document).find('#sCust_no').val(cust_no);
-
 		 		$(opener.document).find('#sCust_nm').val(cust_nm);
+		 		$(opener.document).find('#sCust_ss_cd').val(cust_ss_cd);
 					self.close();
 			}
 			
@@ -53,9 +55,10 @@
 		$(document).on('dblclick','.checkTr',function(){										//행 더블클릭 시  더블클릭한 행의 값 변수에 할당하고 본문에 적용
 			var custNo = $(this).find('td').find('span').eq(0).text();
 			var custNm = $(this).find('td').find('span').eq(1).text();
+			var custSsCd = $(this).find('td').find('span').eq(3).text();
 			$(opener.document).find('#sCust_no').val(custNo);
-/* 	 		 $(opener.document).find('#cust_nm').val(custNm); */
-	 		$(opener.document).find('#sCust_nm').val(custNm);
+ 	 		$(opener.document).find('#sCust_nm').val(custNm); 
+	 		$(opener.document).find('#sCust_ss_cd').val(custSsCd);
 				self.close();
 		});
 
@@ -94,7 +97,7 @@
 							output +='<td><span>'+item.cust_no+'</span></td>';
 							output +='<td><span>'+item.cust_nm+'</span></td>';
 							output += '<td><span>'+item.mbl_no+'</span></td>';
-							output += '<td>'+item.cust_ss_cd+'</td>';
+							output += '<td><span>'+item.cust_ss_cd+'</span></td>';
 							output += '</tr>';
 					
 					});

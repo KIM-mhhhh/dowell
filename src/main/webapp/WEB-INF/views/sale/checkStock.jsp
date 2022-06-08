@@ -18,6 +18,15 @@
 		function init(){
 			$('#listTbody').empty();
 		}
+		addComm();
+		//가격에 , 넣기
+		function addComm(){
+			$('.prd_csmr_upr').each(function(){
+				var org = $(this).text().toLocaleString();
+
+				$(this).text($(this).text().toLocaleString());
+			});
+		}
 		
 		//체크박스 x
 		function nonCheck(thing,value){
@@ -31,7 +40,7 @@
 		}
 
 		
-		//검색해서 재고 가져오기
+		//재고목록 가져오기
 		$('#searchBtn').click(function(event){
 				var prt_keyword = $('#prt_keyword').val();
 				var prd_keyword = $('#prd_keyword').val();
@@ -68,6 +77,7 @@
 						nonCheck($('.prd_csmr_upr'),'0');
 						$('.C').attr('disabled',true);
 						$('.C').parent().parent().css('backgroundColor','#fcf5a2');
+						addComm();
 					},
 					error:function(){
 						alert('네트워크 오류 발생');

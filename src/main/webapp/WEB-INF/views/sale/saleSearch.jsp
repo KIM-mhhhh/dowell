@@ -111,8 +111,24 @@
 		
 		//상세페이지 이동		
  		$(document).on('click','.detBtn',function(){
- 			
  			var num = $(this).attr('num');
+ 			
+ 			//이미 반품한 제품인지 체크
+ 			$('.RTN').each(function(){
+ 				var rNum = $(this).attr('num');
+ 				var org_shop = $('#org_shop_cd'+rNum).text();
+ 	 			var org_no = $('#org_sal_no'+rNum).text();
+ 	 			var org_dt = $('#org_sal_dt'+rNum).text();
+ 	 			
+ 	 			if(org_shop == $('#sPrt_cd'+num).text() ){
+ 	 				if(org_no == $('#sal_no'+num).text() ){
+ 						if(org_dt == $('#sal_dt'+num).text().replace(/\-/g,'')){
+ 							$('#org_shop_cd'+num).text('already');
+ 						}
+ 	 	 			}
+ 	 			} 
+				
+ 			});
  			
  			var sal_dt = $('#saleTr'+num).children().eq(0).text().replace(/\-/g,'');
  			var cust_no = $('#saleTr'+num).children().eq(1).text();
@@ -125,6 +141,7 @@
  			var pnt_Stlm_amt = $('#saleTr'+num).children().eq(8).text();
  			var prt_cd = $('#saleTr'+num).children().eq(11).text();
  			var sal_tp_cd = $('#saleTr'+num).children().eq(12).text();
+ 			var org_shop_cd = $('#saleTr'+num).children().eq(13).text();
  			
  			var info={
  				sal_dt:sal_dt,
@@ -137,7 +154,8 @@
  				crd_stlm_amt:crd_stlm_amt,
  				pnt_Stlm_amt:pnt_Stlm_amt,
  				prt_cd:prt_cd,
- 				sal_tp_cd:sal_tp_cd
+ 				sal_tp_cd:sal_tp_cd,
+ 				org_shop_cd: org_shop_cd
  			}
  			
  			openPopulPost('${pageContext.request.contextPath}/sale/saleDetailPopup.do', info);	
@@ -181,10 +199,10 @@
 					}else if(count>0){																			//list 결과값이 있는 경우 table에 append해서 적용.
 						$(param.saleList).each(function(index,item) {
 							output += '<tr id="saleTr'+index+1+'">';
-							output += '<td>'+item.sal_dt+'</td>';
+							output += '<td id="sal_dt'+index+1+'">'+item.sal_dt+'</td>';
 							output += '<td>'+item.cust_no+'</td>';
 							output += '<td>'+item.cust_nm+'</td>';
-							output += '<td>'+item.sal_no+'<input type="button" class="detBtn" num="'+index+1+'" value="상세"></td>';
+							output += '<td id="sal_no'+index+1+'">'+item.sal_no+'<input type="button" class="detBtn" num="'+index+1+'" value="상세"></td>';
 							output += '<td class="'+item.sal_tp_cd+' qty" num="'+index+1+'">'+item.tot_sal_qty+'</td>';
 							output += '<td class="'+item.sal_tp_cd+' amt" num="'+index+1+'">'+item.tot_sal_amt+'</td>';
 							output += '<td class="cash" num="'+index+1+'">'+item.csh_stlm_amt+'</td>';
@@ -192,8 +210,11 @@
 							output += '<td class="pnt" num="'+index+1+'">'+item.pnt_stlm_amt+'</td>';
 							output += '<td>'+item.user_nm+'</td>';
 							output += '<td>'+item.sFst_reg_dt+'</td>';
-							output += '<td style="display:none">'+item.prt_cd+'</td>';
+							output += '<td style="display:none" id="sPrt_cd'+index+1+'" >'+item.prt_cd+'</td>';
 							output += '<td style="display:none" id="sal_tp_cd'+index+1+'">'+item.sal_tp_cd+'</td>';
+							output += '<td style="display:none" id="org_shop_cd'+index+1+'">'+item.org_shop_cd+'</td>';
+							output += '<td style="display:none" id="org_sal_dt'+index+1+'">'+item.org_sal_dt+'</td>';
+							output += '<td style="display:none" id="org_sal_no'+index+1+'">'+item.org_sal_no+'</td>';
 							output += '</tr>';
 					});
 				}else{
@@ -305,10 +326,10 @@
 				</c:if>
 					<c:forEach var="sale" items="${saleList}" varStatus="status">
 					<tr id="saleTr${status.index }">
-						<td>${sale.sal_dt}</td>
+						<td id="sal_dt${status.index }">${sale.sal_dt}</td>
 						<td>${sale.cust_no}</td>
 						<td>${sale.cust_nm}</td>
-						<td>${sale.sal_no}<input type="button" class="detBtn" num=${status.index } value="상세"></td>
+						<td id="sal_no${status.index }">${sale.sal_no}<input type="button" class="detBtn" num=${status.index } value="상세"></td>
 						<td class="${sale.sal_tp_cd} qty" num=${status.index }>${sale.tot_sal_qty}</td>
 						<td class="${sale.sal_tp_cd} amt" num=${status.index }>${sale.tot_sal_amt}</td>
 						<td class="cash" num=${status.index }>${sale.csh_stlm_amt}</td>
@@ -316,8 +337,11 @@
 						<td class="pnt" num=${status.index }>${sale.pnt_stlm_amt}</td>
 						<td>${sale.user_nm}</td>
 						<td>${sale.sFst_reg_dt}</td>
-						<td style="display:none">${sale.prt_cd}</td>
+						<td style="display:none" id="sPrt_cd${status.index }">${sale.prt_cd}</td>
 						<td style="display:none" id="sal_tp_cd${status.index }">${sale.sal_tp_cd}</td>
+						<td style="display:none" id="org_shop_cd${status.index }">${sale.org_shop_cd}</td>
+						<td style="display:none" id="org_sal_dt${status.index }">${sale.org_sal_dt}</td>
+						<td style="display:none" id="org_sal_no${status.index }">${sale.org_sal_no}</td>
 					</tr>
 					</c:forEach>
 			</tbody>

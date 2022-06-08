@@ -50,17 +50,19 @@
 			// 합계 계산(체크된 것만)
 			var sum = 0;
 			var aSum = 0;
-			
-			$('.sal_qty').each(function(){ //클래스가 cash인 항목의 갯수만큼 진행
-				sum += Number($(this).val()); 
-			});  
-			$('#qtySum').text(sum.toLocaleString());				// ,넣어준다
-			
-			$('.sal_amt').each(function(){ //클래스가 cash인 항목의 갯수만큼 진행
-				aSum += Number($(this).val()); 
-			});  
-			$('#amtSum').text(aSum.toLocaleString());				// ,넣어준다
-					  
+			 $('.checkBox').each(function(){
+				 if ( $(this).is(':checked') ){
+
+					 var num = $(this).attr('num');
+					 //총 구매갯수
+					 sum += Number($('#sal_qty'+num).val());
+					 
+				 	//총 구매액
+					 aSum += Number($('#sal_amt'+num).val()); 
+				 }
+			 });
+			 $('#qtySum').text(sum);
+			 $('#amtSum').text(aSum.toLocaleString());				  
 		} 
 		
 		//창 종료
@@ -139,29 +141,70 @@
 						alert('네트워크 오류 발생');
 					}
 				});		//ajax끝
-
             }
 		}) ;
+		//고객이 해지고객이면 판매할 수 없음
+		function checkCustCd(){
+			alert('실행');
+			/* if($('#sCust_ss_cd').val() == '해지'){
+				alert('해지고객에게는 판매할 수 없습니다.');
+				$('#sCust_no').val('');
+				$('#sCust_nm').val('');
+			}else{
+				alert('아님');
+			} */
+		}
+		/* $('#sCust_ss_cd').change(function(){
+			alert('변화');
+			 if($('#sCust_ss_cd').val().equals('해지')){
+				alert('해지고객에게는 판매할 수 없습니다.');
+				$('#sCust_no').val('');
+				$('#sCust_nm').val('');
+			} 
+		}); */
 		
-		//카드 유효일자 6자리 체크, 숫자 정규식 체크
-		$('#vld_ym').change(function(){
+		//숫자 자릿수, 정규식 체크 함수
+		function checkExp(thing,size){
 			const regExp = /[0-9]/g;
-			if(regExp.test($(this).val())){
-				if($(this).val().length !=6){
-					alert('6자리의 숫자를 입력하세요.');
-					$(this).val('').focus();
+			if(regExp.test(thing.val())){
+				if(thing.val().length !=size){
+					alert(size+'자리의 숫자를 입력하세요.');
+					thing.val('').focus();
 				}
 			}else{
 				alert('숫자를 입력하세요.');
-				$(this).val('').focus();
+				thing.val('').focus();
 			}
-		});
+		}
 		
-		//판매금액 계산
+		//카드 유효일자 6자리 체크, 숫자 정규식 체크
+		$('#vld_ym').change(function(){
+			checkExp($('#vld_ym'),6);
+		});
+		//카드번호 체크
+		$('#crd_no1').change(function(){
+			checkExp($('#crd_no1'),4);
+		});
+		$('#crd_no2').change(function(){
+			checkExp($('#crd_no2'),4);
+		});
+		$('#crd_no3').change(function(){
+			checkExp($('#crd_no3'),4);
+		});
+		$('#crd_no4').change(function(){
+			checkExp($('#crd_no4'),4);
+		});
+
+		//판매금액 제한
 		$(document).on('change','.sal_qty',function(){
 			var num = $(this).attr('num');
+			const regExp = /[0-9]/g;
 			if($(this).val() <=0){
 				alert('1이상의 갯수를 입력하세요');
+				$(this).val('').focus();
+				return false;
+			}else if(regExp.test($('#sal_qty'+num).val()) == false){
+				alert('숫자를 입력하세요');
 				$(this).val('').focus();
 				return false;
 			}else if(Number($(this).val())>Number($('#ivco_qty'+num).val())){
@@ -173,11 +216,11 @@
 			var prd_csmr_upr = $('#prd_csmr_upr'+num).val();
 			var cost = sal_qty * prd_csmr_upr;
 			$('#sal_amt'+num).val(cost);
-			getSum();
 		});
 		
 		//value 비어잇으면 체크 불가능
-		$(document).on('click','.checkBox',function(){													
+		$(document).on('click','.checkBox',function(){	
+			
 			var num = $(this).attr('num');
 			if($(this).is(':checked')){
 				$(this).prop('checked',false);
@@ -187,9 +230,10 @@
 					alert('판매수량을 입력하세요.');
 				}else{
 					$(this).prop('checked',true);
+					getSum();
 				}
-			}else{
-				
+			}else{										//체크 풀때
+				getSum();
 			}
 		});	
 		
@@ -203,7 +247,7 @@
  			//현금과 카드 둘 다 비어있으면 제출 불가
  			if($('#csh_stlm_amt').val().length<=0 && $('#crd_stlm_amt').val().length<=0){
  				alert('금액을 입력하세요');
- //				$('#csh_stlm_amt').val().focus();
+// 				$('#csh_stlm_amt').val().focus();
  				return false;
  			}else if(Number($('#csh_stlm_amt').val())+Number($('#crd_stlm_amt').val()) != $('#amtSum').text().replace(/\,/g,'')){	//현금 + 카드와 총 구매금액이 다르면 제출 불가
  				alert('결제금액과 판매금액이 동일하지 않습니다.');
@@ -314,9 +358,10 @@
 			</li>
 			<li>
 				<label>고객번호</label>
-				<input type="text" name="cust_no" id="sCust_no">
+				<input type="text" name="cust_no" id="sCust_no" onchange="checkCustCd()">
 				<img id="searchCust" class="searchIcon" alt="고객조회" src="${pageContext.request.contextPath}/images/search.png">
 				<input type="text" name="cust_nm" id="sCust_nm">
+				<input type="hidden" id="sCust_ss_cd" >
 			</li>
 		</ul>
 	

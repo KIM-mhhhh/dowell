@@ -138,7 +138,7 @@
 
 <div id="resultBtn">
 		<input type="button" id="closeBtn" value="닫기">
-		<c:if test="${saleVO.sal_tp_cd eq 'SAL' and prt_dt_cd eq '2'}">
+		<c:if test="${saleVO.sal_tp_cd eq 'SAL' and prt_dt_cd eq '2' and saleVO.org_shop_cd eq ''}">
 			<input type="submit" id="refundBtn" value="반품">
 		</c:if>
 </div>
