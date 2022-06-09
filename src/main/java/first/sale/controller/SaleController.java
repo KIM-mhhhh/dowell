@@ -208,7 +208,7 @@ public class SaleController {
 			 System.out.println(saleList.size());
 			 //mt에 입력할 vo
 			 SaleVO mtSaleVO = saleList.get(0);
-			 System.out.println("mtVO:" + mtSaleVO);
+			 System.out.println("등록mtVO:" + mtSaleVO);
 			 Map<String,Object> map = new  HashMap<String,Object>();
 			 map.put("list", saleList);
 			 map.put("mtSaleVO", mtSaleVO);

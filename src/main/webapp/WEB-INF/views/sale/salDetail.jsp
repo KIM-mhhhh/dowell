@@ -10,19 +10,61 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
-		
+		addComm();
 		getSum();
+		
 		//창 종료
 		$('#closeBtn').click(function(){
 			self.close();
 		});
 		//반품 처리
 		$('#refundBtn').click(function(){
+			
 			var yn = confirm("반품하시겠습니까?");
 				if(yn==false){
 					return false;
+				}else{
+					popComm();
 				}
 		});
+		//가격에 , 넣기
+		function addComm(){
+			$('.vos').each(function(){
+				var org = Number($(this).text());
+				$(this).text(org.toLocaleString());
+			});
+			$('.vat').each(function(){
+				var org = Number($(this).text());
+				$(this).text(org.toLocaleString());
+			});
+			$('.amt').each(function(){
+				var org = Number($(this).text());
+				$(this).text(org.toLocaleString());
+			});
+			$('#csh_stlm_amt').val(Number($('#csh_stlm_amt').val()).toLocaleString());
+			$('#crd_stlm_amt').val(Number($('#crd_stlm_amt').val()).toLocaleString());
+			$('#tot_sal_amt').val(Number($('#tot_sal_amt').val()).toLocaleString());
+		}
+		
+		//가격에 , 빼기
+		function popComm(){
+/* 			$('.vos').each(function(){
+				var org = $(this).text().replace(/\,/g,'');
+				$(this).text(org);
+			});
+			$('.vat').each(function(){
+				var org = $(this).text().replace(/\,/g,'');
+				$(this).text(org);
+			});
+			$('.amt').each(function(){
+				var org = $(this).text().replace(/\,/g,'');
+				$(this).text(org);
+			}); */
+			$('#csh_stlm_amt').val($('#csh_stlm_amt').val().replace(/\,/g,''));
+			$('#crd_stlm_amt').val($('#crd_stlm_amt').val().replace(/\,/g,''));
+			$('#tot_sal_amt').val($('#tot_sal_amt').val().replace(/\,/g,''));
+		}
+		
 		//합계
 		function getSum() {
 			// 합계 계산
@@ -40,20 +82,20 @@
 			//판매금액 합계
 			$('.amt').each(function(){ 
 				var num = $(this).attr('num');
-				amtSum += Number($(this).text());
+				amtSum += Number($(this).text().replace(/\,/g,''));
 			});	  
 			$('#amtSum').text(amtSum.toLocaleString());				// ,넣어준다
 			$('#qtySum').text(qtySum);	
 			//공급가 합계
 			$('.vos').each(function(){ 
 				var num = $(this).attr('num');
-				vosSum += Number($(this).text());
+				vosSum += Number($(this).text().replace(/\,/g,''));
 			});	  
 			$('#vosSum').text(vosSum.toLocaleString());				// ,넣어준다
 			//부가세 합계
 			$('.vat').each(function(){ 
 				var num = $(this).attr('num');
-				vatSum += Number($(this).text());
+				vatSum += Number($(this).text().replace(/\,/g,''));
 			});	  
 			$('#vatSum').text(vatSum.toLocaleString());				// ,넣어준다
 		}	
@@ -82,15 +124,15 @@
 			</li>
 			<li>
 				<label>판매금액</label>
-				<input type="text" name="tot_sal_amt" value="${saleVO.tot_sal_amt}">
+				<input type="text" name="tot_sal_amt" id="tot_sal_amt" value="${saleVO.tot_sal_amt}">
 			</li>
 			<li>
 				<label>현금</label>
-				<input type="text" name="csh_stlm_amt" value="${saleVO.csh_stlm_amt}">
+				<input type="text" name="csh_stlm_amt" id="csh_stlm_amt" value="${saleVO.csh_stlm_amt}">
 			</li>
 			<li>
-				<label>현금</label>
-				<input type="text" name="crd_stlm_amt" value="${saleVO.crd_stlm_amt}">
+				<label>카드</label>
+				<input type="text" name="crd_stlm_amt" id="crd_stlm_amt" value="${saleVO.crd_stlm_amt}">
 			</li>
 		</ul>
 	

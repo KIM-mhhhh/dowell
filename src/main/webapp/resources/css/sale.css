@@ -133,7 +133,7 @@ th, td {
 	background-color:white;
 	border : 3px double black;
 }
-#infoForm > ul{
+ul{
 	list-style:none;
 }
 #infoForm ul li{
@@ -182,6 +182,16 @@ th, td {
 	margin-right:50px;
 }
 
+input[type=button],input[type=submit]{
+	background-color : white;
+	border : 2px solid black;
+	border-radius : 8%;
+	margin-left : 10px;
+	margin-top : 10px;
+	font-weight : bold;
+	width:40px;
+	height:28px;
+}
 
 
 

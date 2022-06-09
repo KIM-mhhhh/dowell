@@ -46,7 +46,7 @@
 			window.open('${pageContext.request.contextPath}/sale/openStock.do?num='+num+'','stock','_blank','width=700,height=900');
 		});
 		
- 		function getSum() {
+ 		$.getSum = function(){
 			// 합계 계산(체크된 것만)
 			var sum = 0;
 			var aSum = 0;
@@ -58,7 +58,7 @@
 					 sum += Number($('#sal_qty'+num).val());
 					 
 				 	//총 구매액
-					 aSum += Number($('#sal_amt'+num).val()); 
+					 aSum += Number($('#sal_amt'+num).val().replace(/\,/g,'')); 
 				 }
 			 });
 			 $('#qtySum').text(sum);
@@ -76,13 +76,13 @@
 
 			//새 행 추가
 			$('#salTbody').append(
-			"<tr><td><input type='checkbox' num='"+seq+"' id='checkBox' class='checkBox'></td>"
+			"<tr><td><input type='checkbox' num='"+seq+"' id='checkBox"+seq+"' class='checkBox'></td>"
 			+ "<td>"+seq+"</td>"
 			+ "<td><input type='text' class='prd_cd' num='"+seq+"'  name='prd_cd' id='prd_cd"+seq+"'><img id='stockBtn' num='"+seq+"' class='searchIcon stockBtn' alt='재고검색' src='${pageContext.request.contextPath}/images/search.png'></td>"
 			+ "<td><input type='text' name='prd_nm' readonly id='prd_nm"+seq+"'></td>"
 			+ "<td><input type='text' name='ivco_qty' readonly id='ivco_qty"+seq+"'></td>"
 			+ "<td><input type='text' name='sal_qty' class='sal_qty' num='"+seq+"' id='sal_qty"+seq+"'></td>"
-			+ "<td><input type='text' name='prd_csmr_upr' readonly id='prd_csmr_upr"+seq+"'></td>"
+			+ "<td><input type='text' class='prd_csmr_upr' name='prd_csmr_upr' readonly id='prd_csmr_upr"+seq+"'></td>"
 			+ "<td><input type='text' class='sal_amt' readonly name='sal_amt' id='sal_amt"+seq+"'></td></tr>"
 			)
 		});
@@ -92,7 +92,7 @@
 				return false;
 			}
 			$('#salTbody tr:last').remove();
-			getSum();
+			$.getSum();
 		});
 		//상품코드를 입력하고 엔터치면 ajax로 정보 불러와서 해당 행에 입력>> 미래테그로.
 		$(document).on('keydown','.prd_cd',function(key){
@@ -122,9 +122,20 @@
 								alert('상품상태가 정상이 아닙니다.');
 								$('#prd_cd'+num).val('').focus();
 							}else{
-								$('#prd_nm'+num).val(param.stockList[0].prd_nm);
-								$('#ivco_qty'+num).val(param.stockList[0].ivco_qty);
-								$('#prd_csmr_upr'+num).val(param.stockList[0].prd_csmr_upr);
+								//동일한 상품이 이미 등록되어 있는지 확인
+								var leng = $('#regTable >#salTbody tr').length;
+								for(var i=1;i<=leng;i++){
+									if($('#prd_cd'+i).val() == param.stockList[0].prd_cd){
+										alert('이미 선택된 상품입니다.');
+										$('#prd_cd'+num).val('').focus();
+										return false;
+									}else{
+										$('#prd_nm'+num).val(param.stockList[0].prd_nm);
+										$('#ivco_qty'+num).val(param.stockList[0].ivco_qty);
+										$('#prd_csmr_upr'+num).val(param.stockList[0].prd_csmr_upr);
+									}
+								}
+
 							}
 						}else{				
 							//팝업창 오픈
@@ -143,25 +154,20 @@
 				});		//ajax끝
             }
 		}) ;
-		//고객이 해지고객이면 판매할 수 없음
-		function checkCustCd(){
-			alert('실행');
-			/* if($('#sCust_ss_cd').val() == '해지'){
-				alert('해지고객에게는 판매할 수 없습니다.');
-				$('#sCust_no').val('');
-				$('#sCust_nm').val('');
-			}else{
-				alert('아님');
-			} */
-		}
-		/* $('#sCust_ss_cd').change(function(){
-			alert('변화');
-			 if($('#sCust_ss_cd').val().equals('해지')){
-				alert('해지고객에게는 판매할 수 없습니다.');
-				$('#sCust_no').val('');
-				$('#sCust_nm').val('');
-			} 
-		}); */
+		//상품코드 keyin으로 값 지우거나 변경 시 값 초기화
+		$(document).on('change','.prd_cd',function(key){
+			var num = $(this).attr('num');
+			$('#checkBox'+num).prop('checked',false);
+			$('#prd_nm'+num).val('');
+			$('#ivco_qty'+num).val('');	
+			$('#sal_qty'+num).val('');	
+			$('#prd_csmr_upr'+num).val('');	
+			$('#sal_amt'+num).val('');	
+			$('#qtySum').text('');	
+			$('#amtSum').text('');	
+			
+		});
+		
 		
 		//숫자 자릿수, 정규식 체크 함수
 		function checkExp(thing,size){
@@ -213,14 +219,13 @@
 				return false;
 			}
 			var sal_qty = $(this).val();
-			var prd_csmr_upr = $('#prd_csmr_upr'+num).val();
+			var prd_csmr_upr = $('#prd_csmr_upr'+num).val().replace(/\,/g,'');
 			var cost = sal_qty * prd_csmr_upr;
-			$('#sal_amt'+num).val(cost);
+			$('#sal_amt'+num).val(cost.toLocaleString());
 		});
 		
 		//value 비어잇으면 체크 불가능
 		$(document).on('click','.checkBox',function(){	
-			
 			var num = $(this).attr('num');
 			if($(this).is(':checked')){
 				$(this).prop('checked',false);
@@ -230,12 +235,23 @@
 					alert('판매수량을 입력하세요.');
 				}else{
 					$(this).prop('checked',true);
-					getSum();
+					$.getSum();
 				}
 			}else{										//체크 풀때
-				getSum();
+				$.getSum();
 			}
 		});	
+		//가격에 , 빼기
+		function popComm(){
+			$('.prd_csmr_upr').each(function(){
+				var org = $(this).val().replace(/\,/g,'');
+				$(this).val(org);
+			});
+			$('.sal_amt').each(function(){
+				var org = $(this).val().replace(/\,/g,'');
+				$(this).val(org);
+			});
+		}
 		
 		//등록
  		$('#submitBtn').click(function(e){
@@ -244,6 +260,11 @@
  				alert('고객정보를 입력하세요.');
  				return false;
  			};
+ 			//해지고객에게는 판매등록하지 않음
+ 			if($('#sCust_nm').val()){
+ 				alert('해지고객의 구매는 등록할 수 없습니다.');
+ 				return false;
+ 			}
  			//현금과 카드 둘 다 비어있으면 제출 불가
  			if($('#csh_stlm_amt').val().length<=0 && $('#crd_stlm_amt').val().length<=0){
  				alert('금액을 입력하세요');
@@ -264,19 +285,19 @@
  					alert('카드회사를 선택하세요.');
  					$('#crd_co_cd').val().focus();
  					return false;
- 				}else if($('#crd_no1').val().length<=4){
+ 				}else if($('#crd_no1').val().length<4){
  					alert('카드번호를 입력하세요.');
  					$('#crd_no1').val().focus();
  					return false;
- 				}else if($('#crd_no2').val().length<=4){
+ 				}else if($('#crd_no2').val().length<4){
  					alert('카드번호를 모두 입력하세요.');
  					$('#crd_no2').val().focus();
  					return false;
- 				}else if($('#crd_no3').val().length<=4){
+ 				}else if($('#crd_no3').val().length<4){
  					alert('카드번호를 모두 입력하세요.');
  					$('#crd_no3').val().focus();
  					return false;
- 				}else if($('#crd_no4').val().length<=4){
+ 				}else if($('#crd_no4').val().length<4){
  					alert('카드번호를 모두 입력하세요.');
  					$('#crd_no4').val().focus();
  					return false;
@@ -287,6 +308,7 @@
  			$('#tot_sal_qty').val($('#qtySum').text());
  			$('#tot_sal_amt').val($('#amtSum').text().replace(/\,/g,''));
  			$('#crd_co_cd').val($('#sCrd_co_cd').val());
+ 			popComm();
  			
  			//체크된 것 없으면 제출 불가능.
  			if($('input[type=checkbox]:checked').length <=0){
@@ -429,7 +451,7 @@
 				<td><input type="text" name="prd_nm" id="prd_nm1" readonly></td>
 				<td><input type="text" name="ivco_qty" id="ivco_qty1" readonly></td>
 				<td><input type="text" name="sal_qty" id="sal_qty1" num="1" class="sal_qty"></td>
-				<td><input type="text" name="prd_csmr_upr" id="prd_csmr_upr1" readonly></td>
+				<td><input type="text" class="prd_csmr_upr" name="prd_csmr_upr" id="prd_csmr_upr1" readonly></td>
 				<td><input type="text" class="sal_amt" name="sal_amt" id="sal_amt1" readonly></td>
 			</tr>
 		</tbody>

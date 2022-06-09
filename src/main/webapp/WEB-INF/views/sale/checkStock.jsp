@@ -22,9 +22,9 @@
 		//가격에 , 넣기
 		function addComm(){
 			$('.prd_csmr_upr').each(function(){
-				var org = $(this).text().toLocaleString();
-
-				$(this).text($(this).text().toLocaleString());
+				var org = Number($(this).text());
+//				alert($(this).text());
+				$(this).text(org.toLocaleString());
 			});
 		}
 		
@@ -115,11 +115,26 @@
 				alert('값을 선택하세요');
 				return false;
 			}else{															//체크한 경우 본 페이지의 prt_cd와 prt_nm에 해당 값 넣고 닫음.
-				$(opener.document).find('#prd_cd'+rowNum).val(prd_cd);
-				$(opener.document).find('#prd_nm'+rowNum).val(prd_nm);
-				$(opener.document).find('#ivco_qty'+rowNum).val(ivco_qty);
-				$(opener.document).find('#prd_csmr_upr'+rowNum).val(prd_csmr_upr);
-					self.close();
+				var leng = $(opener.document).find('#regTable >#salTbody tr').length;
+				for(var i=1;i<=leng;i++){
+					if( $(opener.document).find('#prd_cd'+i).val() == prd_cd && (i!=rowNum)){
+//						alert('중복선택:' + prd_cd + '/비교 :'+ $(opener.document).find('#prd_cd'+i).val());
+						alert('이미 선택한 물품입니다.');
+						return false;
+					}
+				}
+//						alert('선택한것:' + prd_cd + '/비교 :'+ $(opener.document).find('#prd_cd'+i).val());
+						$(opener.document).find('#prd_cd'+rowNum).val(prd_cd);
+						$(opener.document).find('#prd_nm'+rowNum).val(prd_nm);
+						$(opener.document).find('#ivco_qty'+rowNum).val(ivco_qty);
+						$(opener.document).find('#sal_qty'+rowNum).val('');
+						$(opener.document).find('#sal_amt'+rowNum).val('');
+						$(opener.document).find('#prd_csmr_upr'+rowNum).val(prd_csmr_upr);
+						$(opener.document).find('#checkBox'+rowNum).prop('checked',false);
+						opener.parent.$.getSum();
+							self.close();
+					
+				
 			}
 		  });
 		
@@ -170,9 +185,5 @@
 	<input type="button" id="submitBtn" value="적용">
 </div>
 </body>
-<script type="text/javascript">
-	$(document).ready(function(){
-		$(opener.document).openPrdPop = this;
-	});
-</script>
+
 </html>

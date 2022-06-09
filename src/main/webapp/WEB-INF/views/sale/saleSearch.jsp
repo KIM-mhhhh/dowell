@@ -16,6 +16,7 @@
 	$(document).ready(function(){
 		//반품인 경우 빨간색 처리
 		$('.RTN').css('color','red');
+		addComm();
 		
 		//본사는 매장 검색 가능. 매장인경우 불가능. 
 		if(${prt_dt_cd} =='2'){
@@ -26,6 +27,27 @@
 		function init(){
 			$('#saleTbody').empty();
 		}
+		
+		//가격에 , 넣기
+		function addComm(){
+			$('.amt').each(function(){
+				var org = Number($(this).text());
+				$(this).text(org.toLocaleString());
+			});
+			$('.cash').each(function(){
+				var org = Number($(this).text());
+				$(this).text(org.toLocaleString());
+			});
+			$('.card').each(function(){
+				var org = Number($(this).text());
+				$(this).text(org.toLocaleString());
+			});
+			$('.pnt').each(function(){
+				var org = Number($(this).text());
+				$(this).text(org.toLocaleString());
+			});
+		}
+		
 		getSum();
 		//합계
  		function getSum() {
@@ -51,9 +73,9 @@
 			$('.amt').each(function(){ 
 				var num = $(this).attr('num');
 				if($('#sal_tp_cd'+num).text() == 'SAL'){
-					amtSum += Number($(this).text());
+					amtSum += Number($(this).text().replace(/\,/g,''));
 				}else{
-					amtSum -= Number($(this).text());
+					amtSum -= Number($(this).text().replace(/\,/g,''));
 				} 
 			});	  
 			$('#amtSum').text(amtSum.toLocaleString());				// ,넣어준다
@@ -62,9 +84,9 @@
 			$('.cash').each(function(){ 
 				var num = $(this).attr('num');
 				if($('#sal_tp_cd'+num).text() == 'SAL'){
-					sum += Number($(this).text()); 
+					sum += Number($(this).text().replace(/\,/g,'')); 
 				}else{
-					sum -= Number($(this).text()); 
+					sum -= Number($(this).text().replace(/\,/g,'')); 
 				} 	
 			});	  
 			$('#cshSum').text(sum.toLocaleString());				// ,넣어준다
@@ -73,9 +95,9 @@
 			$('.card').each(function(){ 
 				var num = $(this).attr('num');
 				if($('#sal_tp_cd'+num).text() == 'SAL'){
-					cdSum += Number($(this).text()); 
+					cdSum += Number($(this).text().replace(/\,/g,'')); 
 				}else{
-					cdSum -= Number($(this).text());
+					cdSum -= Number($(this).text().replace(/\,/g,''));
 				} 		 
 			});	
 			$('#crdSum').text(cdSum.toLocaleString());
@@ -83,9 +105,9 @@
 			$('.pnt').each(function(){ 
 				var num = $(this).attr('num');
 				if($('#sal_tp_cd'+num).text() == 'SAL'){
-					pntSum += Number($(this).text()); 
+					pntSum += Number($(this).text().replace(/\,/g,'')); 
 				}else{
-					pntSum -= Number($(this).text()); 
+					pntSum -= Number($(this).text().replace(/\,/g,'')); 
 				} 		
 			});	
 			$('#pntSum').text(pntSum.toLocaleString());
@@ -127,7 +149,6 @@
  						}
  	 	 			}
  	 			} 
-				
  			});
  			
  			var sal_dt = $('#saleTr'+num).children().eq(0).text().replace(/\-/g,'');
@@ -135,10 +156,10 @@
  			var cust_nm = $('#saleTr'+num).children().eq(2).text();
  			var sal_no = $('#saleTr'+num).children().eq(3).text();
  			var tot_sal_qty = $('#saleTr'+num).children().eq(4).text();
- 			var tot_sal_amt = $('#saleTr'+num).children().eq(5).text();
- 			var csh_stlm_amt = $('#saleTr'+num).children().eq(6).text();
- 			var crd_stlm_amt = $('#saleTr'+num).children().eq(7).text();
- 			var pnt_Stlm_amt = $('#saleTr'+num).children().eq(8).text();
+ 			var tot_sal_amt = $('#saleTr'+num).children().eq(5).text().replace(/\,/g,'');
+ 			var csh_stlm_amt = $('#saleTr'+num).children().eq(6).text().replace(/\,/g,'');
+ 			var crd_stlm_amt = $('#saleTr'+num).children().eq(7).text().replace(/\,/g,'');
+ 			var pnt_Stlm_amt = $('#saleTr'+num).children().eq(8).text().replace(/\,/g,'');
  			var prt_cd = $('#saleTr'+num).children().eq(11).text();
  			var sal_tp_cd = $('#saleTr'+num).children().eq(12).text();
  			var org_shop_cd = $('#saleTr'+num).children().eq(13).text();
@@ -223,7 +244,7 @@
 					init();
 					$('#saleTbody').append(output);
 					$('.RTN').css('color','red');
-
+					addComm();
 					getSum();
 				},
 				error:function(){
