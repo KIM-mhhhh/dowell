@@ -6,6 +6,7 @@ import java.util.List;
 public class SaleVO {
 	
 	private String prt_cd;
+	private String prt_nm;
 	private String sal_dt;
 	private int sal_no;
 	private String sal_tp_cd;
@@ -43,6 +44,12 @@ public class SaleVO {
 	
 	
 	
+	public String getPrt_nm() {
+		return prt_nm;
+	}
+	public void setPrt_nm(String prt_nm) {
+		this.prt_nm = prt_nm;
+	}
 	public String getUser_nm() {
 		return user_nm;
 	}

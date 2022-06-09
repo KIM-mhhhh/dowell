@@ -110,29 +110,30 @@
 		<input type="hidden" name="sal_dt" value="${saleVO.sal_dt}">
 		<ul>
 			<li>
-				<label>매장</label>
-				<input type="text" name="prt_cd" value="${saleVO.prt_cd}" >
+				<label class="two">매장</label>
+				<input type="text" name="prt_cd" value="${saleVO.prt_cd}" readonly>
+				<input type="text" name="prt_nm" value="${saleVO.prt_nm}" readonly>
 			</li>
 			<li>
 				<label>고객번호</label>
-				<input type="text" name="cust_no" value="${saleVO.cust_no}">
-				<input type="text" name="cust_nm" value="${saleVO.cust_nm}">
+				<input type="text" name="cust_no" value="${saleVO.cust_no}" readonly>
+				<input type="text" name="cust_nm" value="${saleVO.cust_nm}" readonly>
 			</li>
 			<li>
 				<label>판매수량</label>
-				<input type="text" name="tot_sal_qty" value="${saleVO.tot_sal_qty}">
+				<input type="text" name="tot_sal_qty" value="${saleVO.tot_sal_qty}" readonly>
 			</li>
 			<li>
 				<label>판매금액</label>
-				<input type="text" name="tot_sal_amt" id="tot_sal_amt" value="${saleVO.tot_sal_amt}">
+				<input type="text" name="tot_sal_amt" id="tot_sal_amt" value="${saleVO.tot_sal_amt}" readonly>
 			</li>
 			<li>
-				<label>현금</label>
-				<input type="text" name="csh_stlm_amt" id="csh_stlm_amt" value="${saleVO.csh_stlm_amt}">
+				<label class="two">현금</label>
+				<input type="text" name="csh_stlm_amt" id="csh_stlm_amt" value="${saleVO.csh_stlm_amt}" readonly>
 			</li>
 			<li>
-				<label>카드</label>
-				<input type="text" name="crd_stlm_amt" id="crd_stlm_amt" value="${saleVO.crd_stlm_amt}">
+				<label class="two">카드</label>
+				<input type="text" name="crd_stlm_amt" id="crd_stlm_amt" value="${saleVO.crd_stlm_amt}" readonly>
 			</li>
 		</ul>
 	
@@ -180,7 +181,7 @@
 
 <div id="resultBtn">
 		<input type="button" id="closeBtn" value="닫기">
-		<c:if test="${saleVO.sal_tp_cd eq 'SAL' and prt_dt_cd eq '2' and saleVO.org_shop_cd eq ''}">
+		<c:if test="${saleVO.sal_tp_cd eq 'SAL' and prt_dt_cd eq '2' and (saleVO.org_shop_cd eq '' or saleVO.org_shop_cd eq 'null')}">
 			<input type="submit" id="refundBtn" value="반품">
 		</c:if>
 </div>

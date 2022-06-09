@@ -45,9 +45,9 @@
 			var num = $(this).attr('num');
 			window.open('${pageContext.request.contextPath}/sale/openStock.do?num='+num+'','stock','_blank','width=700,height=900');
 		});
-		
+		// 합계 계산(체크된 것만)
  		$.getSum = function(){
-			// 합계 계산(체크된 것만)
+			
 			var sum = 0;
 			var aSum = 0;
 			 $('.checkBox').each(function(){
@@ -68,6 +68,29 @@
 		//창 종료
 		$('#closeBtn').click(function(){
 			self.close();
+		});
+		//카드금액 입력되면 카드 요소들 입력 가능
+		$('#crd_stlm_amt').change(function(){
+			if($(this).val().trim().length>0){
+				$('#vld_ym').prop('readonly',false);
+				$('#crd_no1').prop('readonly',false);
+				$('#crd_no2').prop('readonly',false);
+				$('#crd_no3').prop('readonly',false);
+				$('#crd_no4').prop('readonly',false);
+				$('#sCrd_co_cd').prop('disabled',false);
+			}else{
+				$('#vld_ym').prop('readonly',true);
+				$('#vld_ym').val('');
+				$('#crd_no1').prop('readonly',true);
+				$('#crd_no1').val('');
+				$('#crd_no2').prop('readonly',true);
+				$('#crd_no2').val('');
+				$('#crd_no3').prop('readonly',true);
+				$('#crd_no3').val('');
+				$('#crd_no4').prop('readonly',true);
+				$('#crd_no4').val('');
+//				$('#sCrd_co_cd').prop('disabled',true);
+			}
 		});
 		
 		//행 추가
@@ -185,7 +208,22 @@
 		
 		//카드 유효일자 6자리 체크, 숫자 정규식 체크
 		$('#vld_ym').change(function(){
-			checkExp($('#vld_ym'),6);
+			if($(this).val().trim().length>0){
+				checkExp($('#vld_ym'),6);
+				//오늘 이전은 안됨
+ 				var date = new Date();
+				var year = date.getFullYear();
+				var month = date.getMonth();
+				month += 1;
+				if (month <= 9){
+					 month = "0" + month;
+				}
+				if($(this).val()< year+month){
+					alert('이전의 날짜는 유효일자를 쓸 수 없습니다.');
+					$(this).val('').focus();
+				} 
+			}
+			
 		});
 		//카드번호 체크
 		$('#crd_no1').change(function(){
@@ -203,7 +241,9 @@
 
 		//판매금액 제한
 		$(document).on('change','.sal_qty',function(){
+			
 			var num = $(this).attr('num');
+			$('#checkBox'+num).prop('checked',false);
 			const regExp = /[0-9]/g;
 			if($(this).val() <=0){
 				alert('1이상의 갯수를 입력하세요');
@@ -218,6 +258,10 @@
 				$(this).val('').focus();
 				return false;
 			}
+/* 			if($(this).val().trim().length <=0){
+				alert('판매갯수를 입력하세요');
+				$(this).val('').focus();
+			} */
 			var sal_qty = $(this).val();
 			var prd_csmr_upr = $('#prd_csmr_upr'+num).val().replace(/\,/g,'');
 			var cost = sal_qty * prd_csmr_upr;
@@ -261,8 +305,10 @@
  				return false;
  			};
  			//해지고객에게는 판매등록하지 않음
- 			if($('#sCust_nm').val()){
- 				alert('해지고객의 구매는 등록할 수 없습니다.');
+ 			if($('#sCust_nm').val().trim() == '해지고객'){
+ 				alert('해지고객은 구매할 수 없습니다.');
+ 				$('#sCust_no').val('');
+ 				$('#sCust_nm').val('');
  				return false;
  			}
  			//현금과 카드 둘 다 비어있으면 제출 불가
@@ -401,13 +447,13 @@
 		</li>
 		<li>
 			<label>유효일자</label>
-			<input type="text" name="vld_ym" id="vld_ym">
+			<input type="text" name="vld_ym" id="vld_ym" readonly>
 		
 		</li>
 		<li>
 			<label>카드회사</label>
 			<input type="hidden" name="crd_co_cd" id="crd_co_cd">
-			<select id="sCrd_co_cd">
+			<select id="sCrd_co_cd" disabled>
 								<option selected value="">-선택-</option>
 							<c:forEach var="code" items="${codeList }">
 								<option value="${code.DTL_CD }">${code.DTL_CD_NM }</option>
@@ -417,10 +463,10 @@
 		<li>
 			<label>카드번호</label>
 			<input type="hidden" name="crd_no" id="crd_no">
-			<input type="text" id="crd_no1">
-			<input type="text" id="crd_no2">
-			<input type="text" id="crd_no3">
-			<input type="text" id="crd_no4">
+			<input type="text" id="crd_no1" readonly>
+			<input type="text" id="crd_no2" readonly>
+			<input type="text" id="crd_no3" readonly>
+			<input type="text" id="crd_no4" readonly>
 		</li>
 	</ul>
 </div>

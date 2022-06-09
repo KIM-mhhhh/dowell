@@ -129,7 +129,7 @@ th, td {
 #infoBox{
 	margin:0 auto;
 	width:90%;
-	height:60px;
+	height:90px;
 	background-color:white;
 	border : 3px double black;
 }
@@ -140,6 +140,16 @@ ul{
 	display:inline-block;
 	width:50%;
 	float:left;
+}
+#infoForm input[type=text]{
+	border:none;
+}
+#infoForm label{
+	font-weight : bold;
+	margin-right: 20px;
+}
+#infoForm label.two{
+	margin-right:50px;
 }
 
 /* 고객판매수금등록 */

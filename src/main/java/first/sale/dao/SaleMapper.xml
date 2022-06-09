@@ -62,8 +62,10 @@
 			   ,d.SAL_VAT_AMT
 			   ,d.sal_dt
 			   ,d.sal_no
+			   ,t.prt_nm
 		FROM CS_SAL01_DT d
 		LEFT OUTER JOIN MA_PRD01_MT p ON d.prd_cd=p.prd_cd
+		LEFT OUTER JOIN MA_PRT_MT t ON d.prt_cd=t.prt_cd
 		WHERE d.PRT_CD=#{prt_cd} and d.sal_dt=#{sal_dt} and d.sal_no=#{sal_no}
 	</select> 
 	

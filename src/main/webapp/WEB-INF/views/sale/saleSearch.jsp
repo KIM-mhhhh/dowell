@@ -192,6 +192,10 @@
 
 			var count;
 			var output ="";
+			if($('#prt_cd').val().trim().length<=0){
+				alert('매장을 선택하세요');
+				return false;
+			}
 			
 			var prt_cd = $('#prt_cd').val().trim();
 			var cust_no = $('#sCust_no').val().trim();

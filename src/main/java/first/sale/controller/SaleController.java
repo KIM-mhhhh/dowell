@@ -58,7 +58,7 @@ public class SaleController {
 		
 		List<SaleVO> saleList = saleService.getSaleList(map);
 		System.out.println("saleList 수:"+saleList.size());
-		System.out.println(saleList);
+		System.out.println("관리창 열 때 :" + saleList);
 		
 		ModelAndView mav = new ModelAndView("/sale/saleSearch");
 		mav.addObject("saleList", saleList);
@@ -84,7 +84,7 @@ public class SaleController {
 		List<SaleVO> saleList = saleService.getSaleList(map);
 		int count = saleList.size();
 		System.out.println("saleList갯수:" + count);
-		System.out.println("sale리스트:"+saleList);
+		System.out.println("ajax sale리스트:"+saleList);
 		
 		Map<String,Object> ajaxMap = new HashMap<String,Object>();
 		ajaxMap.put("saleList", saleList);
