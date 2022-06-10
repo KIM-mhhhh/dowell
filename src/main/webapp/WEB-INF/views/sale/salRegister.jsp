@@ -13,6 +13,8 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('#prd_cd').focus();
+		$('.red').css('color','red');
+		$('.subCard').css('background-color','#e0dada');
 		
 		//오늘 날짜 구하는 함수
 		var getToday = function(){
@@ -71,15 +73,33 @@
 		});
 		//카드금액 입력되면 카드 요소들 입력 가능
 		$('#crd_stlm_amt').change(function(){
-			$(this).val($(this).val().replace(/\,/g,''));
+		
 			if($(this).val().trim().length>0){
-				$('#vld_ym').prop('readonly',false);
-				$('#crd_no1').prop('readonly',false);
-				$('#crd_no2').prop('readonly',false);
-				$('#crd_no3').prop('readonly',false);
-				$('#crd_no4').prop('readonly',false);
-				$('#sCrd_co_cd').prop('disabled',false);
-				$(this).val(Number($(this).val()).toLocaleString());
+				if(!checkExp($('#crd_stlm_amt'),0)){
+					$('#vld_ym').prop('readonly',true);
+					$('#vld_ym').val('');
+					$('#crd_no1').prop('readonly',true);
+					$('#crd_no1').val('');
+					$('#crd_no2').prop('readonly',true);
+					$('#crd_no2').val('');
+					$('#crd_no3').prop('readonly',true);
+					$('#crd_no3').val('');
+					$('#crd_no4').prop('readonly',true);
+					$('#crd_no4').val('');
+					$('#sCrd_co_cd').prop('disabled',true);
+					$('#sCrd_co_cd').val('');
+					$('.subCard').css('background-color','#e0dada');
+					return false;
+				}else{
+					$('#vld_ym').prop('readonly',false);
+					$('#crd_no1').prop('readonly',false);
+					$('#crd_no2').prop('readonly',false);
+					$('#crd_no3').prop('readonly',false);
+					$('#crd_no4').prop('readonly',false);
+					$('#sCrd_co_cd').prop('disabled',false);
+					$('.subCard').css('background-color','white');
+					$(this).val(Number($(this).val()).toLocaleString());
+				}	
 			}else{
 				$('#vld_ym').prop('readonly',true);
 				$('#vld_ym').val('');
@@ -93,15 +113,16 @@
 				$('#crd_no4').val('');
 				$('#sCrd_co_cd').prop('disabled',true);
 				$('#sCrd_co_cd').val('');
+				$('.subCard').css('background-color','#e0dada');
 			}
 		});
 		//현금 금액에 ,삽입
-		$('#csh_stlm_amt').change(function(){
-			$(this).val($(this).val().replace(/\,/g,''));
-			if($(this).val().trim().length>0){
-				$(this).val(Number($(this).val()).toLocaleString());
+		$('#csh_stlm_amt').change(function(){	
+			$(this).val(Number($('#csh_stlm_amt').val()).toLocaleString());
+
+ 			if(!checkExp($('#csh_stlm_amt'),0)){
+				return false;
 			}
-			
 		});
 		//행 추가
 		$('#plusRow').click(function(){
@@ -142,8 +163,10 @@
 					cache:false,
 					timeout:30000,
 					success:function(param){
+						$(this).val('');
 						if(param.count<=0){
 							alert('검색 결과가 존재하지 않습니다.');
+							$('#prd_cd'+num).val('').focus();
 						}else if(param.count==1){
 							if(param.stockList[0].ivco_qty <=0){
 								alert('재고가 없습니다.');
@@ -166,6 +189,7 @@
 										$('#prd_cd'+num).val('').focus();
 										return false;
 									}else{
+										$('#prd_cd'+num).val(param.stockList[0].prd_cd);
 										$('#prd_nm'+num).val(param.stockList[0].prd_nm);
 										$('#ivco_qty'+num).val(param.stockList[0].ivco_qty);
 										$('#prd_csmr_upr'+num).val(param.stockList[0].prd_csmr_upr);
@@ -208,13 +232,19 @@
 		//숫자 자릿수, 정규식 체크 함수
 		function checkExp(thing,size){
 			const regExp = /[0-9]/g;
-			if(regExp.test(thing.val())){
-				if(thing.val().replace(/ /g,"").length !=size){
-					alert(size+'자리의 숫자를 입력하세요.');
-					thing.val('').focus();
-					return false;
+			if(regExp.test(thing.val())){							//정규식 맞으면
+				if(size != 0){											
+					if(thing.val().replace(/ /g,"").length !=size){	//숫자 수 검사
+						alert(size+'자리의 숫자를 입력하세요.');
+						thing.val('').focus();
+						return false;
+					}else{
+						return true;
+					}
+				}else{
+					return true;
 				}
-			}else{
+			}else{													//정규식 틀리면
 				alert('숫자를 입력하세요.');
 				thing.val('').focus();
 				return false;
@@ -240,15 +270,16 @@
 							 month = "0" + month;
 						}
 						if($(this).val().substr(2)< year){					//연도가 과거이면 x
-							alert('유효하지 않은 연도입니다.');
+							alert('유효하지 않은 카드입니다.');
 							$(this).val('').focus();
 						}else if($(this).val().substr(0,2)< month){			//연도가 적절한 경우 월검사, 월이 과거인 경우x
-							alert('유효하지 않은 월입니다.');
+							alert('유효하지 않은 카드입니다.');
 							$(this).val('').focus();
 						}
 					}
 				}else {
 					alert('날짜가 형식에 맞지 않습니다.');
+					$(this).val('').focus();
 				}
 			}
 			
@@ -271,7 +302,13 @@
 		$(document).on('change','.sal_qty',function(){
 			
 			var num = $(this).attr('num');
-			$('#checkBox'+num).prop('checked',false);
+			
+			if($('#ivco_qty'+num).val().length<=0){
+				alert('상품을 선택하세요.');
+				$(this).val('');
+				return false;
+			}
+			
 			const regExp = /[0-9]/g;
 			if($(this).val() <=0){
 				alert('1이상의 갯수를 입력하세요');
@@ -290,6 +327,7 @@
 			var prd_csmr_upr = $('#prd_csmr_upr'+num).val().replace(/\,/g,'');
 			var cost = sal_qty * prd_csmr_upr;
 			$('#sal_amt'+num).val(cost.toLocaleString());
+			$.getSum();
 		});
 		
 		//value 비어있으면 체크 불가능
@@ -309,6 +347,8 @@
 				$.getSum();
 			}
 		});	
+		
+		
 		//가격에 , 빼기
 		function popComm(){
 			$('.prd_csmr_upr').each(function(){
@@ -335,6 +375,13 @@
  				$('#sCust_nm').val('');
  				return false;
  			}
+ 			//체크된 것 없으면 제출 불가능.
+ 			if($('input[type=checkbox]:checked').length <=0){
+ 				alert('등록할 값을 선택하세요.');
+ 				return false;
+ 			};	
+ 			
+ 			
  			//현금과 카드 둘 다 비어있으면 제출 불가
  			if($('#csh_stlm_amt').val().replace(/ /g,"").length<=0 && $('#crd_stlm_amt').val().replace(/ /g,"").length<=0){
  				alert('금액을 입력하세요');
@@ -348,11 +395,10 @@
  			if($('#crd_stlm_amt').val().length>0){
  				if($('#vld_ym').val().length<=0){
  					alert('유효일자를 입력하세요.');
- 					$('#vld_ym').val().focus();
+ 					$('#vld_ym').focus();
  					return false;
  				}else if($('#sCrd_co_cd').val().length<=0){
  					alert('카드회사를 선택하세요.');
- 					$('#crd_co_cd').val().focus();
  					return false;
  				}else if($('#crd_no1').val().length<4){
  					alert('카드번호를 입력하세요.');
@@ -372,39 +418,35 @@
  					return false;
  				}
  			}
- 			
- 			$('#crd_no').val($('#crd_no1').val()+$('#crd_no2').val()+$('#crd_no3').val()+$('#crd_no4').val());
- 			$('#tot_sal_qty').val($('#qtySum').text());
- 			$('#tot_sal_amt').val($('#amtSum').text().replace(/\,/g,''));
- 			$('#crd_stlm_amt').val($('#crd_stlm_amt').val().replace(/\,/g,''));
- 			$('#csh_stlm_amt').val($('#csh_stlm_amt').val().replace(/\,/g,''));
- 			$('#crd_co_cd').val($('#sCrd_co_cd').val());
- 			popComm();
- 			
- 			//체크된 것 없으면 제출 불가능.
- 			if($('input[type=checkbox]:checked').length <=0){
- 				alert('등록할 값을 선택하세요.');
- 				return false;
- 			};		
- 			
- 			var arr = [];
-			  $('#regTable tr').each(function() {
-				  var form = $('#registForm').clone();
-				  var tmp = $(this).closest('tr').clone();
-			    if ( $(this).find('input[type=checkbox]').is(':checked') ) {
-			      var tmp = $(this).clone();
-			      form.append(tmp);
-			      var formData = form.serializeObject();
-			      arr.push(JSON.stringify(formData));
-			      form.empty();
-			    }
-			    
-			});
+ 		
 			  console.log(arr);
 			  var yn = confirm("등록하시겠습니까?");
 				if(yn==false){
 					return false;
 				}else{
+					
+		 			$('#crd_no').val($('#crd_no1').val()+$('#crd_no2').val()+$('#crd_no3').val()+$('#crd_no4').val());
+		 			$('#tot_sal_qty').val($('#qtySum').text());
+		 			$('#tot_sal_amt').val($('#amtSum').text().replace(/\,/g,''));
+		 			$('#crd_stlm_amt').val($('#crd_stlm_amt').val().replace(/\,/g,''));
+		 			$('#csh_stlm_amt').val($('#csh_stlm_amt').val().replace(/\,/g,''));
+		 			$('#crd_co_cd').val($('#sCrd_co_cd').val());
+		 			popComm();
+		 			
+		 			var arr = [];
+					  $('#regTable tr').each(function() {
+						  var form = $('#registForm').clone();
+						  var tmp = $(this).closest('tr').clone();
+					    if ( $(this).find('input[type=checkbox]').is(':checked') ) {
+					      var tmp = $(this).clone();
+					      form.append(tmp);
+					      var formData = form.serializeObject();
+					      arr.push(JSON.stringify(formData));
+					      form.empty();
+					    }
+					    
+					});
+					
 		 			  $.ajax({
 							url: "${pageContext.request.contextPath}/sale/registerSale.do",
 							type: "post",
@@ -441,7 +483,7 @@
 		<ul>
 			<li>
 				<div id="labelDiv">
-					<label for="sal_dt">판매일자</label>
+					<label for="sal_dt"><span class="red">*</span>판매일자</label>
 				</div>
 				<div id="inputDiv">
 					<input type="date" name="sal_dt" id="sal_dt" readonly >
@@ -449,7 +491,7 @@
 			</li>
 			<li>
 				<div id="labelDiv">
-					<label>판매구분</label>
+					<label><span class="red">*</span>판매구분</label>
 				</div>
 				<div id="inputDiv">
 					<select name="sal_tp_cd" id="sal_tp_cd">
@@ -460,7 +502,7 @@
 			</li>
 			<li>
 				<div id="labelDiv">
-					<label>고객번호</label>
+					<label><span class="red">*</span>고객번호</label>
 				</div>
 				<div id="inputDiv">
 					<input type="text" name="cust_no" id="sCust_no" onchange="checkCustCd()">
@@ -485,7 +527,7 @@
 		</li>
 		<li>
 			<label>유효일자</label>
-			<input type="text" name="vld_ym" id="vld_ym" readonly placeholder="월년도 순으로 입력하세요.">
+			<input class="subCard" type="text" name="vld_ym" id="vld_ym" readonly placeholder="MM(월)YYYY(연도)">
 		
 		</li>
 		<li>
@@ -501,10 +543,10 @@
 		<li>
 			<label>카드번호</label>
 			<input type="hidden" name="crd_no" id="crd_no">
-			<input type="text" id="crd_no1" readonly>
-			<input type="text" id="crd_no2" readonly>
-			<input type="text" id="crd_no3" readonly>
-			<input type="text" id="crd_no4" readonly>
+			<input type="text" id="crd_no1" class="subCard" readonly>
+			<input type="text" id="crd_no2" class="subCard" readonly>
+			<input type="text" id="crd_no3" class="subCard" readonly>
+			<input type="text" id="crd_no4" class="subCard" readonly>
 		</li>
 	</ul>
 </div>

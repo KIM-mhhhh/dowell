@@ -16,6 +16,7 @@
 	$(document).ready(function(){
 		//반품인 경우 빨간색 처리
 		$('.RTN').css('color','red');
+		$('.red').css('color','red');
 		addComm();
 		
 		//본사는 매장 검색 가능. 매장인경우 불가능. 
@@ -311,13 +312,13 @@
 			<div class="infoDiv">
 				<ul>
 					<li>
-						<label for="sal_dt">판매일자</label>
+						<label for="sal_dt"><span class="red">*</span>판매일자</label>
 						<input type="date" id="from" name="from">
 						<input type="date" id="to" name="to">
 					</li>
 					<li>
 						<div id="labelDiv">
-							<label class="two">매장</label>
+							<label class="two"><span class="red">*</span>매장</label>
 						</div>
 						<div id="inputDiv">
 							<input type="text" class="prt" id="prt_cd" name="prt_cd" value="${prt_cd }">
