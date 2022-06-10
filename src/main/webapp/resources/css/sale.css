@@ -15,6 +15,10 @@
 h3 img{
 	width:15px;
 	height:15px;
+	
+}
+h3{
+	padding-left : 75px;
 }
 
 #resultBtn{
@@ -34,8 +38,34 @@ h3 img{
 }
 
 .searchBox{
+	width:92%;
+	height:120px;
+	margin:0 auto;
 	background-color :#dcddde;
 	border : 1px solid black;
+}
+#searchBtn{
+	width:60px;
+	height:60px;
+	border:0.5px thin black;
+	background-color :#dcddde;
+}
+#inputDiv{
+	     display: flex;							/*영역 안에서 움직이게 할 수 있음  */
+   /*  align-items: center;	 */				/*해당 것을 가운데로 오게 하겠다.  */
+   width:80%;
+   float:left;
+   margin-top:5px;
+}
+
+#searchForm label{
+	font-weight : bold;
+	width:20%;
+	float:left;
+	margin-top:5px;
+}
+#searchForm li{
+	margin-top:5px;
 }
 
 th{
@@ -55,8 +85,8 @@ th, td {
     height:20px;
 }
 
-#btnDiv{
-	margin:10px 75px;
+ #registBtn{
+	margin:10px 60px;
 	text-align:right;
 }
 
@@ -78,6 +108,32 @@ th, td {
 	margin:0 auto;
 	margin-bottom : 20px;
 	text-align : center;
+}
+#stockForm label{
+	font-weight : bold;
+	width:30%;
+	float:left;
+	
+}
+#textDiv{
+	width:70%;
+	float:left;
+}
+#stockBtnDiv{
+	width:30%;
+	float:left;
+	margin-top:10px;
+	text-align:center;
+}
+#textDiv label{
+	font-weight : bold;
+}
+.searBox{
+	width:90%;
+	height:80px;
+	background-color :#dcddde;
+	border : 1px solid black;
+	margin:0 auto;
 }
 
 /* 고객판매관리 */
@@ -152,7 +208,25 @@ ul{
 	margin-right:50px;
 }
 
+ .infoDiv{
+	width: 65%;
+    float: left;
+    margin-right: 10px;
+}
+ #btnDiv{
+	width: 30%;
+    float: left;
+    margin-right: 10px;
+    margin-top : 39px;
+	text-align:right;
+}  
+
 /* 고객판매수금등록 */
+.searchBox{
+	width:90%;
+	margin:0 auto;
+	
+}
 #regList{
 	width:100%; 
 	overflow:auto;
@@ -203,6 +277,40 @@ input[type=button],input[type=submit]{
 	height:28px;
 }
 
-
-
+.searchBox label{
+	font-weight : bold;
+	width:20%;
+	float:left;
+	margin-top:1px;
+}
+.salDiv{
+	width:60%;
+	float:left;
+}
+#costBox{
+	margin:0 auto;
+	width:90%;
+	height:150px;
+	background-color:white;
+	border : 3px double black;
+}
+#costBox label{
+	font-weight : bold;
+	margin-right: 50px;
+}
+#costBox label.two{
+	margin-right:83px;
+}
+#plusRow, #minusRow{
+	margin-top:20px;
+	height:30px;
+	width:30px;
+}
+.cdDiv{
+	display: flex;							/*영역 안에서 움직이게 할 수 있음  */
+     align-items: center;	 				/*해당 것을 가운데로 오게 하겠다.  */
+}
+h5{
+	padding-left: 50px;
+}
 

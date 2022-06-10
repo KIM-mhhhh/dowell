@@ -145,9 +145,11 @@ public class SaleController {
 		
 		List<SaleVO> saleList = saleService.getDetailSale(saleVO);
 		System.out.println(saleList);
+		saleVO.setPrt_nm(saleList.get(0).getPrt_nm());
 		
 		ModelAndView mav = new ModelAndView("/sale/salDetail");
 		mav.addObject("saleVO", saleVO);
+		System.out.println(saleVO.getPrt_nm());
 		System.out.println(saleVO);
 		mav.addObject("saleList", saleList);
 		

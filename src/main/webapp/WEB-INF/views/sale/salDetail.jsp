@@ -48,18 +48,7 @@
 		
 		//가격에 , 빼기
 		function popComm(){
-/* 			$('.vos').each(function(){
-				var org = $(this).text().replace(/\,/g,'');
-				$(this).text(org);
-			});
-			$('.vat').each(function(){
-				var org = $(this).text().replace(/\,/g,'');
-				$(this).text(org);
-			});
-			$('.amt').each(function(){
-				var org = $(this).text().replace(/\,/g,'');
-				$(this).text(org);
-			}); */
+
 			$('#csh_stlm_amt').val($('#csh_stlm_amt').val().replace(/\,/g,''));
 			$('#crd_stlm_amt').val($('#crd_stlm_amt').val().replace(/\,/g,''));
 			$('#tot_sal_amt').val($('#tot_sal_amt').val().replace(/\,/g,''));

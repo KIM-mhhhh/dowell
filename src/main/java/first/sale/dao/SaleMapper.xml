@@ -4,23 +4,24 @@
 
  	<!-- 재고 조회 -->
 	<select id="getStockList" resultType="ProductVO" parameterType="map">
-		SELECT m.PRD_CD
-			   ,m.PRD_NM
-			   ,i.IVCO_QTY
-			   ,m.PRD_CSMR_UPR
-			   ,m.PRD_SS_CD
-		FROM sd_ivco01_mt i
-		LEFT OUTER JOIN ma_prd01_mt m ON m.PRD_CD=i.prd_cd
-		LEFT OUTER JOIN ma_prt_mt p ON p.prt_cd=i.prt_cd
-		WHERE m.PRD_TP_CD='10' 
-			 AND (i.prt_cd LIKE '%' || #{prt_keyword} || '%' OR p.prt_nm LIKE '%' || #{prt_keyword} || '%')
-			 <if test="prd_keyword != ''">																											<!--회원명 x / 휴대폰번호 o면 휴대폰번호 조건만 적용  -->	
-  			 AND (i.prd_cd LIKE '%' || #{prd_keyword} || '%' OR m.prd_nm LIKE '%' || #{prd_keyword} || '%')
+		SELECT m.PRD_CD																							<!--상품코드  -->
+			   ,m.PRD_NM																						<!--상품명  -->
+			   ,i.IVCO_QTY																						<!--재고수량  -->
+			   ,m.PRD_CSMR_UPR																					<!--상품소비자단가  -->
+			   ,m.PRD_SS_CD																						<!--상품상태코드 -->
+			   ,m.prd_tp_cd																						<!--상품유형코드 -->
+		FROM sd_ivco01_mt i																						<!--매장현재고 테이블 -->
+		LEFT OUTER JOIN ma_prd01_mt m ON m.PRD_CD=i.prd_cd														<!--상품관리 테이블과 상품코드로 조인 -->
+		LEFT OUTER JOIN ma_prt_mt p ON p.prt_cd=i.prt_cd														<!--매장관리 테이블과 매장코드로 조인 -->
+		WHERE 1=1
+			 AND (i.prt_cd LIKE '%' || #{prt_keyword} || '%' OR p.prt_nm LIKE '%' || #{prt_keyword} || '%')		<!-- 매장코드나 매장이름에 맞는 것 조건으로 조회--> 	
+			 <if test="prd_keyword != ''">																												
+  			 AND (i.prd_cd LIKE '%' || #{prd_keyword} || '%' OR m.prd_nm LIKE '%' || #{prd_keyword} || '%')		<!-- 상품코드나 상품명에 맞는 것 조건으로 조회-->
   			</if>
 	</select>
 	
 	<!-- 고객판매관리 검색 -->
-	<select id="getSaleList" resultType="SaleVO" parameterType="map">
+<!-- 	<select id="getSaleList" resultType="SaleVO" parameterType="map">
 		SELECT (SUBSTR(s.SAL_DT,1,4) || '-' || SUBSTR(s.SAL_DT,5,2) || '-' || SUBSTR(s.SAL_DT,7,2))AS SAL_DT
 			   ,s.CUST_NO
 			   ,c.CUST_NM
@@ -43,11 +44,45 @@
 		LEFT OUTER JOIN MA_USER_MT m ON s.fst_user_id=m.USER_ID
 		WHERE s.PRT_CD=#{prt_cd}
 			AND s.SAL_DT BETWEEN #{from} AND #{to}
-			<if test="cust_no != null and cust_no !=''">																									<!--회원명 x / 휴대폰번호 o면 휴대폰번호 조건만 적용  -->	
+			<if test="cust_no != null and cust_no !=''">																									
   			 AND s.CUST_NO=#{cust_no}
   			</if>
   		ORDER BY SAL_DT DESC, s.SAL_NO DESC
+	</select> -->
+	
+	 <select id="getSaleList" resultType="SaleVO" parameterType="map">
+		SELECT (SUBSTR(s.SAL_DT,1,4) || '-' || SUBSTR(s.SAL_DT,5,2) || '-' || SUBSTR(s.SAL_DT,7,2))AS SAL_DT
+			   ,s.CUST_NO																				<!--회원번호  -->
+			   ,c.CUST_NM																				<!--회원명  -->
+			   ,s.PRT_CD																				<!--매장코드  -->
+			   ,s.SAL_TP_CD																				<!--판매구분코드  -->
+			   ,s.SAL_NO																				<!--판매번호  -->
+			   ,j.sumQ AS TOT_SAL_QTY																	<!--SAL_QTY을 sum으로 총 수량  -->	
+			   ,j.sumA AS TOT_SAL_AMT																	<!--SAL_AMT을 sum으로 총 금액  -->
+			   ,s.CSH_STLM_AMT																			<!--현금결제금액  -->
+			   ,s.CRD_STLM_AMT																			<!--카드결제금액  -->
+			   ,s.PNT_STLM_AMT																			<!--포인트결제금액  -->
+			   ,s.FST_USER_ID																			<!--최초등록자ID  -->
+			   ,m.user_nm																				<!--최초등록자명  -->
+			   ,TO_CHAR(s.FST_REG_DT,'yyyy-MM-dd') AS sFst_reg_dt										<!--최초등록일  -->
+			   ,s.ORG_SHOP_CD																			<!--원매장코드  -->
+			   ,s.ORG_SAL_DT																			<!--원판매일자  -->
+			   ,s.ORG_SAL_NO																			<!--원매장번호  -->
+		FROM CS_SAL01_MT s																				<!--고객판매 테이블 -->
+		LEFT OUTER JOIN CS_CUST01_MT c ON s.cust_no=c.cust_no											<!--고객관리 테이블과 회원번호로 조인 -->
+		LEFT OUTER JOIN MA_USER_MT m ON s.fst_user_id=m.USER_ID											<!--사용자 테이블과 사용자아이디로 조인 -->													
+		LEFT OUTER JOIN (select prt_Cd,sal_dt,sal_no, SUM(SAL_QTY)as sumQ, SUM(SAL_AMT) as sumA 		<!--고객판매상세 테이블에서 SUM들을 가져오기 위해 SELECT문으로 가져와서 조인 -->
+						 from cs_sal01_dt 																		
+						 GROUP BY prt_cd,sal_dt,sal_no) j 
+									ON s.prt_cd=j.prt_cd and s.sal_dt=j.sal_dt and s.sal_no=j.sal_no
+		WHERE s.PRT_CD=#{prt_cd}																		<!--파라미터의 매장코드와 기간이 조건.  -->		
+			AND s.SAL_DT BETWEEN #{from} AND #{to}
+			<if test="cust_no != null and cust_no !=''">												<!--회원번호가 있다면 조건에 추가  -->														
+  			 AND s.CUST_NO=#{cust_no}
+  			</if>
+  		ORDER BY s.SAL_DT DESC, s.SAL_NO DESC															<!--판매일과 판매번호로 내림순 정렬  -->		
 	</select>
+	
 	
 	<!-- 판매상세조회 -->
 	<select id="getDetailSale" resultType="SaleVO" parameterType="SaleVO">

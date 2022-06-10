@@ -196,6 +196,19 @@
 				alert('매장을 선택하세요');
 				return false;
 			}
+			if($('#from').val().trim().length<=0){
+				alert('날짜를 선택하세요');
+				return false;
+			}else if($('#to').val().trim().length<=0){
+				alert('날짜를 선택하세요');
+				return false;
+			}
+			
+			if($('#from').val()>= $('#to').val()){
+				alert('날짜를 다시 선택하세요');
+				return false;
+			}
+			
 			
 			var prt_cd = $('#prt_cd').val().trim();
 			var cust_no = $('#sCust_no').val().trim();
@@ -289,36 +302,49 @@
 	<jsp:include page="/WEB-INF/views/common/header.jsp"/>
 </div>
 <div id='wrapper'>
+<div class="side">
+	<jsp:include page="/WEB-INF/views/common/side.jsp"/>
+</div>
 	<h3>고객판매관리<img alt="새로고침" src="${pageContext.request.contextPath}/images/reload.png" onclick="window.location.reload()"></h3>
 	<div class="searchBox">
-		<form>
-			<ul>
-				<li>
-					<label for="sal_dt">판매일자</label>
-					<input type="date" id="from" name="from">
-					<input type="date" id="to" name="to">
-				</li>
-				<li>
-					<label>매장</label>
-					<input type="text" class="prt" id="prt_cd" name="prt_cd" value="${prt_cd }">
-					<img id="searchMarket" class="searchIcon prt" alt="매장조회" src="${pageContext.request.contextPath}/images/search.png" >
-					<input type="text" class="prt" id="prt_nm" name="prt_nm" value="${prt_nm }">
-				</li>
-				<li>
-					<label>고객번호</label>
-					<input type="text" id="sCust_no">
-					<img id="searchCust" class="searchIcon" alt="고객조회" src="${pageContext.request.contextPath}/images/search.png">
-					<input type="text" id="sCust_nm">
-				</li>
-			</ul>
-			<div>
+		<form id="searchForm">
+			<div class="infoDiv">
+				<ul>
+					<li>
+						<label for="sal_dt">판매일자</label>
+						<input type="date" id="from" name="from">
+						<input type="date" id="to" name="to">
+					</li>
+					<li>
+						<div id="labelDiv">
+							<label class="two">매장</label>
+						</div>
+						<div id="inputDiv">
+							<input type="text" class="prt" id="prt_cd" name="prt_cd" value="${prt_cd }">
+							<img id="searchMarket" class="searchIcon prt" alt="매장조회" src="${pageContext.request.contextPath}/images/search.png" >
+							<input type="text" class="prt" id="prt_nm" name="prt_nm" value="${prt_nm }">
+						</div>
+					</li>
+					<li>
+						<div id="labelDiv">
+							<label>고객번호</label>
+						</div>
+						<div id="inputDiv">
+							<input type="text" id="sCust_no">
+							<img id="searchCust" class="searchIcon" alt="고객조회" src="${pageContext.request.contextPath}/images/search.png">
+							<input type="text" id="sCust_nm">
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div id="btnDiv">
 				<button id="searchBtn"><span class="material-icons">search</span></button>
 			</div>
 			
 		</form>
 	</div>
 <c:if test="${prt_dt_cd eq '2'}">	
-	<div id="btnDiv">
+	<div id="registBtn">
 		<button id="registBtn">판매등록</button>
 	</div>
 </c:if>

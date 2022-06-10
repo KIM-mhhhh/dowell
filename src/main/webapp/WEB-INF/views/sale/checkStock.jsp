@@ -1,11 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>     
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/sale.css" type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -38,8 +41,6 @@
 				}
 			});
 		}
-
-		
 		//재고목록 가져오기
 		$('#searchBtn').click(function(event){
 				var prt_keyword = $('#prt_keyword').val();
@@ -57,13 +58,26 @@
 							output+="<tr><td colspan='5'>검색 결과가 존재하지 않습니다.</td></tr>";
 						}else if(param.count>0){
 							$(param.stockList).each(function(index,item) {
-								output += '<tr class="checkTr">';
+								
+								if(item.prd_tp_cd == '20'){
+									output +='';
+								}else{
+									output += '<tr class="checkTr">';
+									output +='<td><input type="checkbox" class="checkBox '+item.prd_ss_cd+'" num="'+index+'" id="checkBox'+index+'"></td>';
+		 							output +='<td class="prd_cd" id="prd_cd'+index+'">'+item.prd_cd+'</td>';
+									output +='<td class="prd_nm" id="prd_nm'+index+'">'+item.prd_nm+'</td>';
+									output +='<td class="stock" id="stock'+index+'" num="'+index+'" class="stock">'+item.ivco_qty+'</td>'; 
+									output +='<td class="prd_csmr_upr" num="'+index+'" id="prd_csmr_upr'+index+'">'+item.prd_csmr_upr+'</td>';
+									output +='</tr>';
+								}
+								
+/* 								output += '<tr class="checkTr">';
 								output +='<td><input type="checkbox" class="checkBox '+item.prd_ss_cd+'" num="'+index+'" id="checkBox'+index+'"></td>';
 	 							output +='<td class="prd_cd" id="prd_cd'+index+'">'+item.prd_cd+'</td>';
 								output +='<td class="prd_nm" id="prd_nm'+index+'">'+item.prd_nm+'</td>';
 								output +='<td class="stock" id="stock'+index+'" num="'+index+'" class="stock">'+item.ivco_qty+'</td>'; 
 								output +='<td class="prd_csmr_upr" num="'+index+'" id="prd_csmr_upr'+index+'">'+item.prd_csmr_upr+'</td>';
-								output +='</tr>';
+								output +='</tr>'; */
 	
 							}); 	
 						}else{
@@ -143,22 +157,24 @@
 </head>
 <body>
 <h3>매장재고조회</h3>
-<div class="searchBox">
-	<form>
+<div class="searBox">
+	<form id="stockForm">
 		<input type="hidden" id="rowNum" value="${num}">
 		<input type="hidden" id="prt_cd" value="${prt_cd}">
-		<ul>
-			<li>
-				<label>매장</label>
-				<input type="text" id="prt_keyword" readonly value="${prt_nm }">
-			</li>
-			<li>
-				<label>상품(코드+명)</label>
-				<input type="text" id="prd_keyword">
-			</li>
-		</ul>
-		<div>
-			<button id="searchBtn">검색</button>
+		<div id="textDiv">
+			<ul>
+				<li>
+					<label>매장</label>
+					<input type="text" id="prt_keyword" readonly value="${prt_nm }">
+				</li>
+				<li>
+					<label>상품(코드+명)</label>
+					<input type="text" id="prd_keyword">
+				</li>
+			</ul>
+		</div>
+		<div id="stockBtnDiv">
+			<button id="searchBtn"><span class="material-icons">search</span></button>
 		</div>
 	</form>
 </div>
